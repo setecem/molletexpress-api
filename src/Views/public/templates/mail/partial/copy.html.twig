@@ -1,0 +1,14 @@
+{% extends "mail/default.html.twig" %}
+ {% block message %}
+     <p>
+         {{ include(template_from_string(message|nl2br), {server: server}) }}
+     </p>
+
+     <p align="center">
+
+         <a class="btn btn-primary" href="{{ link.url }}">
+             {{ link.label }}
+         </a>
+
+     </p>
+ {% endblock %}

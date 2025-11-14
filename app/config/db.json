@@ -1,0 +1,43 @@
+{
+    "local": {
+        "dbname": "crm_api_copy",
+        "user": "root",
+        "password": "1234",
+        "host": "localhost",
+        "driver": "pdo_mysql",
+        "charset": "utf8mb4",
+        "dev_mode": true,
+        "schema_filter": null,
+        "entities": [
+            "Entity"
+        ]
+    },
+    "cli": {
+        "dbname": "crm_api_copy",
+        "user": "root",
+        "password": "1234",
+        "host": "localhost",
+        "driver": "pdo_mysql",
+        "charset": "utf8mb4",
+        "schema_filter": null,
+        "dev_mode": true,
+        "entities": [
+            "Entity"
+        ]
+    },
+    "boards": {
+        "host": "localhost",
+        "user": "root",
+        "password": "1234",
+        "dbname": "boards",
+        "driver": "pdo_mysql",
+        "charset": "utf8mb4"
+    },
+    "settings": {
+        "entity": {
+            "depth": {
+                "enabled": false
+            }
+        }
+    }
+}

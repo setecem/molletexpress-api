@@ -1,0 +1,10 @@
+.idea
+composer.lock
+/vendor
+/app/config/main.json
+/app/config/*.*.json
+/app/cache
+/app/log
+/web/*
+/data/
+bin

@@ -1,0 +1,25 @@
+{
+    "debug": 0,
+    "host": "mail.setecem.com",
+    "smtp_auth": true,
+    "user": "pruebas@setecem.com",
+    "password": "s2C7W%RG&uM",
+    "port": 587,
+    "from_mail": null,
+    "smtp": true,
+    "encryption": "tls",
+    "from": {
+        "email": "pruebas@setecem.com",
+        "name": "SETECEM FROM"
+    },
+    "reply": {
+        "email": "pruebas@setecem.com",
+        "name": "SETECEM REPLY",
+        "enable": false
+    },
+    "bbc": {
+        "email": "pruebas@setecem.com",
+        "name": "SETECEM BBC",
+        "enable": false
+    }
+}

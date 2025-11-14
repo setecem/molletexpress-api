@@ -1,0 +1,8 @@
+{
+    "filters": {
+        "deletedOn": true
+    },
+    "support": {
+        "native_lazy_object": true
+    }
+}

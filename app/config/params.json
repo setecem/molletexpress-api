@@ -1,0 +1,85 @@
+{
+    "theme": "public",
+    "debug": true,
+    "timezone": "Europe\/Madrid",
+    "formas_pago": null,
+    "dias_pago": null,
+    "data": {
+        "employees": {
+            "files": "C:\\Users\\Programacion\\Desktop\\Projects\\crm\\data\\personal"
+        },
+        "contact": {
+            "files": "C:\\Users\\Programacion\\Desktop\\Projects\\crm\\data\\contact"
+        }
+    },
+    "files": {
+        "employee": {
+            "types": [
+                "Documento",
+                "Nómina",
+                "DNI",
+                "Seguridad Social",
+                "Cuenta bancaria"
+            ]
+        },
+        "contact": {
+            "types": [
+                "Documento",
+                "Presupuesto",
+                "Factura",
+                "Informe",
+                "Diseño",
+                "Imagenes"
+            ]
+        }
+    },
+    "movement": {
+        "employee": {
+            "types": [
+                "Multa",
+                "Anticipo"
+            ]
+        }
+    },
+    "contact": {
+        "feed": {
+            "types": [
+                "Llamada",
+                "Reunión",
+                "Email"
+            ]
+        },
+        "alert": {
+            "email": "pruebas@setecem.com",
+            "name": "Pruebas"
+        }
+    },
+    "mail": {
+        "from_name": null,
+        "debug": null,
+        "host": null,
+        "smtp_auth": null,
+        "user": null,
+        "password": null,
+        "encrypt": null,
+        "autotls": null,
+        "port": null,
+        "from_mail": null,
+        "from": {
+            "email": null,
+            "name": null
+        }
+    },
+    "session": {
+        "enabled": true
+    },
+    "log": {
+        "debug": true,
+        "enabled": true
+    },
+    "core": {
+        "date": {
+            "format": "Y-m-d\\TH:i"
+        }
+    }
+}

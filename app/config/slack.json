@@ -1,0 +1,7 @@
+{
+  "token": "secret",
+    "target": {
+        "incidencias": "general-programacion",
+        "pedro": "devops"
+    }
+}

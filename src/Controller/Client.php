@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Controller;
+
+use Cavesman\Db;
+use Cavesman\Http;
+use DateTime;
+use Doctrine\ORM\Exception\ORMException;
+use Exception;
+
+class Client
+{
+
+    public static function list(): Http\JsonResponse
+    {
+        try {
+
+            $list = \App\Entity\Client::findBy(['deletedOn' => null]);
+
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $client) => $client->model(\App\Model\Client::class)->json(), $list));
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function get(int $id): Http\JsonResponse
+    {
+        try {
+
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            return new Http\JsonResponse($item->model(\App\Model\Client::class)->json());
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function active(int $id): Http\JsonResponse
+    {
+        try {
+
+            $em = DB::getManager();
+
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            $item->active = !$item->active;
+
+            $em->persist($item);
+            $em->flush();
+
+            if ($item->active)
+                $return['message'] = "Cliente activado correctamente";
+            else
+                $return['message'] = "Cliente desactivado correctamente";
+
+            return new Http\JsonResponse($return);
+        } catch (Exception | ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function add(): Http\JsonResponse
+    {
+        try {
+
+            $model = \App\Model\Client::fromRequest();
+
+            $entity = $model->entity();
+
+            $em = DB::getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return new Http\JsonResponse([
+                'message' => "Cliente añadido correctamente",
+                'item' => $entity->model(\App\Model\Client::class)->json()
+            ]);
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function update(int $id): Http\JsonResponse
+    {
+        try {
+
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            if (!$item)
+                return new Http\JsonResponse(['message' => "Cliente no encontrado"], 404);
+
+            $model = \App\Model\Client::fromRequest();
+
+            if ($id != $model->id)
+                return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
+
+            $entity = $model->entity();
+
+            $em = DB::getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return new Http\JsonResponse([
+                'message' => "Cliente actualizado correctamente",
+                'item' => $entity->model(\App\Model\Client::class)->json()
+            ]);
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public static function delete(int $id): Http\JsonResponse
+    {
+        try {
+
+            $em = DB::getManager();
+
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            $item->deletedOn = new DateTime();
+
+            $em->persist($item);
+            $em->flush();
+
+            return new Http\JsonResponse(['message' => "Cliente eliminado correctamente"]);
+        } catch (Exception | ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+}

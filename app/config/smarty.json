@@ -1,0 +1,6 @@
+{
+    "caching": false,
+    "force_compile": true,
+    "compile_check": true,
+    "debugging": false
+}

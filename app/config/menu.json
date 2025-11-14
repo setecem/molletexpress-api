@@ -1,0 +1,40 @@
+{
+    "home": {
+        "items": {
+            "contact": {
+                "visible": true
+            },
+            "employee": {
+                "visible": true
+            },
+            "users": {
+                "visible": true
+            }
+        }
+    },
+    "main": {
+        "items": {
+            "departments": {
+                "visible": true
+            },
+            "profiles": {
+                "visible": true
+            },
+            "users": {
+                "visible": true
+            },
+            "admin-Section": {
+                "visible": true
+            },
+            "employee": {
+                "visible": true
+            },
+            "contact": {
+                "visible": true
+            },
+            "client": {
+                "visible": true
+            }
+        }
+    }
+}

@@ -1,0 +1,202 @@
+{
+    "component.dev-bar.menu.language": {
+        "message": "Languages",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.merge": {
+        "message": "Merge strings",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.merge.success.text": {
+        "message": "Merge language completed",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.merge.success.title": {
+        "message": "Merge completed",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.send-pending.success.text": {
+        "message": "Send completed",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.send-pending.success.title": {
+        "message": "All pending strings already sent",
+        "replace": []
+    },
+    "component.dev-bar.menu.language.send.pending": {
+        "message": "Send pending strings",
+        "replace": []
+    },
+    "component.dev-bar.menu.role": {
+        "message": "Roles",
+        "replace": []
+    },
+    "component.dev-bar.menu.role.send-pending.success.text": {
+        "message": "Send completed",
+        "replace": []
+    },
+    "component.dev-bar.menu.role.send-pending.success.title": {
+        "message": "All pending roles already sent",
+        "replace": []
+    },
+    "component.dev-bar.menu.role.send.pending": {
+        "message": "Send pending roles",
+        "replace": []
+    },
+    "component.dev-bar.title": {
+        "message": "Dev Bar",
+        "replace": []
+    },
+    "role.group.EMPLOYEE": {
+        "message": "Employees",
+        "replace": []
+    },
+    "role.role.ACCESS": {
+        "message": "Access",
+        "replace": []
+    },
+    "role.role.EDIT": {
+        "message": "Edit",
+        "replace": []
+    },
+    "role.role.DELETE": {
+        "message": "Delete",
+        "replace": []
+    },
+    "role.role.FILES": {
+        "message": "Files",
+        "replace": []
+    },
+    "role.role.CREATE": {
+        "message": "Create",
+        "replace": []
+    },
+    "role.group.CLIENT": {
+        "message": "Client",
+        "replace": []
+    },
+    "role.group.CONTACT": {
+        "message": "Contacts",
+        "replace": []
+    },
+    "role.role.FEED": {
+        "message": "Feedback",
+        "replace": []
+    },
+    "role.role.PRIVATE": {
+        "message": "Private",
+        "replace": []
+    },
+    "role.role.VIEW_ALL": {
+        "message": "View all",
+        "replace": []
+    },
+    "role.role.UPDATE": {
+        "message": "Update",
+        "replace": []
+    },
+    "role.group.FEED": {
+        "message": "Feedback",
+        "replace": []
+    },
+    "role.role.ALERT": {
+        "message": "Alert",
+        "replace": []
+    },
+    "role.group.COMERCIAL": {
+        "message": "Commercial",
+        "replace": []
+    },
+    "role.group.ORIGEN": {
+        "message": "Origin",
+        "replace": []
+    },
+    "role.group.TYPE": {
+        "message": "Type",
+        "replace": []
+    },
+    "role.group.ALERT": {
+        "message": "Alert",
+        "replace": []
+    },
+    "role.group.DNI": {
+        "message": "DNI",
+        "replace": []
+    },
+    "role.role.EMPTY": {
+        "message": "Empty",
+        "replace": []
+    },
+    "role.role.ROLES": {
+        "message": "Permissions",
+        "replace": []
+    },
+    "role.role.COMERCIAL_EDIT": {
+        "message": "Edit commercial",
+        "replace": []
+    },
+    "role.role.ORIGEN_EDIT": {
+        "message": "Edit origin",
+        "replace": []
+    },
+    "role.role.TYPE_EDIT": {
+        "message": "Edit type",
+        "replace": []
+    },
+    "role.role.DNI_EMPTY": {
+        "message": "Empty DNI",
+        "replace": []
+    },
+    "role.role.FEED_DELETE": {
+        "message": "Delete feedback",
+        "replace": []
+    },
+    "role.role.FEED_ALERT": {
+        "message": "Feedback alert",
+        "replace": []
+    },
+    "role.role.FEED_CREATE": {
+        "message": "Add feedback",
+        "replace": []
+    },
+    "role.role.FEED_PRIVATE": {
+        "message": "Private feedback",
+        "replace": []
+    },
+    "role.role.ALERT_CREATE": {
+        "message": "Add alert",
+        "replace": []
+    },
+    "role.role.VIEW": {
+        "message": "See entry",
+        "replace": []
+    },
+    "role.role.RECEIVE_EMAIL": {
+        "message": "Receive email",
+        "replace": []
+    },
+    "role.role.RECEIVE_EMAIL_CREATE": {
+        "message": "Receive email from created contact",
+        "replace": []
+    },
+    "role.role.RECEIVE_EMAIL_EDIT": {
+        "message": "Receive email from updated contact",
+        "replace": []
+    },
+    "role.role.RECEIVE_EMAIL_DELETE": {
+        "message": "Receive email from deleted contact",
+        "replace": []
+    },
+    "role.role.ORIGEN_HIDE": {
+        "message": "Hide origen",
+        "replace": []
+    },
+    "role.group.INVOICE": {
+        "message": "Invoice",
+        "replace": []
+    },
+    "role.group.DELIVERY_NOTE": {
+        "message": "Delivery note",
+        "replace": []
+    }
+}

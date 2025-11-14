@@ -1,0 +1,3 @@
+<?php
+
+\Cavesman\DB::getCli();

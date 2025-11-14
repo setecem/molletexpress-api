@@ -1,0 +1,34 @@
+{% extends "mail/default.html.twig" %}
+ {% block message %}
+     <h3>{{ title }}</h3>
+
+     {% if item.enterprise %}
+         <h4>{{ item.enterprise }}</h4><br>
+     {% endif %}
+
+     {% if item.type %}
+         Tipo: {{ item.type }}<br>
+     {% endif %}
+
+     {% if item.origen %}
+         Origen: {{ item.origen }}<br>
+     {% endif %}
+
+     {% if item.sector %}
+         Sector: {{ item.sector }}<br>
+     {% endif %}
+
+     Comercial: {{ item.employee.name }} {{ item.employee.lastname }}<br><hr>
+
+     {% if item.contacts is not empty %}
+         <h4>Contactos</h4>
+         {% for contact in item.contacts %}
+             {% if contact.main %}
+                 <b>Contacto principal: {{ contact.name }}</b>
+             {% else %}
+                 {{ contact.name }}
+             {% endif %}
+             <br>
+         {% endfor %}
+     {% endif %}
+ {% endblock %}
