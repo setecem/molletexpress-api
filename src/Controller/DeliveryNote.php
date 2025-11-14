@@ -372,7 +372,7 @@ class DeliveryNote
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Nuevo albarán en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Nuevo albarán en molletexpress', ['html' => $body, 'text' => $text]);
         }
 
     }
@@ -400,7 +400,7 @@ class DeliveryNote
             $mail = Mail::getInstance();
 
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Albarán actualizado en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Albarán actualizado en molletexpress', ['html' => $body, 'text' => $text]);
         }
     }
 
@@ -422,7 +422,7 @@ class DeliveryNote
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Albarán eliminado en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Albarán eliminado en molletexpress', ['html' => $body, 'text' => $text]);
         }
 
     }

@@ -372,7 +372,7 @@ class Invoice
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Nueva factura en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Nueva factura en molletexpress', ['html' => $body, 'text' => $text]);
         }
 
     }
@@ -400,7 +400,7 @@ class Invoice
             $mail = Mail::getInstance();
 
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Factura actualizada en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Factura actualizada en molletexpress', ['html' => $body, 'text' => $text]);
         }
     }
 
@@ -422,7 +422,7 @@ class Invoice
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Factura eliminada en CRM', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Factura eliminada en molletexpress', ['html' => $body, 'text' => $text]);
         }
 
     }

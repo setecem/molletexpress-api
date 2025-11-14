@@ -1,6 +1,6 @@
 {
     "local": {
-        "dbname": "crm_api_copy",
+        "dbname": "molletexpress_api",
         "user": "root",
         "password": "1234",
         "host": "localhost",
@@ -13,7 +13,7 @@
         ]
     },
     "cli": {
-        "dbname": "crm_api_copy",
+        "dbname": "molletexpress_api",
         "user": "root",
         "password": "1234",
         "host": "localhost",

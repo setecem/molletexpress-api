@@ -13,6 +13,8 @@ enum RoleGroup: string
     case CONTACT = 'CONTACT';
     case INVOICE = 'INVOICE';
     case DELIVERY_NOTE = 'DELIVERY_NOTE';
+    case SERVICE = 'SERVICE';
+    case ORDAIN_CHARGE = 'ORDAIN_CHARGE';
     case REPORT = 'REPORT';
     case DEVICE = 'DEVICE';
     case LOG = 'LOG';
@@ -128,5 +130,66 @@ enum RoleGroup: string
                 Role::RECEIVE_EMAIL_DELETE
             ]
         ];
+    }
+
+    public static function rolesService(): array
+    {
+        return [
+            self::SERVICE->value => [
+                Role::ACCESS,
+                Role::EDIT,
+                Role::DELETE,
+                Role::FILES,
+                Role::CREATE,
+                Role::FEED,
+                Role::VIEW_ALL,
+                Role::VIEW,
+                Role::PRIVATE,
+                Role::COMERCIAL_EDIT,
+                Role::ORIGEN_EDIT,
+                Role::ORIGEN_HIDE,
+                Role::TYPE_EDIT,
+                Role::DNI_EMPTY,
+                Role::FEED_ALERT,
+                Role::FEED_CREATE,
+                Role::FEED_DELETE,
+                Role::FEED_PRIVATE,
+                Role::ALERT_CREATE,
+                Role::RECEIVE_EMAIL_CREATE,
+                Role::RECEIVE_EMAIL_EDIT,
+                Role::RECEIVE_EMAIL_DELETE
+            ]
+        ];
+    }
+
+    public static function rolesOrdainCharge(): array
+    {
+        return [
+            self::ORDAIN_CHARGE->value => [
+                Role::ACCESS,
+                Role::EDIT,
+                Role::DELETE,
+                Role::FILES,
+                Role::CREATE,
+                Role::FEED,
+                Role::VIEW_ALL,
+                Role::VIEW,
+                Role::PRIVATE,
+                Role::COMERCIAL_EDIT,
+                Role::ORIGEN_EDIT,
+                Role::ORIGEN_HIDE,
+                Role::TYPE_EDIT,
+                Role::DNI_EMPTY,
+                Role::FEED_ALERT,
+                Role::FEED_CREATE,
+                Role::FEED_DELETE,
+                Role::FEED_PRIVATE,
+                Role::ALERT_CREATE,
+                Role::RECEIVE_EMAIL_CREATE,
+                Role::RECEIVE_EMAIL_EDIT,
+                Role::RECEIVE_EMAIL_DELETE
+            ]
+        ];
+
     }
 }
