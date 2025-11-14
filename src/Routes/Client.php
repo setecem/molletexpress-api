@@ -1,12 +1,13 @@
 <?php
 
 use App\Controller\Client;
+use App\Middleware\Api\Role;
 use Cavesman\Router;
 
 Router::mount('/api/v1/client', function () {
 
     /** @see Client::list() */
-    Router::get('/', Client::class . '@list', \App\Middleware\Api\Role::class . '@check:FEED|ACCESS');
+    Router::get('/', Client::class . '@list', Role::class . '@check:FEED|ACCESS');
 
     /** @see Client::get() */
     Router::get('/(\d+)', Client::class . '@get');

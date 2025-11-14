@@ -57,8 +57,6 @@ class Employee
                     if ($entity) {
                         $entity->username = $user->username;
                         $entity->password = $user->password;
-                        $entity->createdOn = $entity->dateCreated;
-                        $entity->updatedOn = $entity->dateModified;
                     } else {
                         $entity = new \App\Entity\Employee();
                         $entity->name = $user->firstname;
@@ -85,7 +83,7 @@ class Employee
                     $em->flush();
                 }
 
-                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote()) as $groupName => $roles) {
+                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
                     $group = RoleGroup::from($groupName);
                     foreach ($roles as $item) {
                         $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
