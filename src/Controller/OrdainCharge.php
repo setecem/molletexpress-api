@@ -13,7 +13,7 @@ class OrdainCharge
 
             $list = \App\Entity\OrdainCharge::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\OrdainCharge $oc) => $oc->model(\App\Model\OrdainCharge::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\OrdainCharge $service) => $service->model(\App\Model\OrdainCharge::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -23,7 +23,7 @@ class OrdainCharge
     {
         try {
 
-            $item = \App\Entity\OrdainCharge::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Service::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             return new Http\JsonResponse($item->model(\App\Model\OrdainCharge::class)->json());
         } catch (Exception $e) {

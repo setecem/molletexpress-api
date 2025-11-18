@@ -5,10 +5,10 @@ use Cavesman\Router;
 
 Router::mount('/api/v1/ordain-charge', function () {
 
-    /** @see Service::list() */
+    /** @see OrdainCharge::list() */
     Router::get('/', OrdainCharge::class . '@list');
 
-    /** @see Service::get() */
+    /** @see OrdainCharge::get() */
     Router::get('/(\d+)', OrdainCharge::class . '@get');
 
 });
