@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Model\DeliveryNoteDataTable;
+use App\Model\DataTable;
 use App\Model\DeliveryNoteFeed;
 use App\Model\DeliveryNoteFeedAlert;
-use App\Model\DeliveryNoteFeedDataTable;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Directory;
 use Cavesman\Exception\ModuleException;
@@ -139,7 +137,7 @@ class DeliveryNote
             /** @var \App\Entity\DeliveryNote[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new DeliveryNoteDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\DeliveryNote $model */
@@ -224,7 +222,7 @@ class DeliveryNote
             /** @var \App\Entity\DeliveryNote[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new DeliveryNoteDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\DeliveryNote $model */
@@ -281,7 +279,7 @@ class DeliveryNote
             /** @var \App\Entity\DeliveryNoteFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new DeliveryNoteFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(DeliveryNoteFeed::class)->json();
@@ -338,7 +336,7 @@ class DeliveryNote
             /** @var \App\Entity\DeliveryNoteFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new DeliveryNoteFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(DeliveryNoteFeed::class)->json();

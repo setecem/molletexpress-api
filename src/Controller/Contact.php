@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Model\ContactDataTable;
 use App\Model\ContactFeed;
 use App\Model\ContactFeedAlert;
-use App\Model\ContactFeedDataTable;
+use App\Model\DataTable;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Directory;
 use Cavesman\Exception\ModuleException;
@@ -139,7 +137,7 @@ class Contact
             /** @var \App\Entity\Contact[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new ContactDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Contact $model */
@@ -224,7 +222,7 @@ class Contact
             /** @var \App\Entity\Contact[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new ContactDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Contact $model */
@@ -281,7 +279,7 @@ class Contact
             /** @var \App\Entity\ContactFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new ContactFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(ContactFeed::class)->json();
@@ -338,7 +336,7 @@ class Contact
             /** @var \App\Entity\ContactFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new ContactFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(ContactFeed::class)->json();

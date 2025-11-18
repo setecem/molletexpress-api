@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Model\InvoiceDataTable;
+use App\Model\DataTable;
 use App\Model\InvoiceFeed;
 use App\Model\InvoiceFeedAlert;
-use App\Model\InvoiceFeedDataTable;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Directory;
 use Cavesman\Exception\ModuleException;
@@ -139,7 +137,7 @@ class Invoice
             /** @var \App\Entity\Invoice[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new InvoiceDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Invoice $model */
@@ -224,7 +222,7 @@ class Invoice
             /** @var \App\Entity\Invoice[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new InvoiceDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Invoice $model */
@@ -281,7 +279,7 @@ class Invoice
             /** @var \App\Entity\InvoiceFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new InvoiceFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(InvoiceFeed::class)->json();
@@ -338,7 +336,7 @@ class Invoice
             /** @var \App\Entity\InvoiceFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new InvoiceFeedDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 $datatable->data[] = $item->model(InvoiceFeed::class)->json();

@@ -6,7 +6,7 @@ use App\Entity\EmployeeRole;
 use App\Entity\User;
 use App\Enum\RoleGroup;
 use App\Model\EmployeeBase;
-use App\Model\EmployeeDataTable;
+use App\Model\DataTable;
 use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Console\Type;
@@ -156,7 +156,7 @@ class Employee
             /** @var \App\Entity\Employee[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new EmployeeDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Employee $model */
@@ -212,7 +212,7 @@ class Employee
             /** @var \App\Entity\Employee[] $list */
             $list = $qb->getQuery()->getResult();
 
-            $datatable = new EmployeeDataTable();
+            $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
                 /** @var \App\Model\Employee $model */
