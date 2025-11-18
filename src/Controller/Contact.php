@@ -370,7 +370,7 @@ class Contact
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Nuevo contacto en molletexpress', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Nuevo contacto en CRM', ['html' => $body, 'text' => $text]);
         }
 
     }
@@ -420,7 +420,7 @@ class Contact
             $text = Twig::renderFromString($body);
             $mail = Mail::getInstance();
             $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Contacto eliminado en molletexpress', ['html' => $body, 'text' => $text]);
+            Mail::send($employee->email, 'Contacto eliminado en CRM', ['html' => $body, 'text' => $text]);
         }
 
     }
@@ -651,6 +651,14 @@ class Contact
                 $contact->contact->contacts = [];
             }
 
+            foreach ($item->contacts as $contact) {
+                if (!$entity->contacts->contains($contact)) {
+                    // TODO No se borra?¿
+                    $contact->delete();
+                    $em->persist($contact);
+                }
+            }
+
             $entity->employee->roles = [];
             if ($entity->employee->comercial) {
                 $entity->employee->comercial->roles = [];
@@ -660,6 +668,13 @@ class Contact
             $em->flush();
             try {
                 self::notifyEdited($entity);
+            } catch (Exception $e) {
+
+            }
+
+
+            try {
+                self::notifyCreated($entity);
             } catch (Exception $e) {
 
             }
