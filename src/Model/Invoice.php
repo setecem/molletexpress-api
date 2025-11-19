@@ -15,7 +15,7 @@ class Invoice extends Model
     public ?Client $client = null;
     public ?string $comment = null;
     public int $subtotal = 0;
-    public ?DateTime $date = null;
+    public DateTime|string|null $date = null;
 
 
     // Clonados de contact
