@@ -9,7 +9,7 @@ use Doctrine\ORM\Exception\ORMException;
 
 try {
     $em = Db::getManager();
-    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
+    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
         $roleGroup = RoleGroup::from($groupName);
         foreach ($roles as $role) {
             $item = $em->getRepository(Role::class)->findOneBy(['role' => $role, 'group' => $roleGroup]);

@@ -42,6 +42,22 @@ enum RoleGroup: string
         ];
     }
 
+    public static function rolesClient(): array
+    {
+        return [
+            self::CLIENT->value => [
+                Role::ACCESS,
+                Role::EDIT,
+                Role::DELETE,
+                Role::FILES,
+                Role::CREATE,
+                Role::PRIVATE,
+                Role::VIEW_ALL,
+                Role::VIEW
+            ]
+        ];
+    }
+
     public static function rolesContact(): array
     {
         return [

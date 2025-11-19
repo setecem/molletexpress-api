@@ -8,6 +8,12 @@ Router::mount('/api/v1/client', function () {
     /** @see Client::list() */
     Router::get('/', Client::class . '@list');
 
+    /** @see Client::filterAll() */
+    Router::get('/all/filter', Client::class . '@filterAll');
+
+    /** @see Client::filter() */
+    Router::get('/(\d+)/filter', Client::class . '@filter');
+
     /** @see Client::get() */
     Router::get('/(\d+)', Client::class . '@get');
 
