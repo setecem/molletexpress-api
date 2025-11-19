@@ -17,4 +17,13 @@ Router::mount('/api/v1/ordain-charge', function () {
     /** @see OrdainCharge::filter() */
     Router::get('/(\d+)/filter', OrdainCharge::class . '@filter');
 
+    /** @see OrdainCharge::add() */
+    Router::post('/', OrdainCharge::class . '@add');
+
+    /** @see OrdainCharge::update() */
+    Router::put('/(\d+)', OrdainCharge::class . '@update');
+
+    /** @see OrdainCharge::delete() */
+    Router::delete('/(\d+)', OrdainCharge::class . '@delete');
+
 });

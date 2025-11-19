@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'ordain_charge')]
@@ -16,7 +14,7 @@ class OrdainCharge extends Entity
     #[ORM\Column(name: 'reference', type: 'string', nullable: true)]
     public ?string $ref = null;
 
-    #[ORM\JoinColumn(name:'client_id', referencedColumnName:'id')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'])]
     public ?Client $client = null;
 

@@ -14,7 +14,7 @@ class OrdainCharge extends Model
     public ?string $ref = null;
     public ?Client $client = null;
     public int $amount = 0;
-    public ?DateTime $date = null;
+    public DateTime|string|null $date = null;
 
 
     public function typeOfCollection(string $property): ?string
