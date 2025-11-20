@@ -105,18 +105,6 @@ class Invoice
                 }
             }
 
-            if ($filter && $filter->type) {
-                $qb
-                    ->andWhere('i.type = :type')
-                    ->setParameter('type', $filter->type);
-            }
-
-            if ($filter && $filter->origen) {
-                $qb
-                    ->andWhere('i.origen = :origen')
-                    ->setParameter('origen', $filter->origen);
-            }
-
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
                     $index = $order->column;
@@ -188,18 +176,6 @@ class Invoice
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }
-            }
-
-            if ($filter && $filter->type) {
-                $qb
-                    ->andWhere('i.type = :type')
-                    ->setParameter('type', $filter->type);
-            }
-
-            if ($filter && $filter->origen) {
-                $qb
-                    ->andWhere('i.origen = :origen')
-                    ->setParameter('origen', $filter->origen);
             }
 
             if ($filter->order && $filter->columns) {
