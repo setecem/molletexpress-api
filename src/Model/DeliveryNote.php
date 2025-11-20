@@ -12,7 +12,7 @@ class DeliveryNote extends Model
     const string|Base ENTITY = \App\Entity\DeliveryNote::class;
 
     public ?string $ref = null;
-    public ?Client $client = null;
+    public ?Customer $customer = null;
     public ?string $comment = null;
     public int $subtotal = 0;
     public ?DateTime $date = null;
@@ -52,7 +52,7 @@ class DeliveryNote extends Model
     {
         return match($property) {
             'employee' => Employee::class,
-            'client' => Client::class,
+            'customer' => Customer::class,
             'contacts' => DeliveryNoteContact::class,
             'files' => File::class,
             default => null

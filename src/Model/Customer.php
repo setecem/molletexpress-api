@@ -5,10 +5,10 @@ namespace App\Model;
 use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Model\Model;
 
-class Client extends Model
+class Customer extends Model
 {
 
-    const string|Base ENTITY = \App\Entity\Client::class;
+    const string|Base ENTITY = \App\Entity\Customer::class;
     public ?string $name = null;
     public ?string $nameComercial = null;
     public ?string $address = null;

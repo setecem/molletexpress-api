@@ -22,9 +22,9 @@ class User extends Entity
     #[ORM\OneToOne(targetEntity: Employee::class, mappedBy: 'user')]
     public ?Employee $employee = null;
 
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Client::class)]
-    public ?Client $client = null;
+    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Customer::class)]
+    public ?Customer $customer = null;
 
     #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
     public ?string $nif = null;

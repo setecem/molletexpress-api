@@ -10,7 +10,7 @@ class User extends Model
 {
     const string|Base ENTITY = \App\Entity\User::class;
     public ?Employee $employee = null;
-    public ?Client $client = null;
+    public ?Customer $customer = null;
     public ?string $nif = null;
     public ?string $firstname = null;
     public ?string $lastname = null;
@@ -33,7 +33,7 @@ class User extends Model
     {
         return match($property) {
             'employee' => Employee::class,
-            'client' => Client::class,
+            'customer' => Customer::class,
             'type' => UserType::class,
             default => null,
         };

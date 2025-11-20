@@ -71,8 +71,8 @@
         "message": "Create",
         "replace": []
     },
-    "role.group.CLIENT": {
-        "message": "Client",
+    "role.group.CUSTOMER": {
+        "message": "Customer",
         "replace": []
     },
     "role.group.CONTACT": {

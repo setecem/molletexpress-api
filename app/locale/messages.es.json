@@ -17,7 +17,7 @@
     "role.role.DELETE": "Eliminar",
     "role.role.FILES": "Archivos",
     "role.role.CREATE": "Añadir",
-    "role.group.CLIENT": "Cliente",
+    "role.group.CUSTOMER": "Cliente",
     "role.group.CONTACT": "Contactos",
     "role.role.FEED": "Seguimiento",
     "role.role.PRIVATE": "Privado",

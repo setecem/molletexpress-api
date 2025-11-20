@@ -10,14 +10,14 @@ use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 
-class Client
+class Customer
 {
     public static function filterAll(): Http\JsonResponse
     {
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Client::class)
+            $qb = $em->getRepository(\App\Entity\Customer::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -48,14 +48,14 @@ class Client
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Client[] $list */
+            /** @var \App\Entity\Customer[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Client $model */
-                $model = $item->model(\App\Model\Client::class);
+                /** @var \App\Model\Customer $model */
+                $model = $item->model(\App\Model\Customer::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -71,7 +71,7 @@ class Client
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Client::class)
+            $qb = $em->getRepository(\App\Entity\Customer::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -102,14 +102,14 @@ class Client
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Client[] $list */
+            /** @var \App\Entity\Customer[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Client $model */
-                $model = $item->model(Client::class);
+                /** @var \App\Model\Customer $model */
+                $model = $item->model(\App\Model\Customer::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -126,9 +126,9 @@ class Client
     {
         try {
 
-            $list = \App\Entity\Client::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Customer::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $client) => $client->model(\App\Model\Client::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Customer $customer) => $customer->model(\App\Model\Customer::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -138,9 +138,9 @@ class Client
     {
         try {
 
-            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\Client::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\Customer::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -152,7 +152,7 @@ class Client
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->active = !$item->active;
 
@@ -174,7 +174,7 @@ class Client
     {
         try {
 
-            $model = \App\Model\Client::fromRequest();
+            $model = \App\Model\Customer::fromRequest();
 
             $entity = $model->entity();
 
@@ -184,7 +184,7 @@ class Client
 
             return new Http\JsonResponse([
                 'message' => "Cliente añadido correctamente",
-                'item' => $entity->model(\App\Model\Client::class)->json()
+                'item' => $entity->model(\App\Model\Customer::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -195,12 +195,12 @@ class Client
     {
         try {
 
-            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Cliente no encontrado"], 404);
 
-            $model = \App\Model\Client::fromRequest();
+            $model = \App\Model\Customer::fromRequest();
 
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
@@ -213,7 +213,7 @@ class Client
 
             return new Http\JsonResponse([
                 'message' => "Cliente actualizado correctamente",
-                'item' => $entity->model(\App\Model\Client::class)->json()
+                'item' => $entity->model(\App\Model\Customer::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -227,7 +227,7 @@ class Client
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 

@@ -12,7 +12,7 @@ class Invoice extends Model
     const string|Base ENTITY = \App\Entity\Invoice::class;
 
     public ?string $ref = null;
-    public ?Client $client = null;
+    public ?Customer $customer = null;
     public ?string $comment = null;
     public int $subtotal = 0;
     public DateTime|string|null $date = null;
@@ -52,7 +52,7 @@ class Invoice extends Model
     {
         return match($property) {
             'employee' => Employee::class,
-            'client' => Client::class,
+            'customer' => Customer::class,
             'contacts' => DeliveryNoteContact::class,
             'files' => File::class,
             default => null

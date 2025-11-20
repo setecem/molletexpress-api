@@ -16,9 +16,9 @@ class Invoice extends Entity
     #[ORM\Column(name: 'reference', type: 'string', nullable: true)]
     public ?string $ref = null;
 
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'])]
-    public ?Client $client = null;
+    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['persist'])]
+    public ?Customer $customer = null;
 
     #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
     public ?string $comment = null;

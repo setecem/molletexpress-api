@@ -9,7 +9,7 @@ enum RoleGroup: string
     case WAREHOUSE = 'WAREHOUSE';
     case SCHEDULE = 'SCHEDULE';
     case EMPLOYEE = 'EMPLOYEE';
-    case CLIENT = 'CLIENT';
+    case CUSTOMER = 'CUSTOMER';
     case CONTACT = 'CONTACT';
     case INVOICE = 'INVOICE';
     case DELIVERY_NOTE = 'DELIVERY_NOTE';
@@ -42,10 +42,10 @@ enum RoleGroup: string
         ];
     }
 
-    public static function rolesClient(): array
+    public static function rolesCustomer(): array
     {
         return [
-            self::CLIENT->value => [
+            self::CUSTOMER->value => [
                 Role::ACCESS,
                 Role::EDIT,
                 Role::DELETE,

@@ -6,9 +6,9 @@ namespace App\Entity;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'client')]
+#[ORM\Table(name: 'customer')]
 #[ORM\Entity]
-class Client extends Entity
+class Customer extends Entity
 {
 
     #[ORM\Column(name: 'name', type: 'string', nullable: true)]
