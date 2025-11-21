@@ -15,8 +15,8 @@ class OrdainCharge extends Entity
     public ?string $ref = null;
 
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['persist'])]
-    public ?Customer $customer = null;
+    #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'])]
+    public ?Client $customer = null;
 
     #[ORM\Column(name: 'amount', type: 'integer', nullable: false, options: ['default' => '0'])]
     public int $amount = 0;

@@ -1,5 +1,8 @@
 <?php
 
+use App\Enum\Language;
+use Cavesman\Translate;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 header('Access-Control-Allow-Origin: *');
@@ -11,6 +14,6 @@ if($method == "OPTIONS") {
     die();
 }
 
-
+Translate::setClass(Language::class);
 
 Cavesman\Launcher::run();

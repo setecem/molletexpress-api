@@ -17,8 +17,8 @@ class DeliveryNote extends Entity
     public ?string $ref = null;
 
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['persist'])]
-    public ?Customer $customer = null;
+    #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'])]
+    public ?Client $customer = null;
 
     #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
     public ?string $comment = null;

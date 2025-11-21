@@ -2,32 +2,15 @@
 
 namespace App\Entity;
 
-use Cavesman\Db\Doctrine\Entity\Entity;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'invoice')]
 #[ORM\Entity]
-class Invoice extends Entity
+class Invoice extends Document
 {
 
-    #[ORM\Column(name: 'reference', type: 'string', nullable: true)]
-    public ?string $ref = null;
-
-    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['persist'])]
-    public ?Customer $customer = null;
-
-    #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
-    public ?string $comment = null;
-
-    #[ORM\Column(name: 'subtotal', type: 'integer', nullable: false, options: ['default' => '0'])]
-    public int $subtotal = 0;
-
-    #[ORM\Column(name: 'date', type: 'datetime', nullable: true)]
-    public ?DateTime $date = null;
 
     // Clonados de contact
 

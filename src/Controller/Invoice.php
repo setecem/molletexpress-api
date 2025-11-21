@@ -446,7 +446,7 @@ class Invoice
 
             $model = \App\Model\Invoice::fromRequest();
 
-            if (!$model->customer || $model->ref)
+            if (!$model->customer || !$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if (is_string($model->employee->logo))

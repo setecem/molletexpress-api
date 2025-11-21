@@ -8,7 +8,7 @@ use Cavesman\Db\Doctrine\Model\Model;
 class Customer extends Model
 {
 
-    const string|Base ENTITY = \App\Entity\Customer::class;
+    const string|Base ENTITY = \App\Entity\Client::class;
     public ?string $name = null;
     public ?string $nameComercial = null;
     public ?string $address = null;

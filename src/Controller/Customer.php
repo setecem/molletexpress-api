@@ -17,7 +17,7 @@ class Customer
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Customer::class)
+            $qb = $em->getRepository(\App\Entity\Client::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -48,7 +48,7 @@ class Customer
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Customer[] $list */
+            /** @var \App\Entity\Client[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
@@ -71,7 +71,7 @@ class Customer
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Customer::class)
+            $qb = $em->getRepository(\App\Entity\Client::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -102,7 +102,7 @@ class Customer
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Customer[] $list */
+            /** @var \App\Entity\Client[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
@@ -126,9 +126,9 @@ class Customer
     {
         try {
 
-            $list = \App\Entity\Customer::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Client::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\Customer $customer) => $customer->model(\App\Model\Customer::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $customer) => $customer->model(\App\Model\Customer::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -138,7 +138,7 @@ class Customer
     {
         try {
 
-            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             return new Http\JsonResponse($item->model(\App\Model\Customer::class)->json());
         } catch (Exception $e) {
@@ -152,7 +152,7 @@ class Customer
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->active = !$item->active;
 
@@ -195,7 +195,7 @@ class Customer
     {
         try {
 
-            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Cliente no encontrado"], 404);
@@ -227,7 +227,7 @@ class Customer
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Customer::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 

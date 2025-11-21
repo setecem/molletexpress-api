@@ -23,8 +23,8 @@ class User extends Entity
     public ?Employee $employee = null;
 
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Customer::class)]
-    public ?Customer $customer = null;
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    public ?Client $customer = null;
 
     #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
     public ?string $nif = null;
