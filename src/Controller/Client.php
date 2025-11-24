@@ -10,7 +10,7 @@ use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 
-class Customer
+class Client
 {
     public static function filterAll(): Http\JsonResponse
     {
@@ -128,7 +128,7 @@ class Customer
 
             $list = \App\Entity\Client::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $customer) => $customer->model(\App\Model\Client::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $client) => $client->model(\App\Model\Client::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }

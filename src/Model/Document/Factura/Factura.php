@@ -16,7 +16,7 @@ class Factura extends Model
     const string|Base ENTITY = \App\Entity\Document\Factura\Factura::class;
 
     public ?string $ref = null;
-    public ?Client $customer = null;
+    public ?Client $client = null;
     public ?string $comment = null;
     public int $subtotal = 0;
     public DateTime|string|null $date = null;
@@ -56,7 +56,7 @@ class Factura extends Model
     {
         return match($property) {
             'employee' => Employee::class,
-            'customer' => Client::class,
+            'client' => Client::class,
             'contacts' => AlbaranContact::class,
             'files' => File::class,
             default => null

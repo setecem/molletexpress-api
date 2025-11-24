@@ -446,7 +446,7 @@ class Albaran
 
             $model = \App\Model\Document\Albaran\Albaran::fromRequest();
 
-            if (!$model->customer || !$model->ref)
+            if (!$model->client || !$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if (is_string($model->employee->logo))
@@ -594,7 +594,7 @@ class Albaran
 
             $model = \App\Model\Document\Albaran\Albaran::fromRequest();
 
-            if (!$model->customer || !$model->ref)
+            if (!$model->client || !$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if ($id != $model->id)
@@ -718,12 +718,12 @@ class Albaran
                 $model->feed->albaran->employee->fondo = \App\Enum\Images::from($model->feed->albaran->employee->fondo);
 
             if ($model->feed->albaran->employee->comercial) {
-                if (is_string($model->feed->deliveryNote->employee->comercial->logo))
-                    $model->feed->deliveryNote->employee->comercial->logo = \App\Enum\Images::from($model->feed->deliveryNote->employee->comercial->logo);
-                if (is_string($model->feed->deliveryNote->employee->comercial->icono))
-                    $model->feed->deliveryNote->employee->comercial->icono = \App\Enum\Images::from($model->feed->deliveryNote->employee->comercial->icono);
-                if (is_string($model->feed->deliveryNote->employee->comercial->fondo))
-                    $model->feed->deliveryNote->employee->comercial->fondo = \App\Enum\Images::from($model->feed->deliveryNote->employee->comercial->fondo);
+                if (is_string($model->feed->albaran->employee->comercial->logo))
+                    $model->feed->albaran->employee->comercial->logo = \App\Enum\Images::from($model->feed->albaran->employee->comercial->logo);
+                if (is_string($model->feed->albaran->employee->comercial->icono))
+                    $model->feed->albaran->employee->comercial->icono = \App\Enum\Images::from($model->feed->albaran->employee->comercial->icono);
+                if (is_string($model->feed->albaran->employee->comercial->fondo))
+                    $model->feed->albaran->employee->comercial->fondo = \App\Enum\Images::from($model->feed->albaran->employee->comercial->fondo);
             }
 
             $entity = $model->entity();

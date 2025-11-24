@@ -12,7 +12,7 @@ class OrdainCharge extends Model
     const string|Base ENTITY = \App\Entity\OrdainCharge::class;
 
     public ?string $ref = null;
-    public ?Client $customer = null;
+    public ?Client $client = null;
     public int $amount = 0;
     public DateTime|string|null $date = null;
 
@@ -20,7 +20,7 @@ class OrdainCharge extends Model
     public function typeOfCollection(string $property): ?string
     {
         return match($property) {
-            'customer' => Client::class,
+            'client' => Client::class,
             default => null
         };
     }

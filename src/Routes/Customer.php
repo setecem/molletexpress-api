@@ -1,31 +1,31 @@
 <?php
 
-use App\Controller\Customer;
+use App\Controller\Client;
 use Cavesman\Router;
 
 Router::mount('/api/v1/customer', function () {
 
-    /** @see Customer::list() */
-    Router::get('/', Customer::class . '@list');
+    /** @see Client::list() */
+    Router::get('/', Client::class . '@list');
 
-    /** @see Customer::filterAll() */
-    Router::get('/all/filter', Customer::class . '@filterAll');
+    /** @see Client::filterAll() */
+    Router::get('/all/filter', Client::class . '@filterAll');
 
-    /** @see Customer::filter() */
-    Router::get('/(\d+)/filter', Customer::class . '@filter');
+    /** @see Client::filter() */
+    Router::get('/(\d+)/filter', Client::class . '@filter');
 
-    /** @see Customer::get() */
-    Router::get('/(\d+)', Customer::class . '@get');
+    /** @see Client::get() */
+    Router::get('/(\d+)', Client::class . '@get');
 
-    /** @see Customer::active() */
-    Router::get('/(\d+)/active', Customer::class . '@active');
+    /** @see Client::active() */
+    Router::get('/(\d+)/active', Client::class . '@active');
 
-    /** @see Customer::add() */
-    Router::post('/', Customer::class . '@add');
+    /** @see Client::add() */
+    Router::post('/', Client::class . '@add');
 
-    /** @see Customer::update() */
-    Router::put('/(\d+)', Customer::class . '@update');
+    /** @see Client::update() */
+    Router::put('/(\d+)', Client::class . '@update');
 
-    /** @see Customer::delete() */
-    Router::delete('/(\d+)', Customer::class . '@delete');
+    /** @see Client::delete() */
+    Router::delete('/(\d+)', Client::class . '@delete');
 });

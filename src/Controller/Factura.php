@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\DataTable;
+use App\Model\Document\Factura\FacturaFeed;
 use App\Model\Document\Factura\FacturaFeedAlert;
 use Cavesman\Config;
 use Cavesman\Db;
@@ -127,8 +128,8 @@ class Factura
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Invoice $model */
-                $model = $item->model(\App\Model\Invoice::class);
+                /** @var \App\Model\Document\Factura\Factura $model */
+                $model = $item->model(\App\Model\Document\Factura\Factura::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -200,8 +201,8 @@ class Factura
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Invoice $model */
-                $model = $item->model(\App\Model\Invoice::class);
+                /** @var \App\Model\Document\Factura\Factura $model */
+                $model = $item->model(\App\Model\Document\Factura\Factura::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -220,7 +221,7 @@ class Factura
 
             $qb = $em->getRepository(\App\Entity\Document\Factura\FacturaFeed::class)
                 ->createQueryBuilder('i')
-                ->where('i.invoice = :id')
+                ->where('i.factura = :id')
                 ->andWhere('i.deletedOn IS NULL')
                 ->setParameter('id', $id);
 
@@ -257,7 +258,7 @@ class Factura
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                $datatable->data[] = $item->model(InvoiceFeed::class)->json();
+                $datatable->data[] = $item->model(FacturaFeed::class)->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
 
@@ -275,7 +276,7 @@ class Factura
 
             $qb = $em->getRepository(\App\Entity\Document\Factura\FacturaFeed::class)
                 ->createQueryBuilder('i')
-                ->where('i.invoice = :id')
+                ->where('i.factura = :id')
                 ->andWhere('i.deletedOn IS NULL')
                 ->andWhere('i.private = :private')
                 ->setParameter('id', $id)
@@ -314,7 +315,7 @@ class Factura
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                $datatable->data[] = $item->model(InvoiceFeed::class)->json();
+                $datatable->data[] = $item->model(FacturaFeed::class)->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
 
@@ -406,7 +407,7 @@ class Factura
 
             $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\Invoice::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\Document\Factura\Factura::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -418,7 +419,7 @@ class Factura
 
             $item = \App\Entity\Document\Factura\FacturaFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(InvoiceFeed::class)->json());
+            return new Http\JsonResponse($item->model(FacturaFeed::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -431,9 +432,9 @@ class Factura
             $item = \App\Entity\Document\Factura\FacturaFeedAlert::findOneBy(['feed' => $id, 'deletedOn' => null]);
 
             if ($item)
-                return new Http\JsonResponse($item->model(InvoiceFeedAlert::class)->json());
+                return new Http\JsonResponse($item->model(FacturaFeedAlert::class)->json());
 
-            return new Http\JsonResponse(new InvoiceFeedAlert());
+            return new Http\JsonResponse(new FacturaFeedAlert());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -443,9 +444,9 @@ class Factura
     {
         try {
 
-            $model = \App\Model\Invoice::fromRequest();
+            $model = \App\Model\Document\Factura\Factura::fromRequest();
 
-            if (!$model->customer || !$model->ref)
+            if (!$model->client || !$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if (is_string($model->employee->logo))
@@ -470,11 +471,11 @@ class Factura
             $em = DB::getManager();
 
             foreach ($entity->contacts as $contact) {
-                $contact->invoice = $entity;
+                $contact->factura = $entity;
                 $em->persist($contact);
 
                 // Evitamos el bucle infinito
-                $contact->invoice->contacts = [];
+                $contact->factura->contacts = [];
             }
 
             $entity->employee->roles = [];
@@ -494,7 +495,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Factura añadida correctamente",
-                'item' => $entity->model(\App\Model\Invoice::class)->json()
+                'item' => $entity->model(\App\Model\Document\Factura\Factura::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -505,22 +506,22 @@ class Factura
     {
         try {
 
-            $model = InvoiceFeed::fromRequest();
+            $model = FacturaFeed::fromRequest();
 
-            if (is_string($model->invoice->employee->logo))
-                $model->invoice->employee->logo = \App\Enum\Images::from($model->invoice->employee->logo);
-            if (is_string($model->invoice->employee->icono))
-                $model->invoice->employee->icono = \App\Enum\Images::from($model->invoice->employee->icono);
-            if (is_string($model->invoice->employee->fondo))
-                $model->invoice->employee->fondo = \App\Enum\Images::from($model->invoice->employee->fondo);
+            if (is_string($model->factura->employee->logo))
+                $model->factura->employee->logo = \App\Enum\Images::from($model->factura->employee->logo);
+            if (is_string($model->factura->employee->icono))
+                $model->factura->employee->icono = \App\Enum\Images::from($model->factura->employee->icono);
+            if (is_string($model->factura->employee->fondo))
+                $model->factura->employee->fondo = \App\Enum\Images::from($model->factura->employee->fondo);
 
-            if ($model->invoice->employee->comercial) {
-                if (is_string($model->invoice->employee->comercial->logo))
-                    $model->invoice->employee->comercial->logo = \App\Enum\Images::from($model->invoice->employee->comercial->logo);
-                if (is_string($model->invoice->employee->comercial->icono))
-                    $model->invoice->employee->comercial->icono = \App\Enum\Images::from($model->invoice->employee->comercial->icono);
-                if (is_string($model->invoice->employee->comercial->fondo))
-                    $model->invoice->employee->comercial->fondo = \App\Enum\Images::from($model->invoice->employee->comercial->fondo);
+            if ($model->factura->employee->comercial) {
+                if (is_string($model->factura->employee->comercial->logo))
+                    $model->factura->employee->comercial->logo = \App\Enum\Images::from($model->factura->employee->comercial->logo);
+                if (is_string($model->factura->employee->comercial->icono))
+                    $model->factura->employee->comercial->icono = \App\Enum\Images::from($model->factura->employee->comercial->icono);
+                if (is_string($model->factura->employee->comercial->fondo))
+                    $model->factura->employee->comercial->fondo = \App\Enum\Images::from($model->factura->employee->comercial->fondo);
             }
 
             $entity = $model->entity();
@@ -531,7 +532,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Feed añadido correctamente",
-                'item' => $entity->model(InvoiceFeed::class)->json()
+                'item' => $entity->model(FacturaFeed::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -542,25 +543,25 @@ class Factura
     {
         try {
 
-            $model = InvoiceFeedAlert::fromRequest();
+            $model = FacturaFeedAlert::fromRequest();
 
             if (!$model->date)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
-            if (is_string($model->feed->invoice->employee->logo))
-                $model->feed->invoice->employee->logo = \App\Enum\Images::from($model->feed->invoice->employee->logo);
-            if (is_string($model->feed->invoice->employee->icono))
-                $model->feed->invoice->employee->icono = \App\Enum\Images::from($model->feed->invoice->employee->icono);
-            if (is_string($model->feed->invoice->employee->fondo))
-                $model->feed->invoice->employee->fondo = \App\Enum\Images::from($model->feed->invoice->employee->fondo);
+            if (is_string($model->feed->factura->employee->logo))
+                $model->feed->factura->employee->logo = \App\Enum\Images::from($model->feed->factura->employee->logo);
+            if (is_string($model->feed->factura->employee->icono))
+                $model->feed->factura->employee->icono = \App\Enum\Images::from($model->feed->factura->employee->icono);
+            if (is_string($model->feed->factura->employee->fondo))
+                $model->feed->factura->employee->fondo = \App\Enum\Images::from($model->feed->factura->employee->fondo);
 
-            if ($model->feed->invoice->employee->comercial) {
-                if (is_string($model->feed->invoice->employee->comercial->logo))
-                    $model->feed->invoice->employee->comercial->logo = \App\Enum\Images::from($model->feed->invoice->employee->comercial->logo);
-                if (is_string($model->feed->invoice->employee->comercial->icono))
-                    $model->feed->invoice->employee->comercial->icono = \App\Enum\Images::from($model->feed->invoice->employee->comercial->icono);
-                if (is_string($model->feed->invoice->employee->comercial->fondo))
-                    $model->feed->invoice->employee->comercial->fondo = \App\Enum\Images::from($model->feed->invoice->employee->comercial->fondo);
+            if ($model->feed->factura->employee->comercial) {
+                if (is_string($model->feed->factura->employee->comercial->logo))
+                    $model->feed->factura->employee->comercial->logo = \App\Enum\Images::from($model->feed->factura->employee->comercial->logo);
+                if (is_string($model->feed->factura->employee->comercial->icono))
+                    $model->feed->factura->employee->comercial->icono = \App\Enum\Images::from($model->feed->factura->employee->comercial->icono);
+                if (is_string($model->feed->factura->employee->comercial->fondo))
+                    $model->feed->factura->employee->comercial->fondo = \App\Enum\Images::from($model->feed->factura->employee->comercial->fondo);
             }
 
             $entity = $model->entity();
@@ -571,7 +572,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Alert añadido correctamente",
-                'item' => $entity->model(InvoiceFeedAlert::class)->json()
+                'item' => $entity->model(FacturaFeedAlert::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -591,9 +592,9 @@ class Factura
             if (!$item)
                 return new Http\JsonResponse(['message' => "Factura no encontrada"], 404);
 
-            $model = \App\Model\Invoice::fromRequest();
+            $model = \App\Model\Document\Factura\Factura::fromRequest();
 
-            if (!$model->customer || !$model->ref)
+            if (!$model->client || !$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if ($id != $model->id)
@@ -619,11 +620,11 @@ class Factura
             $entity = $model->entity();
             $em = DB::getManager();
             foreach ($entity->contacts as $contact) {
-                $contact->invoice = $entity;
+                $contact->factura = $entity;
                 $em->persist($contact);
 
                 // Evitamos el bucle infinito
-                $contact->invoice->contacts = [];
+                $contact->factura->contacts = [];
             }
 
             $entity->employee->roles = [];
@@ -641,7 +642,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Factura actualizada correctamente",
-                'item' => $entity->model(\App\Model\Invoice::class)->json()
+                'item' => $entity->model(\App\Model\Document\Factura\Factura::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -657,25 +658,25 @@ class Factura
             if (!$item)
                 return new Http\JsonResponse(['message' => "Feed no encontrado"], 404);
 
-            $model = InvoiceFeed::fromRequest();
+            $model = FacturaFeed::fromRequest();
 
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
 
-            if (is_string($model->invoice->employee->logo))
-                $model->invoice->employee->logo = \App\Enum\Images::from($model->invoice->employee->logo);
-            if (is_string($model->invoice->employee->icono))
-                $model->invoice->employee->icono = \App\Enum\Images::from($model->invoice->employee->icono);
-            if (is_string($model->invoice->employee->fondo))
-                $model->invoice->employee->fondo = \App\Enum\Images::from($model->invoice->employee->fondo);
+            if (is_string($model->factura->employee->logo))
+                $model->factura->employee->logo = \App\Enum\Images::from($model->factura->employee->logo);
+            if (is_string($model->factura->employee->icono))
+                $model->factura->employee->icono = \App\Enum\Images::from($model->factura->employee->icono);
+            if (is_string($model->factura->employee->fondo))
+                $model->factura->employee->fondo = \App\Enum\Images::from($model->factura->employee->fondo);
 
-            if ($model->invoice->employee->comercial) {
-                if (is_string($model->invoice->employee->comercial->logo))
-                    $model->invoice->employee->comercial->logo = \App\Enum\Images::from($model->invoice->employee->comercial->logo);
-                if (is_string($model->invoice->employee->comercial->icono))
-                    $model->invoice->employee->comercial->icono = \App\Enum\Images::from($model->invoice->employee->comercial->icono);
-                if (is_string($model->invoice->employee->comercial->fondo))
-                    $model->invoice->employee->comercial->fondo = \App\Enum\Images::from($model->invoice->employee->comercial->fondo);
+            if ($model->factura->employee->comercial) {
+                if (is_string($model->factura->employee->comercial->logo))
+                    $model->factura->employee->comercial->logo = \App\Enum\Images::from($model->factura->employee->comercial->logo);
+                if (is_string($model->factura->employee->comercial->icono))
+                    $model->factura->employee->comercial->icono = \App\Enum\Images::from($model->factura->employee->comercial->icono);
+                if (is_string($model->factura->employee->comercial->fondo))
+                    $model->factura->employee->comercial->fondo = \App\Enum\Images::from($model->factura->employee->comercial->fondo);
             }
 
             $entity = $model->entity();
@@ -686,7 +687,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Feed actualizado correctamente",
-                'item' => $entity->model(InvoiceFeed::class)->json()
+                'item' => $entity->model(FacturaFeed::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -702,27 +703,27 @@ class Factura
             if (!$item)
                 return new Http\JsonResponse(['message' => "Alert no encontrado"], 404);
 
-            $model = InvoiceFeedAlert::fromRequest();
+            $model = FacturaFeedAlert::fromRequest();
 
             if (!$model->date)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
 
-            if (is_string($model->feed->invoice->employee->logo))
-                $model->feed->invoice->employee->logo = \App\Enum\Images::from($model->feed->invoice->employee->logo);
-            if (is_string($model->feed->invoice->employee->icono))
-                $model->feed->invoice->employee->icono = \App\Enum\Images::from($model->feed->invoice->employee->icono);
-            if (is_string($model->feed->invoice->employee->fondo))
-                $model->feed->invoice->employee->fondo = \App\Enum\Images::from($model->feed->invoice->employee->fondo);
+            if (is_string($model->feed->factura->employee->logo))
+                $model->feed->factura->employee->logo = \App\Enum\Images::from($model->feed->factura->employee->logo);
+            if (is_string($model->feed->factura->employee->icono))
+                $model->feed->factura->employee->icono = \App\Enum\Images::from($model->feed->factura->employee->icono);
+            if (is_string($model->feed->factura->employee->fondo))
+                $model->feed->factura->employee->fondo = \App\Enum\Images::from($model->feed->factura->employee->fondo);
 
-            if ($model->feed->invoice->employee->comercial) {
-                if (is_string($model->feed->invoice->employee->comercial->logo))
-                    $model->feed->invoice->employee->comercial->logo = \App\Enum\Images::from($model->feed->invoice->employee->comercial->logo);
-                if (is_string($model->feed->invoice->employee->comercial->icono))
-                    $model->feed->invoice->employee->comercial->icono = \App\Enum\Images::from($model->feed->invoice->employee->comercial->icono);
-                if (is_string($model->feed->invoice->employee->comercial->fondo))
-                    $model->feed->invoice->employee->comercial->fondo = \App\Enum\Images::from($model->feed->invoice->employee->comercial->fondo);
+            if ($model->feed->factura->employee->comercial) {
+                if (is_string($model->feed->factura->employee->comercial->logo))
+                    $model->feed->factura->employee->comercial->logo = \App\Enum\Images::from($model->feed->factura->employee->comercial->logo);
+                if (is_string($model->feed->factura->employee->comercial->icono))
+                    $model->feed->factura->employee->comercial->icono = \App\Enum\Images::from($model->feed->factura->employee->comercial->icono);
+                if (is_string($model->feed->factura->employee->comercial->fondo))
+                    $model->feed->factura->employee->comercial->fondo = \App\Enum\Images::from($model->feed->factura->employee->comercial->fondo);
             }
 
             $entity = $model->entity();
@@ -732,7 +733,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Alert actualizado correctamente",
-                'item' => $entity->model(InvoiceFeedAlert::class)->json()
+                'item' => $entity->model(FacturaFeedAlert::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -760,7 +761,7 @@ class Factura
 
             return new Http\JsonResponse([
                 'message' => "Factura eliminada correctamente",
-                'item' => $item->model(\App\Model\Invoice::class)->json()
+                'item' => $item->model(\App\Model\Document\Factura\Factura::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
