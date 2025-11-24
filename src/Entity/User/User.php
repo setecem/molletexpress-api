@@ -2,8 +2,6 @@
 
 namespace App\Entity\User;
 
-use App\Entity\Client;
-use App\Entity\Employee\Employee;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -90,14 +88,6 @@ class User extends Entity
     public array|Collection $actions;
 
     public array|Collection $children;
-
-    /** TODO Estaban en crm, ¿Mantener aquí? */
-    #[ORM\OneToOne(targetEntity: Employee::class, mappedBy: 'user')]
-    public ?Employee $employee = null;
-
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Client::class)]
-    public ?Client $client = null;
 
     public function __construct()
     {

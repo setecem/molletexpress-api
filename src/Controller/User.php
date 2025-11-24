@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee\EmployeeRole;
 use App\Entity\User\UserType;
+use App\Enum\RoleGroup;
+use Cavesman\Console;
 use Cavesman\Db;
+use Cavesman\Enum\Console\Type;
 use Cavesman\Http;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
@@ -11,6 +15,84 @@ use Exception;
 
 class User
 {
+
+    public static function updatePassword(): void
+    {
+        try {
+            $username = Console::requestValue('Escribe el nombre de usuario:');
+
+            $item = \App\Entity\User\User::findOneBy(['username' => $username]);
+
+            if (!$item)
+                Console::output('ERROR: Username not found');
+            else {
+                $password = Console::requestValue('Escribe una nueva constraseña:');
+
+                $item->password = password_hash($password, PASSWORD_DEFAULT);
+
+                $em = Db::getManager();
+                $em->persist($item);
+                $em->flush();
+            }
+
+        } catch (Exception|ORMException $e) {
+            Console::output($e->getMessage(), Type::WARNING);
+            Console::output($e->getTraceAsString(), Type::ERROR);
+            exit();
+        }
+    }
+
+    public static function migrateUsers(): void
+    {
+        try {
+            $em = Db::getManager();
+
+            $users = \App\Entity\User\User::findBy([]);
+
+            if (sizeof($users)) {
+                foreach ($users as $user) {
+                    $entity = \App\Entity\User\User::findOneBy(['user' => $user->id]);
+                    if (!$entity)
+                        $entity = new \App\Entity\User\User();
+                    $entity->createdOn = $user->dateCreated;
+                    $entity->updatedOn = $user->dateModified;
+                    $em->persist($entity);
+                }
+                $em->flush();
+
+                $employee = \App\Entity\User\User::findOneBy(['name' => 'admin']);
+
+                if (!$employee) {
+                    $employee = new \App\Entity\User\User();
+                    $employee->firstname = 'Administrador';
+                    $employee->lastname = 'General';
+                    $employee->username = 'admin';
+                    $employee->password = password_hash('1234', PASSWORD_DEFAULT);
+                    $em->persist($employee);
+                    $em->flush();
+                }
+
+                foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
+                    $group = RoleGroup::from($groupName);
+                    foreach ($roles as $item) {
+                        $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
+                        if (!$employeeRole)
+                            $employeeRole = new EmployeeRole();
+                        $employeeRole->employee = $employee;
+                        $employeeRole->role = $item;
+                        $employeeRole->group = $group;
+                        $em->persist($employeeRole);
+                    }
+                }
+                $em->flush();
+            }
+        } catch (Exception|ORMException $e) {
+            Console::output($e->getMessage(), Type::WARNING);
+            Console::output($e->getTraceAsString(), Type::ERROR);
+            exit();
+        }
+
+    }
     public static function list(): Http\JsonResponse
     {
         try {

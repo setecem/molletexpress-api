@@ -2,7 +2,6 @@
 
 namespace App\Entity\Employee;
 
-use App\Entity\Department;
 use App\Entity\File;
 use App\Entity\User\User;
 use App\Enum\Images;
@@ -13,12 +12,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'employee')]
-#[ORM\Index(name: 'token', columns: ['token'])]
-#[ORM\Index(name: 'password', columns: ['password'])]
-#[ORM\Index(name: 'username_password', columns: ['username', 'password'])]
-#[ORM\Index(name: 'email_password', columns: ['email', 'password'])]
-#[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
-// #[ORM\UniqueConstraint(name: 'email', columns: ['email'])] !!! --> No se puede hacer único en employee, ya que hay datos repetido.
 #[ORM\Entity]
 class Employee extends Entity
 {
@@ -78,55 +71,7 @@ class Employee extends Entity
     #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
     public ?DateTime $dateModified = null;
 
-    /** TODO Estaban en crm, ¿Mantener aquí? */
-    #[ORM\Column(name: 'username', type: 'string', nullable: true)]
-    public ?string $username = null;
-
-    #[ORM\Column(name: 'password', type: 'string', nullable: true)]
-    public ?string $password = null;
-
-    #[ORM\Column(name: 'token', type: 'string', nullable: true)]
-    public ?string $token = null;
-
-    #[ORM\JoinColumn(name: 'comercial_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Employee::class, cascade: ['persist'])]
-    public ?Employee $comercial = null;
-
-    #[ORM\Column(name: 'origen', type: 'string', nullable: true)]
-    public ?string $origen = null;
-
-    #[ORM\ManyToMany(targetEntity: Department::class, mappedBy: 'employees')]
-    public array|Collection $departments;
-
-    #[ORM\Column(name: 'ss_num', type: 'string', nullable: true)]
-    public ?string $ssNum = null;
-
-    #[ORM\Column(name: 'ccc_num', type: 'string', nullable: true)]
-    public ?string $cccNum = null;
-
-    #[ORM\Column(name: 'phone', type: 'string', nullable: true)]
-    public ?string $phone = null;
-
-    #[ORM\Column(name: 'mobile', type: 'string', nullable: true)]
-    public ?string $mobile = null;
-
-    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
-    public ?string $email = null;
-
-    #[ORM\Column(name: 'need_comment', type: 'boolean', nullable: false, options: ['default' => false])]
-    public bool $needComment = false;
-
-    #[ORM\Column(name: 'date_start', type: 'datetime', nullable: true)]
-    public ?DateTime $dateStart = null;
-
-    #[ORM\Column(name: 'date_end', type: 'datetime', nullable: true)]
-    public ?DateTime $dateEnd = null;
-
-    #[ORM\Column(name: 'contract', type: 'integer', nullable: false, options: ['default' => 0])]
-    public int $contract = 0;
-
-    #[ORM\Column(name: 'hours', type: 'integer', nullable: false, options: ['default' => 0])]
-    public int $hours = 0;
+    /** Campos traidos del CRM */
 
     /** @var File[]|Collection */
     #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'employee')]

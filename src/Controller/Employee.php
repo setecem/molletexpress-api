@@ -19,31 +19,6 @@ use Exception;
 
 class Employee
 {
-    public static function updatePassword(): void
-    {
-        try {
-            $username = Console::requestValue('Escribe el nombre de usuario:');
-
-            $item = \App\Entity\Employee\Employee::findOneBy(['username' => $username]);
-
-            if (!$item)
-                Console::output('ERROR: Username not found');
-            else {
-                 $password = Console::requestValue('Escribe una nueva constraseña:');
-
-                 $item->password = password_hash($password, PASSWORD_DEFAULT);
-
-                 $em = Db::getManager();
-                 $em->persist($item);
-                 $em->flush();
-            }
-
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-    }
     public static function migrateUsers(): void
     {
         try {

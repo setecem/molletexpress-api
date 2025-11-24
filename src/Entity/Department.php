@@ -34,24 +34,9 @@ class Department extends Entity
     #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
     public ?DateTime $dateModified = null;
 
-    /** TODO Estaban en crm, ¿Mantener aquí? */
-    #[ORM\JoinTable(name: 'employee_department')]
-    #[ORM\JoinColumn(name: 'department_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'employee_id', referencedColumnName: 'id')]
-    #[ORM\ManyToMany(targetEntity: Employee::class, inversedBy: 'departments')]
-    public array|Collection $employees;
-
-    #[ORM\JoinTable(name: 'contact_department')]
-    #[ORM\JoinColumn(name: 'department_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'contact_id', referencedColumnName: 'id')]
-    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'departments')]
-    public array|Collection $contacts;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->employees = new ArrayCollection();
-        $this->contacts = new ArrayCollection();
     }
 
 }

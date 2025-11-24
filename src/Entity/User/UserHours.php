@@ -23,12 +23,4 @@ class UserHours extends Entity
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'users')]
     public User $user;
 
-    /** TODO Estaban en crm, ¿Mantener aquí? */
-    #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
-    public ?string $comment = null;
-
-    #[ORM\OneToMany(targetEntity: UserHoursHistory::class, mappedBy: 'hour')]
-    #[ORM\OrderBy(['id' => 'DESC'])]
-    public array|Collection $history;
-
 }
