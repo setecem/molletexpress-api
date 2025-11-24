@@ -4,7 +4,7 @@
 namespace App\Model\Inactive;
 
 
-use App\Model\UserType;
+use App\Model\User\UserType;
 use BackedEnum;
 use Cavesman\Db\Doctrine\Model\Base;
 

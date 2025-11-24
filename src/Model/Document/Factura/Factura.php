@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Model\Document\Factura;
+
+use App\Model\Client;
+use App\Model\Document\Albaran\AlbaranContact;
+use App\Model\Employee\Employee;
+use App\Model\File;
+use Cavesman\Db\Doctrine\Entity\Base;
+use Cavesman\Db\Doctrine\Model\Model;
+use DateTime;
+
+class Factura extends Model
+{
+
+    const string|Base ENTITY = \App\Entity\Document\Factura\Factura::class;
+
+    public ?string $ref = null;
+    public ?Client $customer = null;
+    public ?string $comment = null;
+    public int $subtotal = 0;
+    public DateTime|string|null $date = null;
+
+
+    // Clonados de contact
+
+    public ?Employee $employee = null;
+    public ?string $enterprise = null;
+    public ?string $enterprise_phone = null;
+    public ?string $enterprise_phone_ext = null;
+    public ?string $enterprise_mobile = null;
+    public ?string $enterprise_mobile_ext = null;
+    public ?string $enterprise_email = null;
+    public ?string $sector = null;
+    public ?string $facturacion = null;
+    public ?string $web = null;
+    public ?string $nif = null;
+    public ?string $address = null;
+    public bool $authorization = false;
+    public ?string $type = null;
+    public ?string $origen = null;
+    public ?string $description = null;
+    public bool $has_recursos = false;
+    public bool $multiexpedicion = false;
+    public ?string $almacenes = null;
+    public ?string $muelles = null;
+    public ?string $recursos = null;
+
+    /** @var FacturaContact[] $contacts */
+    public array $contacts = [];
+
+    /** @var File[] $files */
+    public array $files = [];
+
+    public function typeOfCollection(string $property): ?string
+    {
+        return match($property) {
+            'employee' => Employee::class,
+            'customer' => Client::class,
+            'contacts' => AlbaranContact::class,
+            'files' => File::class,
+            default => null
+        };
+    }
+}

@@ -15247,7 +15247,7 @@ file-invoice:
     - 6.2.0
     - 6.3.0
     - 6.4.0
-  label: File Invoice
+  label: File Factura
   search:
     terms:
       - account
@@ -15272,7 +15272,7 @@ file-invoice-dollar:
     - 6.2.0
     - 6.3.0
     - 6.4.0
-  label: File Invoice Dollar
+  label: File Factura Dollar
   search:
     terms:
       - $

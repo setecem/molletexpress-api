@@ -1,46 +1,46 @@
 <?php
 
-use App\Controller\Invoice;
+use App\Controller\Factura;
 use Cavesman\Router;
 
 Router::mount('/api/v1/invoice', function () {
 
     // Obtener todos los origenes
-    /** @see Invoice::listOrigen() */
-    Router::get('/origen', Invoice::class . '@listOrigen');
+    /** @see Factura::listOrigen() */
+    Router::get('/origen', Factura::class . '@listOrigen');
 
-    /** @see Invoice::filterAll() */
-    Router::get('/all/filter', Invoice::class . '@filterAll');
+    /** @see Factura::filterAll() */
+    Router::get('/all/filter', Factura::class . '@filterAll');
 
-    /** @see Invoice::filter() */
-    Router::get('/(\d+)/filter', Invoice::class . '@filter');
+    /** @see Factura::filter() */
+    Router::get('/(\d+)/filter', Factura::class . '@filter');
 
-    /** @see Invoice::get() */
-    Router::get('/(\d+)', Invoice::class . '@get');
+    /** @see Factura::get() */
+    Router::get('/(\d+)', Factura::class . '@get');
 
-    /** @see Invoice::active() */
-    Router::get('/(\d+)/active', Invoice::class . '@active');
+    /** @see Factura::active() */
+    Router::get('/(\d+)/active', Factura::class . '@active');
 
-    /** @see Invoice::add() */
-    Router::post('/', Invoice::class . '@add');
+    /** @see Factura::add() */
+    Router::post('/', Factura::class . '@add');
 
-    /** @see Invoice::update() */
-    Router::put('/(\d+)', Invoice::class . '@update');
+    /** @see Factura::update() */
+    Router::put('/(\d+)', Factura::class . '@update');
 
-    /** @see Invoice::delete() */
-    Router::delete('/(\d+)', Invoice::class . '@delete');
+    /** @see Factura::delete() */
+    Router::delete('/(\d+)', Factura::class . '@delete');
 
 
-    //  InvoiceFeed
+    //  FacturaFeed
 
-    /** @see Invoice::filterAllFeed() */
-    Router::get('/all/(\d+)/filter', Invoice::class . '@filterAllFeed');
+    /** @see Factura::filterAllFeed() */
+    Router::get('/all/(\d+)/filter', Factura::class . '@filterAllFeed');
 
-    /** @see Invoice::filterPublicFeed() */
-    Router::get('/public/(\d+)/filter', Invoice::class . '@filterPublicFeed');
+    /** @see Factura::filterPublicFeed() */
+    Router::get('/public/(\d+)/filter', Factura::class . '@filterPublicFeed');
 
-    /** @see Invoice::getFeed() */
-    Router::get('/feed/(\d+)', Invoice::class . '@getFeed');
+    /** @see Factura::getFeed() */
+    Router::get('/feed/(\d+)', Factura::class . '@getFeed');
 
     /** @see Invoice::addFeed() */
     Router::post('/feed', Invoice::class . '@addFeed');
@@ -51,7 +51,7 @@ Router::mount('/api/v1/invoice', function () {
     /** @see Invoice::deleteFeed() */
     Router::delete('/feed/(\d+)', Invoice::class . '@deleteFeed');
 
-    // InvoiceFeedAlert
+    // FacturaFeedAlert
 
     /** @see Invoice::addAlert() */
     Router::post('/alert', Invoice::class . '@addAlert');

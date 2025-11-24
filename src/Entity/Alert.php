@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

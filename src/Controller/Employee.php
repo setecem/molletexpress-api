@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\EmployeeRole;
-use App\Entity\User;
+use App\Entity\Employee\EmployeeRole;
+use App\Entity\User\User;
 use App\Enum\RoleGroup;
-use App\Model\EmployeeBase;
 use App\Model\DataTable;
+use App\Model\Employee\EmployeeBase;
 use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Console\Type;
@@ -24,7 +24,7 @@ class Employee
         try {
             $username = Console::requestValue('Escribe el nombre de usuario:');
 
-            $item = \App\Entity\Employee::findOneBy(['username' => $username]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['username' => $username]);
 
             if (!$item)
                 Console::output('ERROR: Username not found');
@@ -53,12 +53,12 @@ class Employee
 
             if (sizeof($users)) {
                 foreach ($users as $user) {
-                    $entity = \App\Entity\Employee::findOneBy(['user' => $user->id]);
+                    $entity = \App\Entity\Employee\Employee::findOneBy(['user' => $user->id]);
                     if ($entity) {
                         $entity->username = $user->username;
                         $entity->password = $user->password;
                     } else {
-                        $entity = new \App\Entity\Employee();
+                        $entity = new \App\Entity\Employee\Employee();
                         $entity->name = $user->firstname;
                         $entity->lastname = $user->lastname;
                         $entity->email = $user->email;
@@ -71,10 +71,10 @@ class Employee
                 }
                 $em->flush();
 
-                $employee = \App\Entity\Employee::findOneBy(['username' => 'admin']);
+                $employee = \App\Entity\Employee\Employee::findOneBy(['username' => 'admin']);
 
                 if (!$employee) {
-                    $employee = new \App\Entity\Employee();
+                    $employee = new \App\Entity\Employee\Employee();
                     $employee->name = 'Administrador';
                     $employee->lastname = 'General';
                     $employee->username = 'admin';
@@ -83,7 +83,7 @@ class Employee
                     $em->flush();
                 }
 
-                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesCustomer(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
+                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesCustomer(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesAlbaran(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
                     $group = RoleGroup::from($groupName);
                     foreach ($roles as $item) {
                         $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
@@ -109,9 +109,9 @@ class Employee
     {
         try {
 
-            $list = \App\Entity\Employee::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Employee\Employee::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\Employee $employee) => $employee->model(EmployeeBase::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Employee\Employee $employee) => $employee->model(EmployeeBase::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -122,7 +122,7 @@ class Employee
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Employee::class)
+            $qb = $em->getRepository(\App\Entity\Employee\Employee::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -153,13 +153,13 @@ class Employee
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Employee[] $list */
+            /** @var \App\Entity\Employee\Employee[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Employee $model */
+                /** @var \App\Model\Employee\Employee $model */
                 $model = $item->model(EmployeeBase::class);
                 $datatable->data[] = $model->json();
             }
@@ -176,7 +176,7 @@ class Employee
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Employee::class)
+            $qb = $em->getRepository(\App\Entity\Employee\Employee::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL')
                 ->andWhere('i.id = :id')
@@ -209,13 +209,13 @@ class Employee
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Employee[] $list */
+            /** @var \App\Entity\Employee\Employee[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Employee $model */
+                /** @var \App\Model\Employee\Employee $model */
                 $model = $item->model(EmployeeBase::class);
                 $datatable->data[] = $model->json();
             }
@@ -232,7 +232,7 @@ class Employee
     {
         try {
 
-            $item = \App\Entity\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             return new Http\JsonResponse($item->model(EmployeeBase::class)->json());
         } catch (Exception $e) {
@@ -246,7 +246,7 @@ class Employee
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->active = !$item->active;
 
@@ -268,12 +268,12 @@ class Employee
     {
         try {
 
-            $model = \App\Model\Employee::fromRequest();
+            $model = \App\Model\Employee\Employee::fromRequest();
 
             if (!$model->username || !$model->password || !$model->name)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos'], 400);
 
-            $item = \App\Entity\Employee::findOneBy(['username' => $model->username]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['username' => $model->username]);
 
             if ($item)
                 return new Http\JsonResponse(['message' => 'Este usuario ya existe'], 400);
@@ -296,7 +296,7 @@ class Employee
                     $model->comercial->fondo = \App\Enum\Images::from($model->comercial->fondo);
             }
 
-            /** @var \App\Entity\Employee $entity */
+            /** @var \App\Entity\Employee\Employee $entity */
             $entity = $model->entity();
 
             if ($entity->comercial)
@@ -318,7 +318,7 @@ class Employee
 
             return new Http\JsonResponse([
                 'message' => "Empleado añadido correctamente",
-                'item' => $entity->model(\App\Model\Employee::class)->json()
+                'item' => $entity->model(\App\Model\Employee\Employee::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -329,12 +329,12 @@ class Employee
     {
         try {
 
-            $item = \App\Entity\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Empleado no encontrado"], 404);
 
-            $model = \App\Model\Employee::fromRequest();
+            $model = \App\Model\Employee\Employee::fromRequest();
 
             if (!$model->username || !$model->name)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos'], 400);
@@ -362,7 +362,7 @@ class Employee
 
             $otherItem = $em->createQueryBuilder()
                 ->select('i')
-                ->from(\App\Entity\Employee::class, 'i')
+                ->from(\App\Entity\Employee\Employee::class, 'i')
                 ->where('i.id != :id AND i.deletedOn IS NULL AND i.username IS NOT NULL AND i.username = :username')
                 ->setParameter('id', $id)
                 ->setParameter('username', $model->username)
@@ -378,7 +378,7 @@ class Employee
 
             $em = DB::getManager();
 
-            /** @var \App\Entity\Employee $entity */
+            /** @var \App\Entity\Employee\Employee $entity */
             $entity = $model->entity();
 
             if ($entity->comercial)
@@ -403,7 +403,7 @@ class Employee
 
             return new Http\JsonResponse([
                 'message' => "Empleado actualizado correctamente",
-                'item' => $item->model(\App\Model\Employee::class)->json()
+                'item' => $item->model(\App\Model\Employee\Employee::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -415,7 +415,7 @@ class Employee
     {
         try {
 
-            $item = \App\Entity\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 

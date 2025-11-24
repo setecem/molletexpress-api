@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Model\ContactFeed;
-use App\Model\ContactFeedAlert;
+use App\Model\Contact\ContactFeed;
+use App\Model\Contact\ContactFeedAlert;
 use App\Model\DataTable;
 use Cavesman\Config;
 use Cavesman\Db;
@@ -31,7 +31,7 @@ class Contact
             $em = DB::getManager();
             $alerts = $em->createQueryBuilder()
                 ->select('a')
-                ->from(\App\Entity\ContactFeedAlert::class, 'a')
+                ->from(\App\Entity\Contact\ContactFeedAlert::class, 'a')
                 ->where('a.date BETWEEN :from AND :to')
                 ->setParameter('from', new DateTime()->setTime(0, 0))
                 ->setParameter('to', new DateTime()->setTime(23, 59, 59))
@@ -68,7 +68,7 @@ class Contact
     public static function listOrigen(): Http\JsonResponse
     {
         try {
-            $list = \App\Entity\Contact::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Contact\Contact::findBy(['deletedOn' => null]);
             $origen = [];
             foreach ($list as $item) {
                 if (!in_array($item->origen, $origen) && $item->origen != null)
@@ -85,7 +85,7 @@ class Contact
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\Contact::class)
+            $qb = $em->getRepository(\App\Entity\Contact\Contact::class)
                 ->createQueryBuilder('i')
                 ->join('i.employee', 'c')
                 ->where('i.deletedOn IS NULL');
@@ -134,14 +134,14 @@ class Contact
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Contact[] $list */
+            /** @var \App\Entity\Contact\Contact[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Contact $model */
-                $model = $item->model(\App\Model\Contact::class);
+                /** @var \App\Model\Contact\Contact $model */
+                $model = $item->model(\App\Model\Contact\Contact::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -158,9 +158,9 @@ class Contact
         try {
             $em = Db::getManager();
 
-            $employee = \App\Entity\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $employee = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $qb = $em->getRepository(\App\Entity\Contact::class)
+            $qb = $em->getRepository(\App\Entity\Contact\Contact::class)
                 ->createQueryBuilder('i')
                 ->join('i.employee', 'c')
                 ->where('i.deletedOn IS NULL');
@@ -219,14 +219,14 @@ class Contact
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Contact[] $list */
+            /** @var \App\Entity\Contact\Contact[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Contact $model */
-                $model = $item->model(\App\Model\Contact::class);
+                /** @var \App\Model\Contact\Contact $model */
+                $model = $item->model(\App\Model\Contact\Contact::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -243,7 +243,7 @@ class Contact
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\ContactFeed::class)
+            $qb = $em->getRepository(\App\Entity\Contact\ContactFeed::class)
                 ->createQueryBuilder('i')
                 ->where('i.contact = :id')
                 ->andWhere('i.deletedOn IS NULL')
@@ -276,7 +276,7 @@ class Contact
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\ContactFeed[] $list */
+            /** @var \App\Entity\Contact\ContactFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
@@ -298,7 +298,7 @@ class Contact
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\ContactFeed::class)
+            $qb = $em->getRepository(\App\Entity\Contact\ContactFeed::class)
                 ->createQueryBuilder('i')
                 ->where('i.contact = :id')
                 ->andWhere('i.deletedOn IS NULL')
@@ -333,7 +333,7 @@ class Contact
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\ContactFeed[] $list */
+            /** @var \App\Entity\Contact\ContactFeed[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
@@ -351,7 +351,7 @@ class Contact
     }
 
     /**
-     * @param \App\Entity\Contact $item
+     * @param \App\Entity\Contact\Contact $item
      * @return void
      * @throws LoaderError
      * @throws ModuleException
@@ -359,7 +359,7 @@ class Contact
      * @throws SyntaxError
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public static function notifyCreated(\App\Entity\Contact $item): void
+    public static function notifyCreated(\App\Entity\Contact\Contact $item): void
     {
         // Buscar receptores de la notificación
         $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_CREATE->value, $item);
@@ -376,7 +376,7 @@ class Contact
     }
 
     /**
-     * @param \App\Entity\Contact $item
+     * @param \App\Entity\Contact\Contact $item
      * @return void
      * @throws LoaderError
      * @throws ModuleException
@@ -384,7 +384,7 @@ class Contact
      * @throws SyntaxError
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public static function notifyEdited(\App\Entity\Contact $item): void
+    public static function notifyEdited(\App\Entity\Contact\Contact $item): void
     {
         // Buscar receptores de la notificación
         $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_EDIT->value, $item);
@@ -409,7 +409,7 @@ class Contact
      * @throws LoaderError
      * @throws ModuleException
      */
-    public static function notifyDeleted(\App\Entity\Contact $item): void
+    public static function notifyDeleted(\App\Entity\Contact\Contact $item): void
     {
         // Buscar receptores de la notificación
         $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_DELETE->value, $item);
@@ -429,9 +429,9 @@ class Contact
     {
         try {
 
-            $item = \App\Entity\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\Contact::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\Contact\Contact::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -441,7 +441,7 @@ class Contact
     {
         try {
 
-            $item = \App\Entity\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             return new Http\JsonResponse($item->model(ContactFeed::class)->json());
         } catch (Exception $e) {
@@ -453,7 +453,7 @@ class Contact
     {
         try {
 
-            $item = \App\Entity\ContactFeedAlert::findOneBy(['feed' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\ContactFeedAlert::findOneBy(['feed' => $id, 'deletedOn' => null]);
 
             if ($item)
                 return new Http\JsonResponse($item->model(ContactFeedAlert::class)->json());
@@ -468,7 +468,7 @@ class Contact
     {
         try {
 
-            $model = \App\Model\Contact::fromRequest();
+            $model = \App\Model\Contact\Contact::fromRequest();
 
             if (!$model->type || !$model->employee)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
@@ -489,7 +489,7 @@ class Contact
                     $model->employee->comercial->fondo = \App\Enum\Images::from($model->employee->comercial->fondo);
             }
 
-            /** @var \App\Entity\Contact $entity */
+            /** @var \App\Entity\Contact\Contact $entity */
             $entity = $model->entity();
 
             $em = DB::getManager();
@@ -519,7 +519,7 @@ class Contact
 
             return new Http\JsonResponse([
                 'message' => "Contacto añadido correctamente",
-                'item' => $entity->model(\App\Model\Contact::class)->json()
+                'item' => $entity->model(\App\Model\Contact\Contact::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -611,12 +611,12 @@ class Contact
 
 
         try {
-            $item = \App\Entity\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Contacto no encontrado"], 404);
 
-            $model = \App\Model\Contact::fromRequest();
+            $model = \App\Model\Contact\Contact::fromRequest();
 
             if (!$model->type || !$model->employee)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
@@ -640,7 +640,7 @@ class Contact
                     $model->employee->comercial->fondo = \App\Enum\Images::from($model->employee->comercial->fondo);
             }
 
-            /** @var \App\Entity\Contact $entity */
+            /** @var \App\Entity\Contact\Contact $entity */
             $entity = $model->entity();
             $em = DB::getManager();
             foreach ($entity->contacts as $contact) {
@@ -681,7 +681,7 @@ class Contact
 
             return new Http\JsonResponse([
                 'message' => "Contacto actualizado correctamente",
-                'item' => $entity->model(\App\Model\Contact::class)->json()
+                'item' => $entity->model(\App\Model\Contact\Contact::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -692,7 +692,7 @@ class Contact
     {
         try {
 
-            $item = \App\Entity\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Feed no encontrado"], 404);
@@ -737,7 +737,7 @@ class Contact
     {
         try {
 
-            $item = \App\Entity\ContactFeedAlert::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\ContactFeedAlert::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Alert no encontrado"], 404);
@@ -785,7 +785,7 @@ class Contact
 
             $em = DB::getManager();
 
-            $item = \App\Entity\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\Contact::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 
@@ -800,7 +800,7 @@ class Contact
 
             return new Http\JsonResponse([
                 'message' => "Contacto eliminado correctamente",
-                'item' => $item->model(\App\Model\Contact::class)->json()
+                'item' => $item->model(\App\Model\Contact\Contact::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -813,7 +813,7 @@ class Contact
 
             $em = DB::getManager();
 
-            $item = \App\Entity\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\Contact\ContactFeed::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 
@@ -828,14 +828,14 @@ class Contact
 
     /**
      * @param string $roleReceive
-     * @param \App\Entity\Contact $item
+     * @param \App\Entity\Contact\Contact $item
      * @return array
      * @throws ModuleException
      */
-    public static function getNotificationReceivers(string $roleReceive, \App\Entity\Contact $item): array
+    public static function getNotificationReceivers(string $roleReceive, \App\Entity\Contact\Contact $item): array
     {
         $employees = [];
-        foreach (\App\Entity\Employee::findBy(['deletedOn' => null]) as $employee) {
+        foreach (\App\Entity\Employee\Employee::findBy(['deletedOn' => null]) as $employee) {
             $canReceiver = false;
             // Comprobar si puede recibir notificación de contactos creados/actualizados/borrados
             // y si le corresponde el contacto (Si puede verlo)

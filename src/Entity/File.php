@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Contact\Contact;
+use App\Entity\Document\Albaran\Albaran;
+use App\Entity\Document\Factura\Factura;
+use App\Entity\Employee\Employee;
 use App\Enum\FileType;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,13 +27,13 @@ class File extends Entity
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     public ?Contact $contact = null;
 
-    #[ORM\JoinColumn(name: 'invoice', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Invoice::class)]
-    public ?Invoice $invoice = null;
+    #[ORM\JoinColumn(name: 'factura', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Factura::class)]
+    public ?Factura $factura = null;
 
-    #[ORM\JoinColumn(name: 'delivery_note', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: DeliveryNote::class)]
-    public ?DeliveryNote $deliveryNote = null;
+    #[ORM\JoinColumn(name: 'albaran', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Albaran::class)]
+    public ?Albaran $albaran = null;
 
     #[ORM\JoinColumn(name: 'employee', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Employee::class)]

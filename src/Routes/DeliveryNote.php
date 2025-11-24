@@ -1,64 +1,64 @@
 <?php
 
-use App\Controller\DeliveryNote;
+use App\Controller\Albaran;
 use Cavesman\Router;
 
 Router::mount('/api/v1/delivery-note', function () {
 
     // Obtener todos los origenes
-    /** @see DeliveryNote::listOrigen() */
-    Router::get('/origen', DeliveryNote::class . '@listOrigen');
+    /** @see Albaran::listOrigen() */
+    Router::get('/origen', Albaran::class . '@listOrigen');
 
-    /** @see DeliveryNote::filterAll() */
-    Router::get('/all/filter', DeliveryNote::class . '@filterAll');
+    /** @see Albaran::filterAll() */
+    Router::get('/all/filter', Albaran::class . '@filterAll');
 
-    /** @see DeliveryNote::filter() */
-    Router::get('/(\d+)/filter', DeliveryNote::class . '@filter');
+    /** @see Albaran::filter() */
+    Router::get('/(\d+)/filter', Albaran::class . '@filter');
 
-    /** @see DeliveryNote::get() */
-    Router::get('/(\d+)', DeliveryNote::class . '@get');
+    /** @see Albaran::get() */
+    Router::get('/(\d+)', Albaran::class . '@get');
 
-    /** @see DeliveryNote::active() */
-    Router::get('/(\d+)/active', DeliveryNote::class . '@active');
+    /** @see Albaran::active() */
+    Router::get('/(\d+)/active', Albaran::class . '@active');
 
-    /** @see DeliveryNote::add() */
-    Router::post('/', DeliveryNote::class . '@add');
+    /** @see Albaran::add() */
+    Router::post('/', Albaran::class . '@add');
 
-    /** @see DeliveryNote::update() */
-    Router::put('/(\d+)', DeliveryNote::class . '@update');
+    /** @see Albaran::update() */
+    Router::put('/(\d+)', Albaran::class . '@update');
 
-    /** @see DeliveryNote::delete() */
-    Router::delete('/(\d+)', DeliveryNote::class . '@delete');
+    /** @see Albaran::delete() */
+    Router::delete('/(\d+)', Albaran::class . '@delete');
 
 
-    //  DeliveryNoteFeed
+    //  AlbaranFeed
 
-    /** @see DeliveryNote::filterAllFeed() */
-    Router::get('/all/(\d+)/filter', DeliveryNote::class . '@filterAllFeed');
+    /** @see Albaran::filterAllFeed() */
+    Router::get('/all/(\d+)/filter', Albaran::class . '@filterAllFeed');
 
-    /** @see DeliveryNote::filterPublicFeed() */
-    Router::get('/public/(\d+)/filter', DeliveryNote::class . '@filterPublicFeed');
+    /** @see Albaran::filterPublicFeed() */
+    Router::get('/public/(\d+)/filter', Albaran::class . '@filterPublicFeed');
 
-    /** @see DeliveryNote::getFeed() */
-    Router::get('/feed/(\d+)', DeliveryNote::class . '@getFeed');
+    /** @see Albaran::getFeed() */
+    Router::get('/feed/(\d+)', Albaran::class . '@getFeed');
 
-    /** @see DeliveryNote::addFeed() */
-    Router::post('/feed', DeliveryNote::class . '@addFeed');
+    /** @see Albaran::addFeed() */
+    Router::post('/feed', Albaran::class . '@addFeed');
 
-    /** @see DeliveryNote::updateFeed() */
-    Router::put('/feed/(\d+)', DeliveryNote::class . '@updateFeed');
+    /** @see Albaran::updateFeed() */
+    Router::put('/feed/(\d+)', Albaran::class . '@updateFeed');
 
-    /** @see DeliveryNote::deleteFeed() */
-    Router::delete('/feed/(\d+)', DeliveryNote::class . '@deleteFeed');
+    /** @see Albaran::deleteFeed() */
+    Router::delete('/feed/(\d+)', Albaran::class . '@deleteFeed');
 
-    // DeliveryNoteFeedAlert
+    // AlbaranFeedAlert
 
-    /** @see DeliveryNote::addAlert() */
-    Router::post('/alert', DeliveryNote::class . '@addAlert');
+    /** @see Albaran::addAlert() */
+    Router::post('/alert', Albaran::class . '@addAlert');
 
-    /** @see DeliveryNote::updateAlert() */
-    Router::put('/alert/(\d+)', DeliveryNote::class . '@updateAlert');
+    /** @see Albaran::updateAlert() */
+    Router::put('/alert/(\d+)', Albaran::class . '@updateAlert');
 
-    /** @see DeliveryNote::getAlert() */
-    Router::get('/alert/(\d+)', DeliveryNote::class . '@getAlert');
+    /** @see Albaran::getAlert() */
+    Router::get('/alert/(\d+)', Albaran::class . '@getAlert');
 });

@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\Invoice;
-use App\Entity\DeliveryNote;
-use App\Entity\ContactFile;
-use App\Entity\InvoiceFile;
-use App\Entity\DeliveryNoteFile;
-use App\Entity\Employee;
+use App\Entity\Contact\Contact;
+use App\Entity\Contact\ContactFile;
+use App\Entity\Document\Albaran\Albaran;
+use App\Entity\Document\Albaran\AlbaranFile;
+use App\Entity\Document\Factura\Factura;
+use App\Entity\Document\Factura\FacturaFile;
+use App\Entity\Employee\Employee;
 use App\Enum\FileType;
 use App\Tool\Fs;
 use Cavesman\Config;
@@ -85,7 +85,7 @@ final class File
         try {
             $em = Db::getManager();
 
-            $invoiceFiles = InvoiceFile::findBy([]);
+            $invoiceFiles = FacturaFile::findBy([]);
 
             if (sizeof($invoiceFiles)) {
                 foreach ($invoiceFiles as $invoiceFile) {
@@ -93,14 +93,14 @@ final class File
                     $entity->name = $invoiceFile->name . '.' . $invoiceFile->extension;
                     $entity->size = $invoiceFile->size;
                     $entity->mime = $invoiceFile->mimeType;
-                    $entity->invoice = $invoiceFile->invoice;
+                    $entity->factura = $invoiceFile->factura;
                     $entity->type = FileType::GENERAL;
                     $entity->private = $invoiceFile->private;
                     $entity->createdOn = $invoiceFile->dateCreated;
                     $entity->updatedOn = $invoiceFile->dateModified;
 
                     $dirOriginal = FileSystem::documentRoot() . '/data/invoice';
-                    $dirOriginal .= '/' . $invoiceFile->invoice->id;
+                    $dirOriginal .= '/' . $invoiceFile->factura->id;
                     $doc = '/' . $invoiceFile->id . '.' . $invoiceFile->extension;
 
                     if (is_dir($dirOriginal) && file_exists($dirOriginal . $doc)) {
@@ -109,7 +109,7 @@ final class File
 
                         $directory = Config::get('files.invoice', '%ROOT%/data/files/invoice');
                         $directory = str_replace('%ROOT%', FileSystem::documentRoot(), $directory);
-                        foreach (str_split($entity->invoice->id) as $number) {
+                        foreach (str_split($entity->factura->id) as $number) {
                             $directory .= '/' . $number;
                         }
                         if (!is_dir($directory)) {
@@ -141,7 +141,7 @@ final class File
         try {
             $em = Db::getManager();
 
-            $deliveryNoteFiles = DeliveryNoteFile::findBy([]);
+            $deliveryNoteFiles = AlbaranFile::findBy([]);
 
             if (sizeof($deliveryNoteFiles)) {
                 foreach ($deliveryNoteFiles as $deliveryNoteFile) {
@@ -149,14 +149,14 @@ final class File
                     $entity->name = $deliveryNoteFile->name . '.' . $deliveryNoteFile->extension;
                     $entity->size = $deliveryNoteFile->size;
                     $entity->mime = $deliveryNoteFile->mimeType;
-                    $entity->deliveryNote = $deliveryNoteFile->deliveryNote;
+                    $entity->albaran = $deliveryNoteFile->albaran;
                     $entity->type = FileType::GENERAL;
                     $entity->private = $deliveryNoteFile->private;
                     $entity->createdOn = $deliveryNoteFile->dateCreated;
                     $entity->updatedOn = $deliveryNoteFile->dateModified;
 
                     $dirOriginal = FileSystem::documentRoot() . '/data/delivery-note';
-                    $dirOriginal .= '/' . $deliveryNoteFile->deliveryNote->id;
+                    $dirOriginal .= '/' . $deliveryNoteFile->albaran->id;
                     $doc = '/' . $deliveryNoteFile->id . '.' . $deliveryNoteFile->extension;
 
                     if (is_dir($dirOriginal) && file_exists($dirOriginal . $doc)) {
@@ -165,7 +165,7 @@ final class File
 
                         $directory = Config::get('files.delivery-note', '%ROOT%/data/files/delivery-note');
                         $directory = str_replace('%ROOT%', FileSystem::documentRoot(), $directory);
-                        foreach (str_split($entity->deliveryNote->id) as $number) {
+                        foreach (str_split($entity->albaran->id) as $number) {
                             $directory .= '/' . $number;
                         }
                         if (!is_dir($directory)) {
@@ -252,13 +252,13 @@ final class File
                 case 'invoice-signed':
                 case 'invoice-validated':
                 case 'invoice-delivery':
-                    $item = Invoice::findOneBy(['id' => Request::post('item')]);
+                    $item = Factura::findOneBy(['id' => Request::post('item')]);
                     break;
                 case 'delivery-note':
                 case 'delivery-note-signed':
                 case 'delivery-note-validated':
                 case 'delivery-note-delivery':
-                    $item = DeliveryNote::findOneBy(['id' => Request::post('item')]);
+                    $item = Albaran::findOneBy(['id' => Request::post('item')]);
                     break;
             }
 
@@ -303,10 +303,10 @@ final class File
                             $file->employee = $item;
                             break;
                         case 'invoice':
-                            $file->invoice = $item;
+                            $file->factura = $item;
                             break;
                         case 'delivery-note':
-                            $file->deliveryNote = $item;
+                            $file->albaran = $item;
                             break;
 
                     }
@@ -371,12 +371,12 @@ final class File
             } elseif ($file->employee) {
                 $section = 'employee';
                 $item = $file->employee;
-            } elseif ($file->invoice) {
+            } elseif ($file->factura) {
                 $section = 'invoice';
-                $item = $file->invoice;
-            } elseif ($file->deliveryNote) {
+                $item = $file->factura;
+            } elseif ($file->albaran) {
                 $section = 'delivery-note';
-                $item = $file->deliveryNote;
+                $item = $file->albaran;
             }
 
             $em->remove($file);
@@ -477,9 +477,9 @@ final class File
                 $section = 'contact';
             } elseif ($file->employee) {
                 $section = 'employee';
-            } elseif ($file->invoice) {
+            } elseif ($file->factura) {
                 $section = 'invoice';
-            } elseif ($file->deliveryNote) {
+            } elseif ($file->albaran) {
                 $section = 'delivery-note';
             }
         }
@@ -488,7 +488,7 @@ final class File
 
     /**
      * @param \App\Entity\File|null $file
-     * @return Contact|Employee
+     * @return \App\Entity\Contact\Contact|Employee
      */
     public static function getItemFromType(?\App\Entity\File $file): Contact|Employee
     {
@@ -502,10 +502,10 @@ final class File
                 $item = $file->contact;
             } elseif ($file->employee) {
                 $item = $file->employee;
-            } elseif ($file->invoice) {
-                $item = $file->invoice;
-            } elseif ($file->deliveryNote) {
-                $item = $file->deliveryNote;
+            } elseif ($file->factura) {
+                $item = $file->factura;
+            } elseif ($file->albaran) {
+                $item = $file->albaran;
             }
         }
         return $item;

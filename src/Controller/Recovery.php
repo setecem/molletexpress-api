@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Cavesman\Config;
 use Cavesman\Db;
 use Cavesman\Http\JsonResponse;

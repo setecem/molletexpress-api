@@ -18798,7 +18798,7 @@ file-invoice:
     pro:
       - family: classic
         style: solid
-  label: File Invoice
+  label: File Factura
   search:
     terms:
       - account
@@ -18828,7 +18828,7 @@ file-invoice-dollar:
     pro:
       - family: classic
         style: solid
-  label: File Invoice Dollar
+  label: File Factura Dollar
   search:
     terms:
       - $

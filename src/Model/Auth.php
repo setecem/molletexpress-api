@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Employee;
+use App\Entity\Employee\Employee;
 use Cavesman\Db;
 use Cavesman\Exception\ModuleException;
 use Cavesman\JWT;
@@ -12,7 +12,7 @@ use stdClass;
 
 class Auth extends Db\Doctrine\Model\Model
 {
-    private static ?\App\Model\Employee $info = null;
+    private static ?\App\Model\Employee\Employee $info = null;
     public ?string $username = null;
     public ?string $password = null;
 
@@ -20,7 +20,7 @@ class Auth extends Db\Doctrine\Model\Model
      * @throws ModuleException
      * @throws Exception
      */
-    public static function getEmployee(): \App\Model\Employee
+    public static function getEmployee(): \App\Model\Employee\Employee
     {
 
         if (self::$info)
@@ -38,7 +38,7 @@ class Auth extends Db\Doctrine\Model\Model
         if (!$item)
             throw new Exception('auth.error.employee.not-found');
 
-        self::$info = $item->model(\App\Model\Employee::class);
+        self::$info = $item->model(\App\Model\Employee\Employee::class);
 
         return self::$info;
     }

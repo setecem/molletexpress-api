@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\UserType;
+use App\Entity\User\UserType;
 use Cavesman\Db;
 use Cavesman\Http;
 use DateTime;
@@ -15,9 +15,9 @@ class User
     {
         try {
 
-            $list = \App\Entity\User::findBy(['deletedOn' => null]);
+            $list = \App\Entity\User\User::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\User $user) => $user->model(\App\Model\User::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\User\User $user) => $user->model(\App\Model\User\User::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -27,9 +27,9 @@ class User
     {
         try {
 
-            $item = \App\Entity\User::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\User::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\User\User::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -39,7 +39,7 @@ class User
     {
         try {
 
-            $item = \App\Entity\User::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->active = !$item->active;
 
@@ -62,11 +62,11 @@ class User
     {
         try {
 
-            $model = \App\Model\User::fromRequest();
+            $model = \App\Model\User\User::fromRequest();
 
             $model->password = password_hash($model->password, PASSWORD_DEFAULT);
 
-            /** @var \App\Entity\User $entity */
+            /** @var \App\Entity\User\User $entity */
             $entity = $model->entity();
             $em = DB::getManager();
 
@@ -86,7 +86,7 @@ class User
 
             return new Http\JsonResponse([
                 'message' => "Usuario añadido correctamente",
-                'item' => $entity->model(\App\Model\User::class)->json()
+                'item' => $entity->model(\App\Model\User\User::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage(), 'exception' => $e->getTrace()], 500);
@@ -97,12 +97,12 @@ class User
     {
         try {
 
-            $item = \App\Entity\User::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Usuario no encontrado"], 404);
 
-            $model = \App\Model\User::fromRequest();
+            $model = \App\Model\User\User::fromRequest();
 
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
@@ -110,7 +110,7 @@ class User
             if ($item->password != $model->password)
                 $model->password = password_hash($model->password, PASSWORD_DEFAULT);
 
-            /** @var \App\Entity\User $entity */
+            /** @var \App\Entity\User\User $entity */
             $entity = $model->entity();
             $em = DB::getManager();
 
@@ -125,7 +125,7 @@ class User
 
             return new Http\JsonResponse([
                 'message' => "Usuario actualizado correctamente",
-                'item' => $entity->model(\App\Model\User::class)->json()
+                'item' => $entity->model(\App\Model\User\User::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -137,7 +137,7 @@ class User
     {
         try {
 
-            $item =  \App\Entity\User::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item =  \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 

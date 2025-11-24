@@ -2,7 +2,7 @@
 
 namespace App\Middleware\Api;
 
-use App\Entity\EmployeeRole;
+use App\Entity\Employee\EmployeeRole;
 use App\Enum\RoleGroup;
 use App\Model\Auth;
 use Cavesman\Config;

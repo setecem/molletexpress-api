@@ -54,8 +54,8 @@ class Customer
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Customer $model */
-                $model = $item->model(\App\Model\Customer::class);
+                /** @var \App\Model\Client $model */
+                $model = $item->model(\App\Model\Client::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -108,8 +108,8 @@ class Customer
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\Customer $model */
-                $model = $item->model(\App\Model\Customer::class);
+                /** @var \App\Model\Client $model */
+                $model = $item->model(\App\Model\Client::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -128,7 +128,7 @@ class Customer
 
             $list = \App\Entity\Client::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $customer) => $customer->model(\App\Model\Customer::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\Client $customer) => $customer->model(\App\Model\Client::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -140,7 +140,7 @@ class Customer
 
             $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\Customer::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\Client::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -174,7 +174,7 @@ class Customer
     {
         try {
 
-            $model = \App\Model\Customer::fromRequest();
+            $model = \App\Model\Client::fromRequest();
 
             $entity = $model->entity();
 
@@ -184,7 +184,7 @@ class Customer
 
             return new Http\JsonResponse([
                 'message' => "Cliente añadido correctamente",
-                'item' => $entity->model(\App\Model\Customer::class)->json()
+                'item' => $entity->model(\App\Model\Client::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -200,7 +200,7 @@ class Customer
             if (!$item)
                 return new Http\JsonResponse(['message' => "Cliente no encontrado"], 404);
 
-            $model = \App\Model\Customer::fromRequest();
+            $model = \App\Model\Client::fromRequest();
 
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
@@ -213,7 +213,7 @@ class Customer
 
             return new Http\JsonResponse([
                 'message' => "Cliente actualizado correctamente",
-                'item' => $entity->model(\App\Model\Customer::class)->json()
+                'item' => $entity->model(\App\Model\Client::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);

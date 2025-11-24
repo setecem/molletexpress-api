@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Employee;
+use App\Entity\Employee\Employee;
 use Cavesman\Db;
 use Cavesman\Http\JsonResponse;
 use Cavesman\JWT;
@@ -30,7 +30,7 @@ final class Auth
 
             $em = Db::getManager();
 
-            /** @var Employee $item */
+            /** @var \App\Entity\Employee\Employee $item */
             $item = $em->getRepository(Employee::class)
                 ->createQueryBuilder('e')
                 ->where('e.username = :username AND e.active = :active AND e.deletedOn IS NULL')
@@ -50,7 +50,7 @@ final class Auth
 
             $token = JWT::encode(['id' => $item->id]);
 
-            $employee = $item->model(\App\Model\Employee::class);
+            $employee = $item->model(\App\Model\Employee\Employee::class);
 
             return new JsonResponse(['employee' => $employee->json(), 'token' => $token, 'message' => 'Datos correctos'], 200);
         } catch (Exception $e) {

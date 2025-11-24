@@ -3,6 +3,10 @@
 namespace App\Model;
 
 use App\Enum\FileType;
+use App\Model\Contact\Contact;
+use App\Model\Document\Albaran\Albaran;
+use App\Model\Document\Factura\Factura;
+use App\Model\Employee\Employee;
 use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Model\Model;
 
@@ -24,8 +28,8 @@ final class File extends Model
         return match ($property) {
             'employee' => Employee::class,
             'contact' => Contact::class,
-            'deliveryNote' => DeliveryNote::class,
-            'invoice' => Invoice::class,
+            'albaran' => Albaran::class,
+            'factura' => Factura::class,
             'type' => FileType::class,
             default => null
         };
