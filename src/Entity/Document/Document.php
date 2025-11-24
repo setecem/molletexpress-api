@@ -7,7 +7,7 @@ use App\Entity\Document\Albaran\Albaran;
 use App\Entity\Document\Factura\Factura;
 use App\Entity\Document\Pedido\Pedido;
 use App\Entity\Document\Presupuesto\Presupuesto;
-use App\Entity\OrdainCharge;
+use App\Entity\OrdenCobro;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,8 +38,8 @@ abstract class Document extends Entity
     public ?Client $client = null;
 
     #[ORM\JoinColumn(name: 'orden', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[ORM\ManyToOne(targetEntity: OrdainCharge::class)]
-    public ?OrdainCharge $orden = null;
+    #[ORM\ManyToOne(targetEntity: OrdenCobro::class)]
+    public ?OrdenCobro $orden = null;
 
     #[ORM\Column(name: 'importe_bruto', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $importeBruto = 0.0;

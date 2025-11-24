@@ -9,16 +9,16 @@ use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 
-class OrdainCharge
+class OrdenCobro
 {
 
     public static function list(): Http\JsonResponse
     {
         try {
 
-            $list = \App\Entity\OrdainCharge::findBy(['deletedOn' => null]);
+            $list = \App\Entity\OrdenCobro::findBy(['deletedOn' => null]);
 
-            return new Http\JsonResponse(array_map(fn(\App\Entity\OrdainCharge $ordainCharge) => $ordainCharge->model(\App\Model\OrdainCharge::class)->json(), $list));
+            return new Http\JsonResponse(array_map(fn(\App\Entity\OrdenCobro $ordenCobro) => $ordenCobro->model(\App\Model\OrdenCobro::class)->json(), $list));
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -29,7 +29,7 @@ class OrdainCharge
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\OrdainCharge::class)
+            $qb = $em->getRepository(\App\Entity\OrdenCobro::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -52,14 +52,14 @@ class OrdainCharge
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\OrdainCharge[] $list */
+            /** @var \App\Entity\OrdenCobro[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\OrdainCharge $model */
-                $model = $item->model(\App\Model\OrdainCharge::class);
+                /** @var \App\Model\OrdenCobro $model */
+                $model = $item->model(\App\Model\OrdenCobro::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -76,7 +76,7 @@ class OrdainCharge
         try {
             $em = Db::getManager();
 
-            $qb = $em->getRepository(\App\Entity\OrdainCharge::class)
+            $qb = $em->getRepository(\App\Entity\OrdenCobro::class)
                 ->createQueryBuilder('i')
                 ->where('i.deletedOn IS NULL');
 
@@ -99,14 +99,14 @@ class OrdainCharge
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\OrdainCharge[] $list */
+            /** @var \App\Entity\OrdenCobro[] $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
             $datatable->recordsTotal = count($total->getQuery()->getResult());
             foreach ($list as $item) {
-                /** @var \App\Model\OrdainCharge $model */
-                $model = $item->model(\App\Model\OrdainCharge::class);
+                /** @var \App\Model\OrdenCobro $model */
+                $model = $item->model(\App\Model\OrdenCobro::class);
                 $datatable->data[] = $model->json();
             }
             $datatable->recordsFiltered = count($total->getQuery()->getResult());
@@ -122,9 +122,9 @@ class OrdainCharge
     {
         try {
 
-            $item = \App\Entity\OrdainCharge::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            return new Http\JsonResponse($item->model(\App\Model\OrdainCharge::class)->json());
+            return new Http\JsonResponse($item->model(\App\Model\OrdenCobro::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -134,12 +134,12 @@ class OrdainCharge
     {
         try {
 
-            $model = \App\Model\OrdainCharge::fromRequest();
+            $model = \App\Model\OrdenCobro::fromRequest();
 
             if (!$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
-            /** @var \App\Entity\OrdainCharge $entity */
+            /** @var \App\Entity\OrdenCobro $entity */
             $entity = $model->entity();
 
             $em = DB::getManager();
@@ -148,7 +148,7 @@ class OrdainCharge
 
             return new Http\JsonResponse([
                 'message' => "Orden de cargo añadido correctamente",
-                'item' => $entity->model(\App\Model\OrdainCharge::class)->json()
+                'item' => $entity->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -158,12 +158,12 @@ class OrdainCharge
     public static function update(int $id): Http\JsonResponse
     {
         try {
-            $item = \App\Entity\OrdainCharge::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
                 return new Http\JsonResponse(['message' => "Orden de cargo no encontrado"], 404);
 
-            $model = \App\Model\OrdainCharge::fromRequest();
+            $model = \App\Model\OrdenCobro::fromRequest();
 
             if (!$model->ref)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
@@ -171,7 +171,7 @@ class OrdainCharge
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
 
-            /** @var \App\Entity\OrdainCharge $entity */
+            /** @var \App\Entity\OrdenCobro $entity */
             $entity = $model->entity();
             $em = DB::getManager();
             $em->persist($entity);
@@ -179,7 +179,7 @@ class OrdainCharge
 
             return new Http\JsonResponse([
                 'message' => "Orden de cargo actualizado correctamente",
-                'item' => $entity->model(\App\Model\OrdainCharge::class)->json()
+                'item' => $entity->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -192,7 +192,7 @@ class OrdainCharge
 
             $em = DB::getManager();
 
-            $item = \App\Entity\OrdainCharge::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->deletedOn = new DateTime();
 
@@ -201,7 +201,7 @@ class OrdainCharge
 
             return new Http\JsonResponse([
                 'message' => "Orden de cargo eliminado correctamente",
-                'item' => $item->model(\App\Model\OrdainCharge::class)->json()
+                'item' => $item->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);

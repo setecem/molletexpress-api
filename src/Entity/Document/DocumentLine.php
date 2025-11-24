@@ -27,16 +27,16 @@ abstract class DocumentLine extends Entity
     #[ORM\Column(name: 'quantity', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $quantity = 0.0;
 
-    #[ORM\Column(name: 'discount', type: 'decimal', nullable: false, options: ['default' => 0.0])]
+    #[ORM\Column(name: 'discount', type: 'decimal', precision: 5, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $discount = 0.0;
 
-    #[ORM\Column(name: 'quantity_certificada', type: 'decimal', nullable: false, options: ['default' => 0.0])]
+    #[ORM\Column(name: 'quantity_certificada', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $quantityCertificada = 0.0;
 
     #[ORM\Column(name: 'price', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $price = 0.0;
 
-    #[ORM\Column(name: 'tax', type: 'decimal',nullable: false, options: ['default' => 0.0])]
+    #[ORM\Column(name: 'tax', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $tax = 0.0;
 
     #[ORM\Column(name: 'total', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]

@@ -12,9 +12,9 @@ class Service extends Model
 
     public ?string $ref = null;
     public ?string $name = null;
-    public ?string $measurementsUnit = null;
-    public int $price = 0;
-    public int $cost = 0;
+    public ?string $unidadMedida = null;
+    public float $price = 0.0;
+    public float $cost = 0.0;
     public bool $active = true;
 
 }

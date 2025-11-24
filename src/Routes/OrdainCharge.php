@@ -1,29 +1,29 @@
 <?php
 
-use App\Controller\OrdainCharge;
+use App\Controller\OrdenCobro;
 use Cavesman\Router;
 
 Router::mount('/api/v1/ordain-charge', function () {
 
-    /** @see OrdainCharge::list() */
-    Router::get('/', OrdainCharge::class . '@list');
+    /** @see OrdenCobro::list() */
+    Router::get('/', OrdenCobro::class . '@list');
 
-    /** @see OrdainCharge::get() */
-    Router::get('/(\d+)', OrdainCharge::class . '@get');
+    /** @see OrdenCobro::get() */
+    Router::get('/(\d+)', OrdenCobro::class . '@get');
 
-    /** @see OrdainCharge::filterAll() */
-    Router::get('/all/filter', OrdainCharge::class . '@filterAll');
+    /** @see OrdenCobro::filterAll() */
+    Router::get('/all/filter', OrdenCobro::class . '@filterAll');
 
-    /** @see OrdainCharge::filter() */
-    Router::get('/(\d+)/filter', OrdainCharge::class . '@filter');
+    /** @see OrdenCobro::filter() */
+    Router::get('/(\d+)/filter', OrdenCobro::class . '@filter');
 
-    /** @see OrdainCharge::add() */
-    Router::post('/', OrdainCharge::class . '@add');
+    /** @see OrdenCobro::add() */
+    Router::post('/', OrdenCobro::class . '@add');
 
-    /** @see OrdainCharge::update() */
-    Router::put('/(\d+)', OrdainCharge::class . '@update');
+    /** @see OrdenCobro::update() */
+    Router::put('/(\d+)', OrdenCobro::class . '@update');
 
-    /** @see OrdainCharge::delete() */
-    Router::delete('/(\d+)', OrdainCharge::class . '@delete');
+    /** @see OrdenCobro::delete() */
+    Router::delete('/(\d+)', OrdenCobro::class . '@delete');
 
 });

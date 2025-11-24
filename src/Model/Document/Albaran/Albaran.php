@@ -21,7 +21,7 @@ class Albaran extends Model
     public DateTime|string|null $date = null;
 
 
-    // Clonados de contact
+    /** TODO Clonados de contact, ¿Mantener aquí? */
 
     public ?Employee $employee = null;
     public ?string $enterprise = null;

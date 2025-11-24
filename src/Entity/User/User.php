@@ -21,13 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
 class User extends Entity
 {
 
-    #[ORM\OneToOne(targetEntity: Employee::class, mappedBy: 'user')]
-    public ?Employee $employee = null;
-
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: Client::class)]
-    public ?Client $client = null;
-
     #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
     public ?string $nif = null;
 
@@ -47,29 +40,29 @@ class User extends Entity
     #[ORM\ManyToOne(targetEntity: UserType::class, cascade: ['persist'], inversedBy: 'users')]
     public ?UserType $type = null;
 
-    #[ORM\Column(name: 'contract', type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(name: 'contract', type: 'integer', nullable: true, options: ['default' => 0])]
     public int $contract = 0;
 
     #[ORM\Column(name: 'hours', type: 'integer', nullable: false, options: ['default' => 0])]
     public int $totalHours = 0;
 
-    #[ORM\Column(name: 'phone', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
     public ?string $phone = null;
 
-    #[ORM\Column(name: 'mobile', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'mobile', type: 'string', length: 20, nullable: true)]
     public ?string $mobile = null;
 
-    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
-    public ?string $email = null;
+    #[ORM\Column(name: 'email', type: 'string', length: 100, nullable: false)]
+    public string $email;
 
-    #[ORM\Column(name: 'username', type: 'string', nullable: true)]
-    public ?string $username = null;
+    #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
+    public string $username;
 
-    #[ORM\Column(name: 'password', type: 'string', nullable: true)]
-    public ?string $password = null;
+    #[ORM\Column(name: 'password', type: 'string', length: 50, nullable: false)]
+    public string $password;
 
-    #[ORM\Column(name: 'token', type: 'string', nullable: true)]
-    public ?string $token = null;
+    #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
+    public string $token;
 
     #[ORM\Column(name: 'date_start', type: 'datetime', nullable: true)]
     public ?DateTime $dateStart = null;
@@ -77,12 +70,34 @@ class User extends Entity
     #[ORM\Column(name: 'date_end', type: 'datetime', nullable: true)]
     public ?DateTime $dateEnd = null;
 
+    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
+    public ?DateTime $dateCreated = null;
+
+    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
+    public ?DateTime $dateModified = null;
+
+    #[ORM\OneToMany(targetEntity: UserDepartment::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['id' => 'DESC'])]
+    public array|Collection $departments;
+
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
 
     #[ORM\OneToMany(targetEntity: UserHours::class, mappedBy: 'user')]
     #[ORM\OrderBy(['id' => 'ASC'])]
     public array|Collection $hours;
+
+    public array|Collection $actions;
+
+    public array|Collection $children;
+
+    /** TODO Estaban en crm, ¿Mantener aquí? */
+    #[ORM\OneToOne(targetEntity: Employee::class, mappedBy: 'user')]
+    public ?Employee $employee = null;
+
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    public ?Client $client = null;
 
     public function __construct()
     {

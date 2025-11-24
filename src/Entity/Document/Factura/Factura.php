@@ -15,7 +15,7 @@ class Factura extends Document
 {
 
 
-    // Clonados de contact
+    /** TODO Clonados de contact, ¿Mantener aquí? */
 
     #[ORM\JoinColumn(name: 'employee_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Employee::class, cascade: ['persist'])]

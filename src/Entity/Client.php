@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-
 use App\Entity\User\User;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
@@ -30,46 +29,46 @@ class Client extends Entity
     public ?string $email = null;
 
     #[ORM\Column(name: 'direccion', type: 'string', nullable: false)]
-    public string $address;
+    public string $direccion;
 
     #[ORM\Column(name: 'localidad', type: 'string', nullable: false)]
-    public string $locale;
+    public string $localidad;
 
     #[ORM\Column(name: 'postal_code', type: 'string', nullable: false)]
-    public string $postcode;
+    public string $codigo_postal;
 
     #[ORM\Column(name: 'provincia', type: 'string', nullable: false)]
-    public string $province;
+    public string $provincia;
 
     #[ORM\Column(name: 'telefono', type: 'string', nullable: false)]
-    public string $phone;
+    public string $telefono;
 
     #[ORM\Column(name: 'movil', type: 'string', nullable: false)]
-    public string $mobile;
+    public string $movil;
 
     #[ORM\Column(name: 'forma_pago', type: 'string', nullable: false)]
-    public string $paymentMethod;
+    public string $formaPago;
 
     #[ORM\Column(name: 'dias_pago', type: 'integer', nullable: false, options: ['default' => '0'])]
-    public int $paymentTerm = 0;
+    public int $diasPago = 0;
 
     #[ORM\Column(name: 'dia_fijo_pago', type: 'integer', nullable: false, options: ['default' => '0'])]
-    public int $paymentDay = 0;
+    public int $diaFijoPago = 0;
 
     #[ORM\Column(name: 'banco', type: 'string', nullable: false)]
-    public string $bankingEntity;
+    public string $banco;
 
     #[ORM\Column(name: 'iban', type: 'string', nullable: false)]
     public string $iban;
 
     #[ORM\Column(name: 'num_abonado', type: 'integer', nullable: false)]
-    public string $subscriberNumber;
+    public string $numAbonado;
 
     #[ORM\Column(name: 'descuento', type: 'integer', nullable: true)]
-    public ?int $discount = null;
+    public ?int $descuento = null;
 
     #[ORM\Column(name: 'num_pedido', type: 'string', nullable: true)]
-    public ?string $orderNumber = null;
+    public ?string $numPedido = null;
 
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;

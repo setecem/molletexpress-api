@@ -15,7 +15,7 @@ class Alert extends Entity
     #[ORM\ManyToOne(targetEntity: User::class)]
     public User $user;
 
-    #[ORM\Column(name: 'message', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'message', type: 'string', length: 400, nullable: true)]
     public ?string $message = null;
 
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
@@ -23,5 +23,11 @@ class Alert extends Entity
 
     #[ORM\Column(name: 'date_alert', type: 'datetime', nullable: true)]
     public ?DateTime $dateAlert = null;
+
+    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
+    public ?DateTime $dateCreated = null;
+
+    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
+    public ?DateTime $dateModified = null;
 
 }

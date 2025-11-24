@@ -653,7 +653,7 @@ class Contact
 
             foreach ($item->contacts as $contact) {
                 if (!$entity->contacts->contains($contact)) {
-                    // TODO No se borra?¿
+                    // TODO No se borra?
                     $contact->delete();
                     $em->persist($contact);
                 }

@@ -11,22 +11,24 @@ class Client extends Model
     const string|Base ENTITY = \App\Entity\Client::class;
     public ?string $name = null;
     public ?string $nameComercial = null;
-    public ?string $address = null;
-    public ?string $locale = null;
-    public ?string $postcode = null;
-    public ?string $province = null;
-    public ?string $subscriberNumber = null;
-    public ?string $phone = null;
-    public ?string $mobile = null;
+    public ?string $direccion = null;
+    public ?string $localidad = null;
+    public ?string $codigo_postal = null;
+    public ?string $provincia = null;
+    public ?string $numAbonado = null;
+    public ?string $telefono = null;
+    public ?string $movil = null;
     public ?string $nif = null;
     public ?string $email = null;
-    public ?string $discount = null;
-    public ?string $orderNumber = null;
-    public ?string $paymentMethod = null;
-    public int $paymentTerm = 0;
-    public int $paymentDay = 0;
-    public ?string $bankingEntity = null;
+    public ?string $descuento = null;
+    public ?string $numPedido = null;
+    public ?string $formaPago = null;
+    public int $diasPago = 0;
+    public int $diaFijoPago = 0;
+    public ?string $banco = null;
     public ?string $iban = null;
     public ?bool $active = true;
+    public int $debe = 0;
+
 
 }

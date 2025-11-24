@@ -6,10 +6,10 @@ use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Model\Model;
 use DateTime;
 
-class OrdainCharge extends Model
+class OrdenCobro extends Model
 {
 
-    const string|Base ENTITY = \App\Entity\OrdainCharge::class;
+    const string|Base ENTITY = \App\Entity\OrdenCobro::class;
 
     public ?string $ref = null;
     public ?Client $client = null;
