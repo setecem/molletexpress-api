@@ -51,16 +51,16 @@ class User extends Entity
     public ?string $mobile = null;
 
     #[ORM\Column(name: 'email', type: 'string', length: 100, nullable: false)]
-    public string $email;
+    public ?string $email = null;
 
     #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
-    public string $username;
+    public ?string $username = null;
 
     #[ORM\Column(name: 'password', type: 'string', length: 50, nullable: false)]
-    public string $password;
+    public ?string $password = null;
 
     #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
-    public string $token;
+    public ?string $token = null;
 
     #[ORM\Column(name: 'date_start', type: 'datetime', nullable: true)]
     public ?DateTime $dateStart = null;

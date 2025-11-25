@@ -26,7 +26,7 @@ class Employee extends Entity
 {
 
     #[ORM\Column(name: 'name', type: 'string', nullable: false)]
-    public string $name;
+    public ?string $name = null;
 
     #[ORM\Column(name: 'lastname', type: 'string', nullable: true)]
     public ?string $lastname = null;
@@ -36,7 +36,7 @@ class Employee extends Entity
     public ?User $user = null;
 
     #[ORM\Column(name: 'dni', type: 'string', nullable: false)]
-    public string $dni;
+    public ?string $dni = null;
 
     #[ORM\Column(name: 'salario_base', type: 'decimal', precision: 10, scale: 2, nullable: false, options: ['default' => 0.0])]
     public float $salarioBase = 0.0;
@@ -108,16 +108,16 @@ class Employee extends Entity
     public ?string $mobile = null;
 
     #[ORM\Column(name: 'email', type: 'string', length: 100, nullable: false)]
-    public string $email;
+    public ?string $email = null;
 
     #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
-    public string $username;
+    public ?string $username = null;
 
     #[ORM\Column(name: 'password', type: 'string', nullable: false)]
-    public string $password;
+    public ?string $password = null;
 
     #[ORM\Column(name: 'token', type: 'string', nullable: true)]
-    public string $token;
+    public ?string $token = null;
 
     #[ORM\Column(name: 'date_start', type: 'datetime', nullable: true)]
     public ?DateTime $dateStart = null;
@@ -161,6 +161,9 @@ class Employee extends Entity
         $this->files = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->hours = new ArrayCollection();
+        $this->actions = new ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->departments = new ArrayCollection();
     }
 
 }

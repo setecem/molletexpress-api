@@ -3,7 +3,7 @@
 use App\Controller\Client;
 use Cavesman\Router;
 
-Router::mount('/api/v1/customer', function () {
+Router::mount('/api/v1/client', function () {
 
     /** @see Client::list() */
     Router::get('/', Client::class . '@list');
