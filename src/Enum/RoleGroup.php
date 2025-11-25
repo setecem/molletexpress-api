@@ -14,7 +14,7 @@ enum RoleGroup: string
     case INVOICE = 'INVOICE';
     case DELIVERY_NOTE = 'DELIVERY_NOTE';
     case SERVICE = 'SERVICE';
-    case ORDAIN_CHARGE = 'ORDAIN_CHARGE';
+    case CHARGE_ORDER = 'CHARGE_ORDER';
     case REPORT = 'REPORT';
     case DEVICE = 'DEVICE';
     case LOG = 'LOG';
@@ -167,10 +167,10 @@ enum RoleGroup: string
         ];
     }
 
-    public static function rolesOrdainCharge(): array
+    public static function roleschargeOrder(): array
     {
         return [
-            self::ORDAIN_CHARGE->value => [
+            self::CHARGE_ORDER->value => [
                 Role::ACCESS,
                 Role::EDIT,
                 Role::DELETE,

@@ -48,5 +48,7 @@
     "role.role.RECEIVE_EMAIL_DELETE": "Recibir email de contacto borrado",
     "role.role.ORIGEN_HIDE": "Ocultar origen",
     "role.group.INVOICE": "Factura",
-    "role.group.DELIVERY_NOTE": "Albarán"
+    "role.group.DELIVERY_NOTE": "Albarán",
+    "role.group.SERVICE": "Servicio",
+    "role.group.CHARGE_ORDER": "Orden de cargo"
 }

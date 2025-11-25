@@ -3,7 +3,7 @@
 use App\Controller\OrdenCobro;
 use Cavesman\Router;
 
-Router::mount('/api/v1/ordain-charge', function () {
+Router::mount('/api/v1/charge-order', function () {
 
     /** @see OrdenCobro::list() */
     Router::get('/', OrdenCobro::class . '@list');

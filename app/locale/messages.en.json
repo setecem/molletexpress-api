@@ -48,5 +48,7 @@
     "role.role.RECEIVE_EMAIL_DELETE": "Receive email from deleted contact",
     "role.role.ORIGEN_HIDE": "Hide origen",
     "role.group.INVOICE": "Invoice",
-    "role.group.DELIVERY_NOTE": "Delivery note"
+    "role.group.DELIVERY_NOTE": "Delivery note",
+    "role.group.SERVICE": "Service",
+    "role.group.CHARGE_ORDER": "Charge order"
 }
