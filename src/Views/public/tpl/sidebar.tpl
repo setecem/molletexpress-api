@@ -19,7 +19,7 @@
             <!-- Title site -->
             <a href="{$base}" class="nav_logo">
                 <i class='fa fa-address-book nav_logo-icon'></i>
-                <span class="nav_logo-name">molletexpress</span>
+                <span class="nav_logo-name">MolletExpress</span>
             </a>
 
             <!-- Menu -->

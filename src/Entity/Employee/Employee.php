@@ -4,6 +4,9 @@ namespace App\Entity\Employee;
 
 use App\Entity\File;
 use App\Entity\User\User;
+use App\Entity\User\UserDepartment;
+use App\Entity\User\UserHours;
+use App\Entity\User\UserType;
 use App\Enum\Images;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;
@@ -12,6 +15,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'employee')]
+#[ORM\Index(name: 'token', columns: ['token'])]
+#[ORM\Index(name: 'password', columns: ['password'])]
+#[ORM\Index(name: 'username_password', columns: ['username', 'password'])]
+#[ORM\Index(name: 'email_password', columns: ['email', 'password'])]
+#[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
+#[ORM\UniqueConstraint(name: 'email', columns: ['email'])]
 #[ORM\Entity]
 class Employee extends Entity
 {
@@ -71,6 +80,63 @@ class Employee extends Entity
     #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
     public ?DateTime $dateModified = null;
 
+    /** Estaban en User */
+
+    #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
+    public ?string $nif = null;
+
+    #[ORM\Column(name: 'ss_num', type: 'string', nullable: true)]
+    public ?string $ssNum = null;
+
+    #[ORM\Column(name: 'ccc_num', type: 'string', nullable: true)]
+    public ?string $cccNum = null;
+
+    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: UserType::class, cascade: ['persist'], inversedBy: 'users')]
+    public ?UserType $type = null;
+
+    #[ORM\Column(name: 'contract', type: 'integer', nullable: true, options: ['default' => 0])]
+    public int $contract = 0;
+
+    #[ORM\Column(name: 'hours', type: 'integer', nullable: false, options: ['default' => 0])]
+    public int $totalHours = 0;
+
+    #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
+    public ?string $phone = null;
+
+    #[ORM\Column(name: 'mobile', type: 'string', length: 20, nullable: true)]
+    public ?string $mobile = null;
+
+    #[ORM\Column(name: 'email', type: 'string', length: 100, nullable: false)]
+    public string $email;
+
+    #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
+    public string $username;
+
+    #[ORM\Column(name: 'password', type: 'string', nullable: false)]
+    public string $password;
+
+    #[ORM\Column(name: 'token', type: 'string', nullable: true)]
+    public string $token;
+
+    #[ORM\Column(name: 'date_start', type: 'datetime', nullable: true)]
+    public ?DateTime $dateStart = null;
+
+    #[ORM\Column(name: 'date_end', type: 'datetime', nullable: true)]
+    public ?DateTime $dateEnd = null;
+
+    #[ORM\OneToMany(targetEntity: UserDepartment::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['id' => 'DESC'])]
+    public array|Collection $departments;
+
+    #[ORM\OneToMany(targetEntity: UserHours::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    public array|Collection $hours;
+
+    public array|Collection $actions;
+
+    public array|Collection $children;
+
     /** Campos traidos del CRM */
 
     /** @var File[]|Collection */
@@ -94,6 +160,7 @@ class Employee extends Entity
     {
         $this->files = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->hours = new ArrayCollection();
     }
 
 }

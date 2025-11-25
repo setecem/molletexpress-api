@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Employee\EmployeeRole;
 use App\Entity\User\User;
 use App\Enum\RoleGroup;
-use App\Model\DataTable;
 use App\Model\Employee\EmployeeBase;
+use App\Model\DataTable;
 use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Console\Type;
@@ -19,6 +19,31 @@ use Exception;
 
 class Employee
 {
+    public static function updatePassword(): void
+    {
+        try {
+            $username = Console::requestValue('Escribe el nombre de usuario:');
+
+            $item = \App\Entity\Employee\Employee::findOneBy(['username' => $username]);
+
+            if (!$item)
+                Console::output('ERROR: Username not found');
+            else {
+                 $password = Console::requestValue('Escribe una nueva constraseña:');
+
+                 $item->password = password_hash($password, PASSWORD_DEFAULT);
+
+                 $em = Db::getManager();
+                 $em->persist($item);
+                 $em->flush();
+            }
+
+        } catch (Exception|ORMException $e) {
+            Console::output($e->getMessage(), Type::WARNING);
+            Console::output($e->getTraceAsString(), Type::ERROR);
+            exit();
+        }
+    }
     public static function migrateUsers(): void
     {
         try {
@@ -32,6 +57,8 @@ class Employee
                     if ($entity) {
                         $entity->username = $user->username;
                         $entity->password = $user->password;
+                        $entity->createdOn = $entity->dateCreated;
+                        $entity->updatedOn = $entity->dateModified;
                     } else {
                         $entity = new \App\Entity\Employee\Employee();
                         $entity->name = $user->firstname;
@@ -58,7 +85,7 @@ class Employee
                     $em->flush();
                 }
 
-                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesOrdainCharge()) as $groupName => $roles) {
+                foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesContact()) as $groupName => $roles) {
                     $group = RoleGroup::from($groupName);
                     foreach ($roles as $item) {
                         $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
@@ -262,20 +289,8 @@ class Employee
             if (is_string($model->fondo))
                 $model->fondo = \App\Enum\Images::from($model->fondo);
 
-            if ($model->comercial) {
-                if (is_string($model->comercial->logo))
-                    $model->comercial->logo = \App\Enum\Images::from($model->comercial->logo);
-                if (is_string($model->comercial->icono))
-                    $model->comercial->icono = \App\Enum\Images::from($model->comercial->icono);
-                if (is_string($model->comercial->fondo))
-                    $model->comercial->fondo = \App\Enum\Images::from($model->comercial->fondo);
-            }
-
             /** @var \App\Entity\Employee\Employee $entity */
             $entity = $model->entity();
-
-            if ($entity->comercial)
-                $entity->comercial->roles = [];
 
             $roles = $entity->roles;
             $entity->roles = [];
@@ -324,15 +339,6 @@ class Employee
             if (is_string($model->fondo))
                 $model->fondo = \App\Enum\Images::from($model->fondo);
 
-            if ($model->comercial) {
-                if (is_string($model->comercial->logo))
-                    $model->comercial->logo = \App\Enum\Images::from($model->comercial->logo);
-                if (is_string($model->comercial->icono))
-                    $model->comercial->icono = \App\Enum\Images::from($model->comercial->icono);
-                if (is_string($model->comercial->fondo))
-                    $model->comercial->fondo = \App\Enum\Images::from($model->comercial->fondo);
-            }
-
             $em = DB::getManager();
 
             $otherItem = $em->createQueryBuilder()
@@ -355,9 +361,6 @@ class Employee
 
             /** @var \App\Entity\Employee\Employee $entity */
             $entity = $model->entity();
-
-            if ($entity->comercial)
-                $entity->comercial->roles = new ArrayCollection();
 
             $roles = $entity->roles;
             $entity->roles = new ArrayCollection();

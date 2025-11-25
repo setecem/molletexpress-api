@@ -2,19 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact\Contact;
-use App\Entity\Contact\ContactFile;
 use App\Entity\Document\Albaran\Albaran;
-use App\Entity\Document\Albaran\AlbaranFile;
 use App\Entity\Document\Factura\Factura;
-use App\Entity\Document\Factura\FacturaFile;
 use App\Entity\Employee\Employee;
 use App\Enum\FileType;
 use App\Tool\Fs;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
-use Cavesman\Enum\Console\Type;
 use Cavesman\FileSystem;
 use Cavesman\Http\JsonResponse;
 use Cavesman\Http\Response;
@@ -24,173 +18,6 @@ use Exception;
 
 final class File
 {
-    public static function migrateContacts(): void
-    {
-        try {
-            $em = Db::getManager();
-
-            $contactFiles = ContactFile::findBy([]);
-
-            if (sizeof($contactFiles)) {
-                foreach ($contactFiles as $contactFile) {
-                    $entity = new \App\Entity\File();
-                    $entity->name = $contactFile->name . '.' . $contactFile->extension;
-                    $entity->size = $contactFile->size;
-                    $entity->mime = $contactFile->mimeType;
-                    $entity->contact = $contactFile->contact;
-                    $entity->type = FileType::GENERAL;
-                    $entity->private = $contactFile->private;
-                    $entity->createdOn = $contactFile->dateCreated;
-                    $entity->updatedOn = $contactFile->dateModified;
-
-                    $dirOriginal = FileSystem::documentRoot() . '/data/contact';
-                    $dirOriginal .= '/' . $contactFile->contact->id;
-                    $doc = '/' . $contactFile->id . '.' . $contactFile->extension;
-
-                    if (is_dir($dirOriginal) && file_exists($dirOriginal . $doc)) {
-                        $em->persist($entity);
-                        $em->flush();
-
-                        $directory = Config::get('files.contact', '%ROOT%/data/files/contact');
-                        $directory = str_replace('%ROOT%', FileSystem::documentRoot(), $directory);
-                        foreach (str_split($entity->contact->id) as $number) {
-                            $directory .= '/' . $number;
-                        }
-                        if (!is_dir($directory)) {
-                            mkdir($directory, 0777, true);
-                            Console::output('New Directory: ' . $directory);
-                        }
-                        $docNew = '/' . $entity->id . '.' . $contactFile->extension;
-
-                        Console::output('Moving file: ' . $dirOriginal . $doc);
-                        if (!@copy($dirOriginal . $doc, $directory . $docNew)) {
-                            $em->remove($entity);
-                            $em->flush();
-                        }
-                    } else {
-                        Console::output('ERROR: Route not found');
-                    }
-                }
-            }
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-
-    }
-
-    public static function migrateInvoices(): void
-    {
-        try {
-            $em = Db::getManager();
-
-            $invoiceFiles = FacturaFile::findBy([]);
-
-            if (sizeof($invoiceFiles)) {
-                foreach ($invoiceFiles as $invoiceFile) {
-                    $entity = new \App\Entity\File();
-                    $entity->name = $invoiceFile->name . '.' . $invoiceFile->extension;
-                    $entity->size = $invoiceFile->size;
-                    $entity->mime = $invoiceFile->mimeType;
-                    $entity->factura = $invoiceFile->factura;
-                    $entity->type = FileType::GENERAL;
-                    $entity->private = $invoiceFile->private;
-                    $entity->createdOn = $invoiceFile->dateCreated;
-                    $entity->updatedOn = $invoiceFile->dateModified;
-
-                    $dirOriginal = FileSystem::documentRoot() . '/data/invoice';
-                    $dirOriginal .= '/' . $invoiceFile->factura->id;
-                    $doc = '/' . $invoiceFile->id . '.' . $invoiceFile->extension;
-
-                    if (is_dir($dirOriginal) && file_exists($dirOriginal . $doc)) {
-                        $em->persist($entity);
-                        $em->flush();
-
-                        $directory = Config::get('files.invoice', '%ROOT%/data/files/invoice');
-                        $directory = str_replace('%ROOT%', FileSystem::documentRoot(), $directory);
-                        foreach (str_split($entity->factura->id) as $number) {
-                            $directory .= '/' . $number;
-                        }
-                        if (!is_dir($directory)) {
-                            mkdir($directory, 0777, true);
-                            Console::output('New Directory: ' . $directory);
-                        }
-                        $docNew = '/' . $entity->id . '.' . $invoiceFile->extension;
-
-                        Console::output('Moving file: ' . $dirOriginal . $doc);
-                        if (!@copy($dirOriginal . $doc, $directory . $docNew)) {
-                            $em->remove($entity);
-                            $em->flush();
-                        }
-                    } else {
-                        Console::output('ERROR: Route not found');
-                    }
-                }
-            }
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-
-    }
-
-    public static function migrateDeliveryNotes(): void
-    {
-        try {
-            $em = Db::getManager();
-
-            $deliveryNoteFiles = AlbaranFile::findBy([]);
-
-            if (sizeof($deliveryNoteFiles)) {
-                foreach ($deliveryNoteFiles as $deliveryNoteFile) {
-                    $entity = new \App\Entity\File();
-                    $entity->name = $deliveryNoteFile->name . '.' . $deliveryNoteFile->extension;
-                    $entity->size = $deliveryNoteFile->size;
-                    $entity->mime = $deliveryNoteFile->mimeType;
-                    $entity->albaran = $deliveryNoteFile->albaran;
-                    $entity->type = FileType::GENERAL;
-                    $entity->private = $deliveryNoteFile->private;
-                    $entity->createdOn = $deliveryNoteFile->dateCreated;
-                    $entity->updatedOn = $deliveryNoteFile->dateModified;
-
-                    $dirOriginal = FileSystem::documentRoot() . '/data/delivery-note';
-                    $dirOriginal .= '/' . $deliveryNoteFile->albaran->id;
-                    $doc = '/' . $deliveryNoteFile->id . '.' . $deliveryNoteFile->extension;
-
-                    if (is_dir($dirOriginal) && file_exists($dirOriginal . $doc)) {
-                        $em->persist($entity);
-                        $em->flush();
-
-                        $directory = Config::get('files.delivery-note', '%ROOT%/data/files/delivery-note');
-                        $directory = str_replace('%ROOT%', FileSystem::documentRoot(), $directory);
-                        foreach (str_split($entity->albaran->id) as $number) {
-                            $directory .= '/' . $number;
-                        }
-                        if (!is_dir($directory)) {
-                            mkdir($directory, 0777, true);
-                            Console::output('New Directory: ' . $directory);
-                        }
-                        $docNew = '/' . $entity->id . '.' . $deliveryNoteFile->extension;
-
-                        Console::output('Moving file: ' . $dirOriginal . $doc);
-                        if (!@copy($dirOriginal . $doc, $directory . $docNew)) {
-                            $em->remove($entity);
-                            $em->flush();
-                        }
-                    } else {
-                        Console::output('ERROR: Route not found');
-                    }
-                }
-            }
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-
-    }
 
     public static function uploadInDataBase($id): JsonResponse
     {
@@ -236,12 +63,6 @@ final class File
             $item = null;
 
             switch ($section) {
-                case 'contact':
-                case 'contact-signed':
-                case 'contact-validated':
-                case 'contact-delivery':
-                    $item = Contact::findOneBy(['id' => Request::post('item')]);
-                    break;
                 case 'employee':
                 case 'employee-signed':
                 case 'employee-validated':
@@ -295,20 +116,8 @@ final class File
                     $file->mime = $mime;
                     $file->size = $size;
 
-                    switch ($section) {
-                        case 'contact':
-                            $file->contact = $item;
-                            break;
-                        case 'employee':
-                            $file->employee = $item;
-                            break;
-                        case 'invoice':
-                            $file->factura = $item;
-                            break;
-                        case 'delivery-note':
-                            $file->albaran = $item;
-                            break;
-
+                    if ($section == 'employee') {
+                        $file->employee = $item;
                     }
 
                     $em->persist($file);
@@ -365,18 +174,9 @@ final class File
 
             $item = null;
 
-            if ($file->contact) {
-                $section = 'contact';
-                $item = $file->contact;
-            } elseif ($file->employee) {
+            if ($file->employee) {
                 $section = 'employee';
                 $item = $file->employee;
-            } elseif ($file->factura) {
-                $section = 'invoice';
-                $item = $file->factura;
-            } elseif ($file->albaran) {
-                $section = 'delivery-note';
-                $item = $file->albaran;
             }
 
             $em->remove($file);
@@ -473,14 +273,8 @@ final class File
         //                break;
         if ($file->type == FileType::GENERAL) {
             $section = 'default';
-            if ($file->contact) {
-                $section = 'contact';
-            } elseif ($file->employee) {
+            if ($file->employee) {
                 $section = 'employee';
-            } elseif ($file->factura) {
-                $section = 'invoice';
-            } elseif ($file->albaran) {
-                $section = 'delivery-note';
             }
         }
         return $section ?? 'default';
@@ -488,9 +282,9 @@ final class File
 
     /**
      * @param \App\Entity\File|null $file
-     * @return \App\Entity\Contact\Contact|Employee
+     * @return Employee
      */
-    public static function getItemFromType(?\App\Entity\File $file): Contact|Employee
+    public static function getItemFromType(?\App\Entity\File $file): Employee
     {
         $item = null;
 
@@ -498,14 +292,8 @@ final class File
         //            case FileType::VALIDATED:
         //            case FileType::DELIVERY:
         if ($file->type == FileType::GENERAL) {
-            if ($file->contact) {
-                $item = $file->contact;
-            } elseif ($file->employee) {
+            if ($file->employee) {
                 $item = $file->employee;
-            } elseif ($file->factura) {
-                $item = $file->factura;
-            } elseif ($file->albaran) {
-                $item = $file->albaran;
             }
         }
         return $item;

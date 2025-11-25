@@ -1,10 +1,9 @@
 <?php
 use App\Controller\Employee;
-use App\Controller\User;
 use Cavesman\Console;
 
 /** @see Employee::migrateUsers */
-Console::command('migrate:users:employees', Employee::class . '@migrateUsers');
+Console::command('migrate:users:employee', Employee::class . '@migrateUsers');
 
-/** @see User::updatePassword */
-Console::command('update:user:password', User::class . '@updatePassword');
+/** @see Employee::updatePassword */
+Console::command('update:user:password', Employee::class . '@updatePassword');

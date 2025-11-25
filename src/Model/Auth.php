@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Employee\Employee;
+use App\Entity\User\User;
 use Cavesman\Db;
 use Cavesman\Exception\ModuleException;
 use Cavesman\JWT;
@@ -33,7 +34,12 @@ class Auth extends Db\Doctrine\Model\Model
 
         $decode = JWT::decode($token);
 
-        $item = Db::getManager()->getRepository(Employee::class)->findOneBy(['id' => $decode->id, 'deletedOn' => null]);
+        $user = User::findOneBy(['id' => $decode->id, 'deletedOn' => null]);
+
+        if (!$user)
+            throw new Exception('auth.error.user.not-found');
+
+        $item = Db::getManager()->getRepository(Employee::class)->findOneBy(['user' => $user, 'deletedOn' => null]);
 
         if (!$item)
             throw new Exception('auth.error.employee.not-found');

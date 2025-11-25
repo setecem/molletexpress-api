@@ -30,7 +30,7 @@ final class Auth
 
             $em = Db::getManager();
 
-            /** @var \App\Entity\Employee\Employee $item */
+            /** @var Employee $item */
             $item = $em->getRepository(Employee::class)
                 ->createQueryBuilder('e')
                 ->where('e.username = :username AND e.active = :active AND e.deletedOn IS NULL')

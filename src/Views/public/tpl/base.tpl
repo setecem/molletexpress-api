@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>molletexpress | {block name="title"}Home{/block}</title>
+    <title>MolletExpress | {block name="title"}Home{/block}</title>
 
     {css file="/fonts/open-sans/open-sans.css"}
 

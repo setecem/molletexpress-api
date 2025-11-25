@@ -17,7 +17,7 @@
     <!--<link rel="shortcut icon" type="image/png" href="assets/images/logo/icon.png">-->
     <!--<link rel="shortcut icon" type="image/png" href="./items/images/opengraphimage.png">-->
 
-    <title>molletexpress</title>
+    <title>MolletExpress</title>
 
     {css file="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"}
     {css file="login.css"}
@@ -27,7 +27,7 @@
 <body>
 
 <section class="login-section">
-    <h3>molletexpress</h3>
+    <h3>MolletExpress</h3>
     <form id="loginForm" method="post" class="form-horizontal" action="/user/login">
         <input type=text name="user" autocomplete="user" autofocus="autofocus" placeholder="Usuario">
         <input type="password" autocomplete="current-password" name="password" placeholder="Contraseña">
