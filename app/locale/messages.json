@@ -198,5 +198,13 @@
     "role.group.DELIVERY_NOTE": {
         "message": "Delivery note",
         "replace": []
+    },
+    "role.group.SERVICE": {
+        "message": "",
+        "replace": []
+    },
+    "role.group.ORDAIN_CHARGE": {
+        "message": "",
+        "replace": []
     }
 }

@@ -27,7 +27,6 @@ class Factura
 
             $qb = $em->getRepository(\App\Entity\Document\Factura\Factura::class)
                 ->createQueryBuilder('i')
-                ->join('i.employee', 'c')
                 ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
@@ -35,11 +34,9 @@ class Factura
             if ($filter && $filter->search) {
                 foreach (explode(' ', $filter->search->value) as $key => $string) {
                     $qb
-                        ->andWhere('i.enterprise LIKE :search_' . $key . ' OR i.enterprise_email LIKE :search_' . $key
-                            . ' OR i.enterprise_mobile LIKE :search_' . $key . ' OR i.enterprise_phone LIKE :search_' . $key
-                            . ' OR i.web LIKE :search_' . $key . ' OR c.name LIKE :search_' . $key . ' OR c.lastname LIKE :search_' . $key
-                            . ' OR i.type LIKE :search_' . $key . ' OR i.origen LIKE :search_' . $key
-                            . ' OR i.sector LIKE :search_' . $key . ' OR i.sector LIKE :search_' . $key
+                        ->andWhere('i.serie LIKE :search_' . $key . ' OR i.number LIKE :search_' . $key
+                            . ' OR i.observaciones LIKE :search_' . $key . ' OR i.tax LIKE :search_' . $key
+                            . ' OR i.comments LIKE :search_' . $key
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }
@@ -88,7 +85,6 @@ class Factura
 
             $qb = $em->getRepository(\App\Entity\Document\Factura\Factura::class)
                 ->createQueryBuilder('i')
-                ->join('i.employee', 'c')
                 ->where('i.deletedOn IS NULL')
                 ->andWhere('c.id = :id')
                 ->setParameter('id', $id);
@@ -99,11 +95,9 @@ class Factura
             if ($filter && $filter->search) {
                 foreach (explode(' ', $filter->search->value) as $key => $string) {
                     $qb
-                        ->andWhere('i.enterprise LIKE :search_' . $key . ' OR i.enterprise_email LIKE :search_' . $key
-                            . ' OR i.enterprise_mobile LIKE :search_' . $key . ' OR i.enterprise_phone LIKE :search_' . $key
-                            . ' OR i.web LIKE :search_' . $key . ' OR c.name LIKE :search_' . $key . ' OR c.lastname LIKE :search_' . $key
-                            . ' OR i.type LIKE :search_' . $key . ' OR i.origen LIKE :search_' . $key
-                            . ' OR i.sector LIKE :search_' . $key . ' OR i.sector LIKE :search_' . $key
+                        ->andWhere('i.serie LIKE :search_' . $key . ' OR i.number LIKE :search_' . $key
+                            . ' OR i.observaciones LIKE :search_' . $key . ' OR i.tax LIKE :search_' . $key
+                            . ' OR i.comments LIKE :search_' . $key
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }

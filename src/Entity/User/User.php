@@ -56,7 +56,7 @@ class User extends Entity
     #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
     public ?string $username = null;
 
-    #[ORM\Column(name: 'password', type: 'string', length: 50, nullable: false)]
+    #[ORM\Column(name: 'password', type: 'string', nullable: false)]
     public ?string $password = null;
 
     #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
