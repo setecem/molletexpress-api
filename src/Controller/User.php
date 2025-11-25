@@ -145,7 +145,7 @@ class User
             $em->persist($item);
             $em->flush();
 
-            //TODO Buscar en user_departament qué líneas hay asociadas al usuario y borrarlas
+            //TODO Buscar en user_department qué líneas hay asociadas al usuario y borrarlas
 
             return new Http\JsonResponse(['message' => "Usuario eliminado correctamente"]);
         } catch (Exception | ORMException $e) {
