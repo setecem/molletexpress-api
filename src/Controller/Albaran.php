@@ -4,19 +4,11 @@ namespace App\Controller;
 
 use App\Model\DataTable;
 use Cavesman\Db;
-use Cavesman\Enum\Directory;
-use Cavesman\Exception\ModuleException;
-use Cavesman\FileSystem;
 use Cavesman\Http;
-use Cavesman\Mail;
 use Cavesman\Request;
-use Cavesman\Twig;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class Albaran
 {
@@ -138,80 +130,6 @@ class Albaran
 
     }
 
-    /**
-     * @param \App\Entity\Document\Albaran\Albaran $item
-     * @return void
-     * @throws LoaderError
-     * @throws ModuleException
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    public static function notifyCreated(\App\Entity\Document\Albaran\Albaran $item): void
-    {
-        // Buscar receptores de la notificación
-        $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_CREATE->value);
-
-        // Preparar mensaje y enviar
-        foreach ($employees as $employee) {
-            $body = Twig::render('mail/partial/new-delivery-note.html.twig', ['item' => $item, 'title' => 'Nuevo albarán']);
-            $text = Twig::renderFromString($body);
-            $mail = Mail::getInstance();
-            $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Nuevo albarán en MolletExpress', ['html' => $body, 'text' => $text]);
-        }
-
-    }
-
-    /**
-     * @param \App\Entity\Document\Albaran\Albaran $item
-     * @return void
-     * @throws LoaderError
-     * @throws ModuleException
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    public static function notifyEdited(\App\Entity\Document\Albaran\Albaran $item): void
-    {
-        // Buscar receptores de la notificación
-        $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_EDIT->value);
-
-        // Preparar mensaje y enviar
-        foreach ($employees as $employee) {
-            $body = Twig::render('mail/partial/new-delivery-note.html.twig', ['item' => $item, 'title' => 'Albarán actualizado']);
-            $text = Twig::renderFromString($body);
-
-
-            $mail = Mail::getInstance();
-
-            $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Albarán actualizado en MolletExpress', ['html' => $body, 'text' => $text]);
-        }
-    }
-
-    /**
-     * @throws \PHPMailer\PHPMailer\Exception
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
-     * @throws ModuleException
-     */
-    public static function notifyDeleted(\App\Entity\Document\Albaran\Albaran $item): void
-    {
-        // Buscar receptores de la notificación
-        $employees = self::getNotificationReceivers(\App\Enum\Role::RECEIVE_EMAIL_DELETE->value);
-
-        // Preparar mensaje y enviar
-        foreach ($employees as $employee) {
-            $body = Twig::render('mail/partial/new-delivery-note.html.twig', ['item' => $item, 'title' => 'Albarán eliminado']);
-            $text = Twig::renderFromString($body);
-            $mail = Mail::getInstance();
-            $mail->addEmbeddedImage(FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-blue.png', 'logo');
-            Mail::send($employee->email, 'Albarán eliminado en MolletExpress', ['html' => $body, 'text' => $text]);
-        }
-
-    }
 
     public static function get(int $id): Http\JsonResponse
     {
@@ -231,25 +149,6 @@ class Albaran
 
             $model = \App\Model\Document\Albaran\Albaran::fromRequest();
 
-            if (!$model->client || !$model->ref)
-                return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
-
-            if (is_string($model->employee->logo))
-                $model->employee->logo = \App\Enum\Images::from($model->employee->logo);
-            if (is_string($model->employee->icono))
-                $model->employee->icono = \App\Enum\Images::from($model->employee->icono);
-            if (is_string($model->employee->fondo))
-                $model->employee->fondo = \App\Enum\Images::from($model->employee->fondo);
-
-            if ($model->employee->comercial) {
-                if (is_string($model->employee->comercial->logo))
-                    $model->employee->comercial->logo = \App\Enum\Images::from($model->employee->comercial->logo);
-                if (is_string($model->employee->comercial->icono))
-                    $model->employee->comercial->icono = \App\Enum\Images::from($model->employee->comercial->icono);
-                if (is_string($model->employee->comercial->fondo))
-                    $model->employee->comercial->fondo = \App\Enum\Images::from($model->employee->comercial->fondo);
-            }
-
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
             $entity = $model->entity();
 
@@ -257,13 +156,6 @@ class Albaran
 
             $em->persist($entity);
             $em->flush();
-
-
-            try {
-                self::notifyCreated($entity);
-            } catch (Exception $e) {
-
-            }
 
             return new Http\JsonResponse([
                 'message' => "Albarán añadido correctamente",
@@ -276,10 +168,6 @@ class Albaran
 
     public static function update(int $id): Http\JsonResponse
     {
-        set_time_limit(5);
-        ini_set('max_execution_time', '5');
-
-
         try {
             $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
 
@@ -288,38 +176,15 @@ class Albaran
 
             $model = \App\Model\Document\Albaran\Albaran::fromRequest();
 
-            if (!$model->client || !$model->ref)
-                return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
-
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
 
-            if (is_string($model->employee->logo))
-                $model->employee->logo = \App\Enum\Images::from($model->employee->logo);
-            if (is_string($model->employee->icono))
-                $model->employee->icono = \App\Enum\Images::from($model->employee->icono);
-            if (is_string($model->employee->fondo))
-                $model->employee->fondo = \App\Enum\Images::from($model->employee->fondo);
-
-            if ($model->employee->comercial) {
-                if (is_string($model->employee->comercial->logo))
-                    $model->employee->comercial->logo = \App\Enum\Images::from($model->employee->comercial->logo);
-                if (is_string($model->employee->comercial->icono))
-                    $model->employee->comercial->icono = \App\Enum\Images::from($model->employee->comercial->icono);
-                if (is_string($model->employee->comercial->fondo))
-                    $model->employee->comercial->fondo = \App\Enum\Images::from($model->employee->comercial->fondo);
-            }
 
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
             $entity = $model->entity();
             $em = DB::getManager();
             $em->persist($entity);
             $em->flush();
-            try {
-                self::notifyEdited($entity);
-            } catch (Exception $e) {
-
-            }
 
             return new Http\JsonResponse([
                 'message' => "Albarán actualizado correctamente",
@@ -343,12 +208,6 @@ class Albaran
             $em->persist($item);
             $em->flush();
 
-            try {
-                self::notifyDeleted($item);
-            } catch (Exception $e) {
-
-            }
-
             return new Http\JsonResponse([
                 'message' => "Albarán eliminado correctamente",
                 'item' => $item->model(\App\Model\Document\Albaran\Albaran::class)->json()
@@ -358,32 +217,28 @@ class Albaran
         }
     }
 
-    /**
-     * @param string $roleReceive
-     * @return array
-     * @throws ModuleException
-     */
-    public static function getNotificationReceivers(string $roleReceive): array
+    public static function factura(int $id): Http\JsonResponse
     {
-        $employees = [];
-        foreach (\App\Entity\Employee\Employee::findBy(['deletedOn' => null]) as $employee) {
-            $canReceiver = false;
-            // Comprobar si puede recibir notificación de albaranes creados/actualizados/borrados
-            // y si le corresponde el albarán (Si puede verlo)
-            foreach ($employee->roles as $role) {
-                if ($role->role->value == $roleReceive && $role->group->value === 'DELIVERY_NOTE' && $role->active)
-                    $canReceiver = true;
-            }
-            if ($canReceiver) {
-                $canReceiver = false;
-                foreach ($employee->roles as $role) {
-                    if ($role->role->value == 'VIEW_ALL' && $role->group->value === 'DELIVERY_NOTE' && $role->active)
-                        $canReceiver = true;
-                }
-                if ($canReceiver)
-                    $employees[] = $employee;
-            }
+        try {
+
+            $em = DB::getManager();
+
+            $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            /** @var \App\Model\Document\Albaran\Albaran $albaran */
+            $albaran = $item->model(\App\Model\Document\Albaran\Albaran::class);
+            $albaran->id = null;
+
+            // TODO: Clonar con json_decode etc
+
+            $array = json_decode(json_encode($albaran->json()), true);
+
+            return new Http\JsonResponse([
+                'message' => "Albarán eliminado correctamente",
+                'item' => $item->model(\App\Model\Document\Albaran\Albaran::class)->json()
+            ]);
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
-        return $employees;
     }
 }

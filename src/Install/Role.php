@@ -9,6 +9,8 @@ use Doctrine\ORM\Exception\ORMException;
 
 try {
     $em = Db::getManager();
+
+    $admin = \App\Entity\Employee\Employee::findOneBy(['username' => 'admin']);
     foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::roleschargeOrder()) as $groupName => $roles) {
         $roleGroup = RoleGroup::from($groupName);
         foreach ($roles as $role) {
@@ -21,6 +23,17 @@ try {
             $item->group = $roleGroup;
 
             $em->persist($item);
+
+            $employeeRole = \App\Entity\Employee\EmployeeRole::findOneBy(['employee' => $admin, 'role' => $role, 'group' => $roleGroup]);
+
+            if(!$employeeRole) {
+                $employeeRole = new \App\Entity\Employee\EmployeeRole();
+                $employeeRole->employee = $admin;
+                $employeeRole->role = $role;
+                $employeeRole->group = $roleGroup;
+                $employeeRole->active = true;
+                $em->persist($employeeRole);
+            }
         }
     }
     $em->flush();

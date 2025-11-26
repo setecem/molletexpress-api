@@ -40,8 +40,5 @@ class OrdenCobro extends Entity
     #[ORM\OneToMany(targetEntity: Factura::class, mappedBy: 'orden')]
     public array|Collection $facturas = [];
 
-    /** @var Albaran[]|Collection */
-    #[ORM\OneToMany(targetEntity: Albaran::class, mappedBy: 'orden')]
-    public array|Collection $albaranes = [];
 
 }

@@ -9,5 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class FacturaLinea extends DocumentLine
 {
-
+    #[ORM\JoinColumn(name: 'factura', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Factura::class)]
+    public Factura $factura;
 }

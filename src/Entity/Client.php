@@ -22,32 +22,32 @@ class Client extends Entity
     #[ORM\ManyToOne(targetEntity: User::class)]
     public ?User $user = null;
 
-    #[ORM\Column(name: 'nif', type: 'string', nullable: false)]
-    public string $nif;
+    #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
+    public ?string $nif = null;
 
-    #[ORM\Column(name: 'email', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'email', type: 'string', nullable: true)]
     public ?string $email = null;
 
-    #[ORM\Column(name: 'direccion', type: 'string', nullable: false)]
-    public string $direccion;
+    #[ORM\Column(name: 'direccion', type: 'string', nullable: true)]
+    public ?string $direccion = null;
 
-    #[ORM\Column(name: 'localidad', type: 'string', nullable: false)]
-    public string $localidad;
+    #[ORM\Column(name: 'localidad', type: 'string', nullable: true)]
+    public ?string $localidad = null;
 
-    #[ORM\Column(name: 'postal_code', type: 'string', nullable: false)]
-    public string $codigo_postal;
+    #[ORM\Column(name: 'postal_code', type: 'string', nullable: true)]
+    public ?string $codigo_postal = null;
 
-    #[ORM\Column(name: 'provincia', type: 'string', nullable: false)]
-    public string $provincia;
+    #[ORM\Column(name: 'provincia', type: 'string', nullable: true)]
+    public ?string $provincia = null;
 
-    #[ORM\Column(name: 'telefono', type: 'string', nullable: false)]
-    public string $telefono;
+    #[ORM\Column(name: 'telefono', type: 'string', nullable: true)]
+    public ?string $telefono = null;
 
-    #[ORM\Column(name: 'movil', type: 'string', nullable: false)]
-    public string $movil;
+    #[ORM\Column(name: 'movil', type: 'string', nullable: true)]
+    public ?string $movil = null;
 
-    #[ORM\Column(name: 'forma_pago', type: 'string', nullable: false)]
-    public string $formaPago;
+    #[ORM\Column(name: 'forma_pago', type: 'string', nullable: true)]
+    public ?string $formaPago = null;
 
     #[ORM\Column(name: 'dias_pago', type: 'integer', nullable: false, options: ['default' => '0'])]
     public int $diasPago = 0;
@@ -55,14 +55,14 @@ class Client extends Entity
     #[ORM\Column(name: 'dia_fijo_pago', type: 'integer', nullable: false, options: ['default' => '0'])]
     public int $diaFijoPago = 0;
 
-    #[ORM\Column(name: 'banco', type: 'string', nullable: false)]
-    public string $banco;
+    #[ORM\Column(name: 'banco', type: 'string', nullable: true)]
+    public ?string $banco = null;
 
-    #[ORM\Column(name: 'iban', type: 'string', nullable: false)]
-    public string $iban;
+    #[ORM\Column(name: 'iban', type: 'string', nullable: true)]
+    public ?string $iban = null;
 
-    #[ORM\Column(name: 'num_abonado', type: 'integer', nullable: false)]
-    public string $numAbonado;
+    #[ORM\Column(name: 'num_abonado', type: 'integer', nullable: true)]
+    public ?string $numAbonado = null;
 
     #[ORM\Column(name: 'descuento', type: 'integer', nullable: true)]
     public ?int $descuento = null;
@@ -72,12 +72,6 @@ class Client extends Entity
 
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
-
-    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
-    public ?DateTime $dateCreated = null;
-
-    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
-    public ?DateTime $dateModified = null;
 
     public int $debe = 0;
 }

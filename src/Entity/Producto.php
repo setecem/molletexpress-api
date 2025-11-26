@@ -20,11 +20,11 @@ class Producto extends Entity
     #[ORM\Column(name: 'date', type: 'datetime', nullable: true)]
     public ?DateTime $date = null;
 
-    #[ORM\Column(name: 'cost', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
-    public float $cost = 0.0;
+    #[ORM\Column(name: 'cost', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $cost = 0;
 
-    #[ORM\Column(name: 'price', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => 0.0])]
-    public float $price = 0.0;
+    #[ORM\Column(name: 'price', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $price = 0;
 
     #[ORM\Column(name: 'tax', type: 'string', nullable: false, options: ['default' => '21'])]
     public string $tax = '21';
