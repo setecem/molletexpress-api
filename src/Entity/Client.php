@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\User\User;
 use Cavesman\Db\Doctrine\Entity\Entity;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'client')]
@@ -34,8 +33,9 @@ class Client extends Entity
     #[ORM\Column(name: 'localidad', type: 'string', nullable: true)]
     public ?string $localidad = null;
 
-    #[ORM\Column(name: 'postal_code', type: 'string', nullable: true)]
-    public ?string $codigo_postal = null;
+
+    #[ORM\Column(name: 'postal_code', type: 'string', nullable: false)]
+    public string $codigoPostal;
 
     #[ORM\Column(name: 'provincia', type: 'string', nullable: true)]
     public ?string $provincia = null;

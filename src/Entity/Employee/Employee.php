@@ -4,12 +4,8 @@ namespace App\Entity\Employee;
 
 use App\Entity\File;
 use App\Entity\User\User;
-use App\Entity\User\UserDepartment;
-use App\Entity\User\UserHours;
-use App\Entity\User\UserType;
 use App\Enum\Images;
 use Cavesman\Db\Doctrine\Entity\Entity;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

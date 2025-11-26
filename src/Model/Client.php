@@ -13,7 +13,7 @@ class Client extends Model
     public ?string $nameComercial = null;
     public ?string $direccion = null;
     public ?string $localidad = null;
-    public ?string $codigo_postal = null;
+    public ?string $codigoPostal = null;
     public ?string $provincia = null;
     public ?string $numAbonado = null;
     public ?string $telefono = null;
