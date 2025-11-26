@@ -91,6 +91,9 @@ class User extends Entity
 
     public function __construct()
     {
+        $this->departments = new ArrayCollection();
         $this->hours = new ArrayCollection();
+        $this->actions = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 }

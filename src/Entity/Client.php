@@ -35,7 +35,7 @@ class Client extends Entity
     public string $localidad;
 
     #[ORM\Column(name: 'postal_code', type: 'string', nullable: false)]
-    public string $codigo_postal;
+    public string $codigoPostal;
 
     #[ORM\Column(name: 'provincia', type: 'string', nullable: false)]
     public string $provincia;
