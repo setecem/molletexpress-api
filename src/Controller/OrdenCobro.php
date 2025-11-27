@@ -147,7 +147,7 @@ class OrdenCobro
             $em->flush();
 
             return new Http\JsonResponse([
-                'message' => "Orden de cargo añadido correctamente",
+                'message' => "Orden de cobro añadido correctamente",
                 'item' => $entity->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
@@ -161,7 +161,7 @@ class OrdenCobro
             $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             if (!$item)
-                return new Http\JsonResponse(['message' => "Orden de cargo no encontrado"], 404);
+                return new Http\JsonResponse(['message' => "Orden de cobro no encontrado"], 404);
 
             $model = \App\Model\OrdenCobro::fromRequest();
 
@@ -178,7 +178,7 @@ class OrdenCobro
             $em->flush();
 
             return new Http\JsonResponse([
-                'message' => "Orden de cargo actualizado correctamente",
+                'message' => "Orden de cobro actualizado correctamente",
                 'item' => $entity->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {
@@ -200,7 +200,7 @@ class OrdenCobro
             $em->flush();
 
             return new Http\JsonResponse([
-                'message' => "Orden de cargo eliminado correctamente",
+                'message' => "Orden de cobro eliminado correctamente",
                 'item' => $item->model(\App\Model\OrdenCobro::class)->json()
             ]);
         } catch (Exception|ORMException $e) {

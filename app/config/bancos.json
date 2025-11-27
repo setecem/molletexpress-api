@@ -1,0 +1,796 @@
+{
+    "lista": [
+          {
+            "code": "AAMAESMM",
+            "name": "ANDBANK WEALTH MANAGEMENT SGIIC"
+          },
+          {
+            "code": "ABNAESMM",
+            "name": "THE ROYAL BANK OF SCOTLAND"
+          },
+          {
+            "code": "AGRIESMM",
+            "name": "CA INDOSUEZ WEALTH"
+          },
+          {
+            "code": "AHCFESMM",
+            "name": "AHORRO CORPORACION FINANCIERA"
+          },
+          {
+            "code": "ALCLESMM",
+            "name": "BANCO ALCALA"
+          },
+          {
+            "code": "ALLFESMM",
+            "name": "ALLFUNDS BANK"
+          },
+          {
+            "code": "AREBESMM",
+            "name": "ARESBANK"
+          },
+          {
+            "code": "ASGSESMM",
+            "name": "ABANTE ASESORES GESTION SGIIC SA"
+          },
+          {
+            "code": "AXIPESBB",
+            "name": "AXA SEGUROS GENERALES SA DE SEGUROS Y RESEGUROS"
+          },
+          {
+            "code": "AYGBESMM",
+            "name": "A AND G BANCA PRIVADA"
+          },
+          {
+            "code": "BACAESMM",
+            "name": "ANDBANK ESPANA"
+          },
+          {
+            "code": "BAPUES22",
+            "name": "BANCA PUEYO"
+          },
+          {
+            "code": "BARCESMM",
+            "name": "CAIXABANK"
+          },
+          {
+            "code": "BASKES2B",
+            "name": "KUTXABANK"
+          },
+          {
+            "code": "BBPIESMM",
+            "name": "BANCO BPI"
+          },
+          {
+            "code": "BBRUESMX",
+            "name": "ING BANK NV"
+          },
+          {
+            "code": "BBVAESMM",
+            "name": "BANCO BILBAO VIZCAYA ARGENTARIA - BBVA"
+          },
+          {
+            "code": "BCCAESMM",
+            "name": "BANCO DE CREDITO SOCIAL COOPERATIVO"
+          },
+          {
+            "code": "BCDMESMM",
+            "name": "BANQUE CHAABI DU MAROC"
+          },
+          {
+            "code": "BCITESMM",
+            "name": "INTESA SANPAOLO S.P.A."
+          },
+          {
+            "code": "BCMAESMM",
+            "name": "ATTIJARIWAFA BANK"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ALMENDRALEJO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL CENTRAL S.C.C."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE GIJON"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE NAVARRA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE EXTREMADURA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE SALAMANCA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE SORIA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE SAN AGUSTIN DE FUENTE ALAMO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE UTRERA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE GRANADA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ASTURIAS"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE BURGOS FUENTEPELAYO SEGOVIA Y CASTELLDANS S.C.C"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE JAEN"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAIXA RURAL GALEGA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA SIETE CAJA RURAL SCC"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE TERUEL"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE CASTILLA LA MANCHA S.C.C."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ZAMORA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL NTRA. SRA. DE GUADALUPE SDAD. COOP. CDTO."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE L'ALCUDIA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL NTRA SRA DEL ROSARIO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL NTRA. SRA. DEL CAMPO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL SAN ISIDRO VALL D'UXO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAIXA RURAL L'ALCORA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL NESTRA MADRE DEL SOL"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ALGEMESI"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL CASAS IBANEZ SDAD. COOP."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL SAN JOSE DE ALMASSORA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL NTRA. SENORA DE LA ESPERANZA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "RURALNOSTRA S. COOP. DE CREDITO V."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE GUISSONA SOCIEDAD COOPERATIVA DE CREDITO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE VILLAMALEA"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ALBAL COOP. DE CREDITO V."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAIXA POPULAR CAIXA RURAL"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE BENICARLO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL SAN ISIDRO DE LES COVES DE VINROMA S. COOP. DE CREDITO V."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL VINAROS S.C.C.V."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DEL SUR,SDAD.COOP.CTO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "GLOBALCAJA CAJA RURAL DE ALBACETE CIUDAD REAL Y CUENCA S.C.C."
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "CAJA RURAL DE ARAGON SOCIEDAD COOPERATIVA DE CREDITO"
+          },
+          {
+            "code": "BCOEESMM",
+            "name": "BANCO COOPERATIVO ESPANOL"
+          },
+          {
+            "code": "BESMESMM",
+            "name": "NOVO BANCO SA"
+          },
+          {
+            "code": "BFIVESBB",
+            "name": "BANCO MEDIOLANUM"
+          },
+          {
+            "code": "BKBKESMM",
+            "name": "BANKINTER"
+          },
+          {
+            "code": "BKOAES22",
+            "name": "BANKOA CREDIT AGRICOLE"
+          },
+          {
+            "code": "BMARES2M",
+            "name": "BANCA MARCH SA"
+          },
+          {
+            "code": "BMCEESMM",
+            "name": "BANQUE MAROCAINE DU COMMERCE EXTERIEUR INTERNATIONAL"
+          },
+          {
+            "code": "BNPAESMH",
+            "name": "BNP PARIBAS"
+          },
+          {
+            "code": "BNPAESMM",
+            "name": "BNP PARIBAS ESPANA"
+          },
+          {
+            "code": "BNPAESMS",
+            "name": "BNP PARIBAS"
+          },
+          {
+            "code": "BNPAESMZ",
+            "name": "BNP PARIBAS ESPANA"
+          },
+          {
+            "code": "BOFAES2X",
+            "name": "BANK OF AMERICA MERRILL LYNCH INTERNATIONAL LIMITED"
+          },
+          {
+            "code": "BOTKESMX",
+            "name": "BANK OF TOKYO-MITSUBISHI UFJ"
+          },
+          {
+            "code": "BPLCESMM",
+            "name": "BARCLAYS BANK PLC"
+          },
+          {
+            "code": "BRASESMM",
+            "name": "BANCO DO BRASIL AG"
+          },
+          {
+            "code": "BSABESBB",
+            "name": "BANCO DE SABADELL"
+          },
+          {
+            "code": "BSCHESMG",
+            "name": "BANCO SANTANDER S.A"
+          },
+          {
+            "code": "BSCHESMM",
+            "name": "BANCO SANTANDER"
+          },
+          {
+            "code": "BSSSESM2",
+            "name": "SANTANDER SECURITIES SERVICES"
+          },
+          {
+            "code": "BSUIESMM",
+            "name": "CREDIT AGRICOLE CIB"
+          },
+          {
+            "code": "BVALESMM",
+            "name": "BANCOVAL SECURITIES SERVICES"
+          },
+          {
+            "code": "CAGLESMM",
+            "name": "ABANCA CORPORACION BANCARIA"
+          },
+          {
+            "code": "CAHMESMM",
+            "name": "BANKIA"
+          },
+          {
+            "code": "CAIXESBB",
+            "name": "CAIXABANK"
+          },
+          {
+            "code": "CAPIESMM",
+            "name": "C.M. CAPITAL MARKETS BOLSA SOCIEDAD DE VALORES"
+          },
+          {
+            "code": "CASDESBB",
+            "name": "CAJA DE ARQUITECTOS S.COOP.DE CREDITO"
+          },
+          {
+            "code": "CAZRES2Z",
+            "name": "IBERCAJA BANCO S A"
+          },
+          {
+            "code": "CCOCESMM",
+            "name": "BANCO CAMINOS"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAJA DE CREDITO DE PETREL"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA RURAL ALTEA CCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R. SAN ROQUE DE ALMENARA SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAJA RURAL DE SAN VICENTE VALL D'UXO"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA R. DE CALLOSA DE EN SARRIA CCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAJA RURAL CATOLICO AGRARIA"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.S. JOSE DE BURRIANA SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA RURAL DE TORRENT CCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.S. JAIME ALQUERIAS NINO PERDIDO SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R. DE CHESTE SCC"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA R. DE TURIS C.C.V"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.S. JOSE DE NULES"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.DE VILLAR CCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R. LA JUNQUERA DE CHILCHES SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA R.S.JOSEP DE VILAVELLA SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.S. ISIDRO DE VILAFAMES SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "C.R.DE ALGINET SCCV"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAIXA RURAL ALBALAT DELS SORELLS"
+          },
+          {
+            "code": "CCRIES2A",
+            "name": "CAJAMAR CAJA RURAL SOCIEDAD COOPERATIVA DE CREDITO"
+          },
+          {
+            "code": "CDENESBB",
+            "name": "CAIXA DE CREDIT DELS. ENGINYERS-CAJA DE CREDITO DE LOS INGENIEROS SOC. COOP. DE CREDITO"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "BANCO MARE NOSTRUM"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CAJA DE AHORROS Y MONTE DE PIEDAD DE ONTINYENT"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "LIBERBANK"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CAJA DE AHORROS DE POLLENSA"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CAJA DE AHORROS DE SANTANDER Y CANTABRIA"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CAIXA D'ESTALVIS DEL PENEDES"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CAJA DE AHORROS Y MONTE DE PIEDAD DE EXTREMADURA"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "BANCO DE CASTILLA-LA MANCHA"
+          },
+          {
+            "code": "CECAESMM",
+            "name": "CECABANK"
+          },
+          {
+            "code": "CGDIESMM",
+            "name": "BANCO CAIXA GERAL"
+          },
+          {
+            "code": "CHASESM3",
+            "name": "JPMORGAN CHASE BANK"
+          },
+          {
+            "code": "CITIES2X",
+            "name": "CITIBANK ESPANA"
+          },
+          {
+            "code": "CITIESMX",
+            "name": "CITIBANK EUROPE PLC SPAIN BRANCH"
+          },
+          {
+            "code": "CLPEES2M",
+            "name": "LABORAL KUTXA"
+          },
+          {
+            "code": "CMBOESMM",
+            "name": "BEKA FINANCE"
+          },
+          {
+            "code": "CMCIESMM",
+            "name": "TARGOBANK"
+          },
+          {
+            "code": "COBAESMX",
+            "name": "COMMERZBANK AG"
+          },
+          {
+            "code": "CRESESMM",
+            "name": "CREDIT SUISSE AG"
+          },
+          {
+            "code": "CSPAES2L",
+            "name": "BANCO DE CAJA ESPANA DE INVERSIONES SALAMANCA Y SORIA"
+          },
+          {
+            "code": "CSSOES2S",
+            "name": "BANCO DE CAJA ESPANA DE INVERSIONES"
+          },
+          {
+            "code": "CSURES2C",
+            "name": "CAJASUR BANCO"
+          },
+          {
+            "code": "DBSCESMM",
+            "name": "DEUTSCHE BANK AG SPANISH BRANCH"
+          },
+          {
+            "code": "DEUTESBB",
+            "name": "DEUTSCHE BANK SOCIEDAD ANONIMA ESPANOLA"
+          },
+          {
+            "code": "DSBLESMM",
+            "name": "DEXIA SABADELL BANCO LOCAL"
+          },
+          {
+            "code": "ESPBESMM",
+            "name": "BANCO DE ESPANA"
+          },
+          {
+            "code": "ESPCESMM",
+            "name": "BANCO SANTANDER FORMERLY BANCO ESPANOL DE CREDITO"
+          },
+          {
+            "code": "ESSIESMM",
+            "name": "HAITONG BANK SA"
+          },
+          {
+            "code": "EVOBESMM",
+            "name": "EVO BANCO"
+          },
+          {
+            "code": "EXCHESMM",
+            "name": "MACCORP EXACT CHANGE"
+          },
+          {
+            "code": "GBMNESMM",
+            "name": "BANCO MARE NOSTRUM"
+          },
+          {
+            "code": "GEBAESMM",
+            "name": "BNP PARIBAS FORTIS"
+          },
+          {
+            "code": "GVCBESBB",
+            "name": "GENERAL DE VALORES Y CAMBIOS"
+          },
+          {
+            "code": "IBRCESMM",
+            "name": "IBERCLEAR"
+          },
+          {
+            "code": "ICBKESMM",
+            "name": "INDUSTRIAL AND COMMERCIAL BANK OF CHINA"
+          },
+          {
+            "code": "ICROESMM",
+            "name": "INSTITUTO DE CREDITO OFICIAL"
+          },
+          {
+            "code": "INGDESMM",
+            "name": "ING BANK NV"
+          },
+          {
+            "code": "INSGESMM",
+            "name": "INVERSEGUROS SOCIEDAD DE VALORESU"
+          },
+          {
+            "code": "INVLESMM",
+            "name": "BANCO INVERSIS"
+          },
+          {
+            "code": "IVALESMM",
+            "name": "INTERMONEY VALORES"
+          },
+          {
+            "code": "KBLXESMM",
+            "name": "KBL EUROPEAN PRIVATE BANKERS"
+          },
+          {
+            "code": "LISEESMM",
+            "name": "LINK SECURITIES SOCIEDAD DE VALORES"
+          },
+          {
+            "code": "LOCYESMM",
+            "name": "LOMBARD ODIER"
+          },
+          {
+            "code": "MEFFESBB",
+            "name": "BME CLEARING"
+          },
+          {
+            "code": "MIDLESMM",
+            "name": "HSBC BANK PLC"
+          },
+          {
+            "code": "MIDLESMX",
+            "name": "HSBC BANK PLC"
+          },
+          {
+            "code": "MIRAESMM",
+            "name": "MIRABAUD AND CIE"
+          },
+          {
+            "code": "MISVESMB",
+            "name": "MAPFRE INVERSION SOCIEDAD DE VALORES"
+          },
+          {
+            "code": "MISVESMM",
+            "name": "MAPFRE INVERSION SOCIEDAD DE VALORES"
+          },
+          {
+            "code": "MLCEESMM",
+            "name": "MERRILL LYNCH CAPITAL MARKETS ESPANA"
+          },
+          {
+            "code": "MNTYESMM",
+            "name": "MONTY GLOBAL PAYMENTS"
+          },
+          {
+            "code": "NACNESMM",
+            "name": "BANCO DE LA NACION ARGENTINA"
+          },
+          {
+            "code": "NATXESMM",
+            "name": "NATIXIS"
+          },
+          {
+            "code": "NORLES2B",
+            "name": "NORBOLSA"
+          },
+          {
+            "code": "NORTESMM",
+            "name": "BANCO SANTANDER FORMERLY BANCO BANIF"
+          },
+          {
+            "code": "OPENESMM",
+            "name": "OPEN BANK SANTANDER CONSUMER"
+          },
+          {
+            "code": "ORUNESMM",
+            "name": "IPAGOO LLP MADRID BRANCH"
+          },
+          {
+            "code": "PARBESMH",
+            "name": "BNP PARIBAS SECURITIES SERVICES"
+          },
+          {
+            "code": "PARBESMX",
+            "name": "BNP PARIBAS SECURITIES SERVICES"
+          },
+          {
+            "code": "PCBCESBB",
+            "name": "CHINA CONSTRUCTION BANK"
+          },
+          {
+            "code": "PICHESMM",
+            "name": "BANCO PICHINCHA"
+          },
+          {
+            "code": "PICTESMM",
+            "name": "PICTET AND CIE"
+          },
+          {
+            "code": "POPIESMM",
+            "name": "POPULAR BANCA PRIVADA"
+          },
+          {
+            "code": "POPLESMM",
+            "name": "BANCOPOPULAR-E"
+          },
+          {
+            "code": "POPUESMM",
+            "name": "BANCO POPULAR ESPANOL"
+          },
+          {
+            "code": "PRABESMM",
+            "name": "RABOBANK MADRID"
+          },
+          {
+            "code": "PRIBESMX",
+            "name": "BANQUE PRIVEE EDMOND DE ROTHSCHILD EUROPE"
+          },
+          {
+            "code": "PROAESMM",
+            "name": "EBN BANCO DE NEGOCIOS"
+          },
+          {
+            "code": "PSTRESMM",
+            "name": "BANCO PASTOR"
+          },
+          {
+            "code": "RENBESMM",
+            "name": "RENTA 4 BANCO"
+          },
+          {
+            "code": "RENTESMM",
+            "name": "RENTA 4 SOCIEDAD DE VALORES"
+          },
+          {
+            "code": "SABNESMM",
+            "name": "SANTANDER INVESTMENT SERVICES"
+          },
+          {
+            "code": "SAMXESMB",
+            "name": "SANTANDER ASSET MANAGEMENT CIUDAD GRUPO SANTANDER"
+          },
+          {
+            "code": "SAMXESMM",
+            "name": "SANTANDER ASSET MANAGEMENT"
+          },
+          {
+            "code": "SBFCESMM",
+            "name": "SANTANDER BRASIL"
+          },
+          {
+            "code": "SCFBESMM",
+            "name": "SANTANDER CONSUMER FINANCE"
+          },
+          {
+            "code": "SELFESMM",
+            "name": "SELF TRADE BANK"
+          },
+          {
+            "code": "SOGEESMM",
+            "name": "SOCIETE GENERALE"
+          },
+          {
+            "code": "SPVGESMM",
+            "name": "SANTANDER PRIVATE BANKING GESTION"
+          },
+          {
+            "code": "TPSGESMM",
+            "name": "TESORO PUBLICO-SPAIN SPANISH GOVERNMENT GOBIERNO DE ESPANA"
+          },
+          {
+            "code": "TRIOESMM",
+            "name": "TRIODOS BANK NV"
+          },
+          {
+            "code": "UBIBESMM",
+            "name": "UBI BANCA INTERNATIONAL-SUCURSAL EN ESPANA"
+          },
+          {
+            "code": "UBSWESMM",
+            "name": "UBS BANK"
+          },
+          {
+            "code": "UCINESMM",
+            "name": "UNION DE CREDITOS INMOBILIARIOS"
+          },
+          {
+            "code": "UCJAES2M",
+            "name": "UNICAJA BANCO"
+          },
+          {
+            "code": "UNCRESMA",
+            "name": "UNICREDIT SPA"
+          },
+          {
+            "code": "WELAESMM",
+            "name": "PORTIGON AG"
+          },
+          {
+            "code": "XBCNESBB",
+            "name": "SOCIEDAD RECTORA DE LA BOLSA DE VALORES DE BARCELONA"
+          },
+          {
+            "code": "XRBVES2B",
+            "name": "SOCIEDAD RECTORA DE LA BOLSA DE VALORES DE BILBAO"
+          },
+          {
+            "code": "ZURIESBB",
+            "name": "ZURICH INSURANCE PLC"
+          }
+        ]
+}
