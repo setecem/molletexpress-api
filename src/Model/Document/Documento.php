@@ -4,6 +4,7 @@ namespace App\Model\Document;
 
 use App\Enum\DocumentStatus;
 use App\Model\Client;
+use BackedEnum;
 use Cavesman\Db\Doctrine\Model\Model;
 use DateTime;
 
@@ -11,14 +12,13 @@ abstract class Documento extends Model
 {
     public DocumentStatus $status = DocumentStatus::DRAFT;
 
-    public ?\App\Model\Client $client = null;
+    public ?Client $client = null;
     public string $serie = 'P';
     public ?int $reference = null;
     public ?int $numPedido = 0;
     public ?string $number = null;
-    public DateTime $date;
+    public DateTime|string|null $date = null;
     public ?string $observaciones = null;
-
     public float $importeBruto = 0;
     public float $subtotal = 0;
     public string $tax = '21';
@@ -40,6 +40,14 @@ abstract class Documento extends Model
         return match ($property) {
             'client' => Client::class,
             'lineas' => DocumentoLinea::class,
+            default => null
+        };
+    }
+
+    public function typeOfEnum($name): BackedEnum|string|null
+    {
+        return match ($name) {
+            'status' => DocumentStatus::class,
             default => null
         };
     }

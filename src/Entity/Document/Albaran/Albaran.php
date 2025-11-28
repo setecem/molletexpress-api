@@ -13,9 +13,9 @@ class Albaran extends Documento
 {
     #[ORM\JoinColumn(name: 'factura', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Factura::class, inversedBy: 'facturas')]
-    public Factura $factura;
+    public ?Factura $factura = null;
 
     /** @var AlbaranLinea[]|Collection */
-    #[ORM\OneToMany(targetEntity: AlbaranLinea::class, mappedBy: 'albaran')]
+    #[ORM\OneToMany(targetEntity: AlbaranLinea::class, mappedBy: 'albaran', cascade: ['persist'])]
     public array|Collection $lineas = [];
 }

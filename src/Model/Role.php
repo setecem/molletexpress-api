@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Enum\RoleGroup;
+use BackedEnum;
 use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Interface\Model;
 
@@ -14,7 +15,7 @@ class Role extends \Cavesman\Db\Doctrine\Model\Model implements Model
     public RoleGroup $group = RoleGroup::EMPLOYEE;
     public bool $active = true;
 
-    public function typeOfEnum($name): \BackedEnum|string|null
+    public function typeOfEnum($name): BackedEnum|string|null
     {
         return match ($name) {
             'group' => RoleGroup::class,

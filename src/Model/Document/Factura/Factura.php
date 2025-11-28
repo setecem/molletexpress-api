@@ -4,7 +4,7 @@ namespace App\Model\Document\Factura;
 
 use App\Model\Client;
 use App\Model\Document\Documento;
-use App\Model\Document\DocumentoLinea;
+use App\Model\OrdenCobro;
 use Cavesman\Db\Doctrine\Entity\Base;
 
 class Factura extends Documento
@@ -12,4 +12,14 @@ class Factura extends Documento
 
     const string|Base ENTITY = \App\Entity\Document\Factura\Factura::class;
 
+    public ?OrdenCobro $ordenCobro = null;
+
+    public function typeOfCollection(string $property): ?string
+    {
+        return match ($property) {
+            'client' => Client::class,
+            'lineas' => FacturaLinea::class,
+            default => null
+        };
+    }
 }

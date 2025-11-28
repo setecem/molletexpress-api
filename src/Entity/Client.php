@@ -14,8 +14,8 @@ class Client extends Entity
     #[ORM\Column(name: 'name', type: 'string', nullable: false)]
     public string $name;
 
-    #[ORM\Column(name: 'name_comercial', type: 'string', nullable: false)]
-    public string $nameComercial;
+    #[ORM\Column(name: 'name_comercial', type: 'string', nullable: true)]
+    public ?string $nameComercial = null;
 
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: User::class)]

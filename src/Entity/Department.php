@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Contact\Contact;
-use App\Entity\Employee\Employee;
 use App\Entity\User\User;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;

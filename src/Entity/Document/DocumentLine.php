@@ -8,8 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class DocumentLine extends Entity
 {
 
+    #[ORM\GeneratedValue]
     #[ORM\Column(name: 'reference', type: 'string', nullable: false)]
-    public string $reference;
+    public ?string $reference = null;
 
     #[ORM\Column(name: 'unidad_medida', type: 'string', nullable: false)]
     public string $unidadMedida;

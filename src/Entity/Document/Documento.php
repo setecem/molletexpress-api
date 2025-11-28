@@ -17,6 +17,7 @@ abstract class Documento extends Entity
     #[ORM\Column(name: 'serie', type: 'string', nullable: false, options: ['default' => 'P'])]
     public string $serie = 'P';
 
+    #[ORM\GeneratedValue]
     #[ORM\Column(name: 'reference', type: 'integer', nullable: true)]
     public ?int $reference = null;
 

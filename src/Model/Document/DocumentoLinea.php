@@ -3,7 +3,7 @@
 namespace App\Model\Document;
 
 class DocumentoLinea {
-    public string $reference;
+    public ?string $reference = null;
     public string $unidadMedida;
     public string $description;
     public float $quantity = 0;
