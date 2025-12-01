@@ -12,11 +12,8 @@ enum Role: string
     case CREATE = 'CREATE';
     case FEED = 'FEED';
     case PRIVATE = 'PRIVATE';
-    case UPDATE = 'UPDATE';
     case VIEW_ALL = 'VIEW_ALL';
     case VIEW = 'VIEW';
-    case ALERT = 'ALERT';
-    case EMPTY = 'EMPTY';
     case ROLES = 'ROLES';
     case DOWNLOAD = 'DOWNLOAD';
     case PAID_STATUS = 'PAID_STATUS';

@@ -4,26 +4,13 @@ namespace App\Enum;
 
 enum RoleGroup: string
 {
-    case DASHBOARD = 'DASHBOARD';
-    case BOOKING = 'BOOKING';
-    case WAREHOUSE = 'WAREHOUSE';
-    case SCHEDULE = 'SCHEDULE';
+
     case EMPLOYEE = 'EMPLOYEE';
     case CLIENT = 'CLIENT';
-    case CONTACT = 'CONTACT';
     case INVOICE = 'INVOICE';
     case DELIVERY_NOTE = 'DELIVERY_NOTE';
     case SERVICE = 'SERVICE';
     case CHARGE_ORDER = 'CHARGE_ORDER';
-    case REPORT = 'REPORT';
-    case DEVICE = 'DEVICE';
-    case LOG = 'LOG';
-    case FEED = 'FEED';
-    case ALERT = 'ALERT';
-    case COMERCIAL = 'COMERCIAL';
-    case ORIGEN = 'ORIGEN';
-    case TYPE = 'TYPE';
-    case DNI = 'DNI';
 
     public static function rolesEmployee(): array
     {
@@ -85,7 +72,8 @@ enum RoleGroup: string
                 Role::RECEIVE_EMAIL_CREATE,
                 Role::RECEIVE_EMAIL_EDIT,
                 Role::RECEIVE_EMAIL_DELETE,
-                Role::DOWNLOAD
+                Role::DOWNLOAD,
+                Role::SEND_EMAIL
             ]
         ];
     }
