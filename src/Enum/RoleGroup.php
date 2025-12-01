@@ -155,7 +155,8 @@ enum RoleGroup: string
                 Role::RECEIVE_EMAIL_EDIT,
                 Role::RECEIVE_EMAIL_DELETE,
                 Role::ACTIVE,
-                Role::DOWNLOAD
+                Role::DOWNLOAD,
+                Role::PAID_STATUS
             ]
         ];
 

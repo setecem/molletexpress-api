@@ -52,5 +52,6 @@
     "role.group.SERVICE": "Service",
     "role.group.CHARGE_ORDER": "Charge order",
     "role.role.ACTIVE": "Activate",
-    "role.role.DOWNLOAD": "Download"
+    "role.role.DOWNLOAD": "Download",
+    "role.role.PAID_STATUS": "Edit paid status"
 }

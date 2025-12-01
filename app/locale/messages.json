@@ -214,5 +214,9 @@
     "role.role.DOWNLOAD": {
         "message": "Download",
         "replace": []
+    },
+    "role.role.PAID_STATUS": {
+        "message": "Edit paid status",
+        "replace": []
     }
 }
