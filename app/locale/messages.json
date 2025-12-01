@@ -218,5 +218,9 @@
     "role.role.PAID_STATUS": {
         "message": "Edit paid status",
         "replace": []
+    },
+    "role.role.SEND_EMAIL": {
+        "message": "Send email",
+        "replace": []
     }
 }

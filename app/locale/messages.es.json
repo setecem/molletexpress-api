@@ -53,5 +53,6 @@
     "role.group.CHARGE_ORDER": "Orden de cobro",
     "role.role.ACTIVE": "Activar",
     "role.role.DOWNLOAD": "Descargar",
-    "role.role.PAID_STATUS": "Editar estado de pagado"
+    "role.role.PAID_STATUS": "Editar estado de pagado",
+    "role.role.SEND_EMAIL": "Enviar email"
 }
