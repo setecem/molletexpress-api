@@ -155,6 +155,10 @@ class Factura
 
             $em = DB::getManager();
 
+            foreach ($entity->lineas as $linea) {
+                $linea->factura = $entity;
+            }
+
             $em->persist($entity);
             $em->flush();
 

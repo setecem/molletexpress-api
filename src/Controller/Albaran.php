@@ -154,6 +154,10 @@ class Albaran
 
             $em = DB::getManager();
 
+            foreach ($entity->lineas as $linea) {
+                $linea->albaran = $entity;
+            }
+
             $em->persist($entity);
             $em->flush();
 
