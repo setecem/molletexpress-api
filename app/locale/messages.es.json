@@ -51,5 +51,6 @@
     "role.group.DELIVERY_NOTE": "Albarán",
     "role.group.SERVICE": "Servicio",
     "role.group.CHARGE_ORDER": "Orden de cobro",
-    "role.role.ACTIVE": "Activar"
+    "role.role.ACTIVE": "Activar",
+    "role.role.DOWNLOAD": "Descargar"
 }

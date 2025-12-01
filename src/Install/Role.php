@@ -13,7 +13,7 @@ try {
     $em = Db::getManager();
 
     $admin = Employee::findOneBy(['username' => 'admin']);
-    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::roleschargeOrder()) as $groupName => $roles) {
+    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::rolesChargeOrder()) as $groupName => $roles) {
         $roleGroup = RoleGroup::from($groupName);
         foreach ($roles as $role) {
             $item = $em->getRepository(Role::class)->findOneBy(['role' => $role, 'group' => $roleGroup]);

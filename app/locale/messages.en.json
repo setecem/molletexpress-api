@@ -51,5 +51,6 @@
     "role.group.DELIVERY_NOTE": "Delivery note",
     "role.group.SERVICE": "Service",
     "role.group.CHARGE_ORDER": "Charge order",
-    "role.role.ACTIVE": "Activate"
+    "role.role.ACTIVE": "Activate",
+    "role.role.DOWNLOAD": "Download"
 }

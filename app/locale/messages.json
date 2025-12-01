@@ -210,5 +210,9 @@
     "role.role.ACTIVE": {
         "message": "Activate",
         "replace": []
+    },
+    "role.role.DOWNLOAD": {
+        "message": "Download",
+        "replace": []
     }
 }

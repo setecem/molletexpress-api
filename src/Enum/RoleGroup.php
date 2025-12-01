@@ -139,7 +139,7 @@ enum RoleGroup: string
         ];
     }
 
-    public static function roleschargeOrder(): array
+    public static function rolesChargeOrder(): array
     {
         return [
             self::CHARGE_ORDER->value => [
@@ -154,7 +154,8 @@ enum RoleGroup: string
                 Role::RECEIVE_EMAIL_CREATE,
                 Role::RECEIVE_EMAIL_EDIT,
                 Role::RECEIVE_EMAIL_DELETE,
-                Role::ACTIVE
+                Role::ACTIVE,
+                Role::DOWNLOAD
             ]
         ];
 
