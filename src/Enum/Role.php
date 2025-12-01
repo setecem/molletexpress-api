@@ -6,6 +6,7 @@ enum Role: string
 {
     case ACCESS = 'ACCESS';
     case EDIT = 'EDIT';
+    case ACTIVE = 'ACTIVE';
     case DELETE = 'DELETE';
     case FILES = 'FILES';
     case CREATE = 'CREATE';

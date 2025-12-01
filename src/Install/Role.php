@@ -1,5 +1,7 @@
 <?php
 
+use App\Entity\Employee\Employee;
+use App\Entity\Employee\EmployeeRole;
 use App\Entity\Role;
 use App\Enum\RoleGroup;
 use Cavesman\Console;
@@ -10,8 +12,8 @@ use Doctrine\ORM\Exception\ORMException;
 try {
     $em = Db::getManager();
 
-    $admin = \App\Entity\Employee\Employee::findOneBy(['username' => 'admin']);
-    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesContact(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::roleschargeOrder()) as $groupName => $roles) {
+    $admin = Employee::findOneBy(['username' => 'admin']);
+    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesService(), RoleGroup::roleschargeOrder()) as $groupName => $roles) {
         $roleGroup = RoleGroup::from($groupName);
         foreach ($roles as $role) {
             $item = $em->getRepository(Role::class)->findOneBy(['role' => $role, 'group' => $roleGroup]);
@@ -24,10 +26,10 @@ try {
 
             $em->persist($item);
 
-            $employeeRole = \App\Entity\Employee\EmployeeRole::findOneBy(['employee' => $admin, 'role' => $role, 'group' => $roleGroup]);
+            $employeeRole = EmployeeRole::findOneBy(['employee' => $admin, 'role' => $role, 'group' => $roleGroup]);
 
             if(!$employeeRole) {
-                $employeeRole = new \App\Entity\Employee\EmployeeRole();
+                $employeeRole = new EmployeeRole();
                 $employeeRole->employee = $admin;
                 $employeeRole->role = $role;
                 $employeeRole->group = $roleGroup;

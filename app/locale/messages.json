@@ -206,5 +206,9 @@
     "role.group.CHARGE_ORDER": {
         "message": "Charge order",
         "replace": []
+    },
+    "role.role.ACTIVE": {
+        "message": "Activate",
+        "replace": []
     }
 }

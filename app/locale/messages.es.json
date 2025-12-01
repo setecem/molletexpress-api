@@ -50,5 +50,6 @@
     "role.group.INVOICE": "Factura",
     "role.group.DELIVERY_NOTE": "Albarán",
     "role.group.SERVICE": "Servicio",
-    "role.group.CHARGE_ORDER": "Orden de cobro"
+    "role.group.CHARGE_ORDER": "Orden de cobro",
+    "role.role.ACTIVE": "Activar"
 }

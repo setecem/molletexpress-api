@@ -85,7 +85,7 @@ class Employee
                     $em->flush();
                 }
 
-                foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesContact()) as $groupName => $roles) {
+                foreach (array_merge(RoleGroup::rolesEmployee()) as $groupName => $roles) {
                     $group = RoleGroup::from($groupName);
                     foreach ($roles as $item) {
                         $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
