@@ -179,10 +179,24 @@ class Albaran
             if ($id != $model->id)
                 return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
 
+            $em = DB::getManager();
+
+            $idLineas = array_map(fn($linea) => $linea->id, $model->lineas);
+
+            foreach ($item->lineas as $linea) {
+                if (!in_array($linea->id, $idLineas)) {
+                    $linea->deletedOn = new DateTime();
+                    $em->persist($linea);
+                }
+            }
 
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
             $entity = $model->entity();
-            $em = DB::getManager();
+
+            foreach ($entity->lineas as $linea) {
+                $linea->albaran = $entity;
+            }
+
             $em->persist($entity);
             $em->flush();
 

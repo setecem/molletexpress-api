@@ -2,7 +2,6 @@
 
 namespace App\Model\Document\Albaran;
 
-use App\Entity\Document\Albaran\AlbaranLinea;
 use App\Model\Client;
 use App\Model\Document\Documento;
 use App\Model\Document\Factura\Factura;

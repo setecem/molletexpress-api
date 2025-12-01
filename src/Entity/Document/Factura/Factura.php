@@ -14,7 +14,7 @@ class Factura extends Documento
 {
 
     /** @var FacturaLinea[]|Collection */
-    #[ORM\OneToMany(targetEntity: FacturaLinea::class, mappedBy: 'factura')]
+    #[ORM\OneToMany(targetEntity: FacturaLinea::class, mappedBy: 'factura', cascade: ['persist'])]
     public array|Collection $lineas = [];
 
     #[ORM\JoinColumn(name: 'orden_cobro', referencedColumnName: 'id', onDelete: 'SET NULL')]

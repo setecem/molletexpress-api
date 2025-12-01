@@ -11,5 +11,5 @@ class FacturaLinea extends DocumentLine
 {
     #[ORM\JoinColumn(name: 'factura', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Factura::class)]
-    public Factura $factura;
+    public ?Factura $factura = null;
 }

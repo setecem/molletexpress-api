@@ -70,15 +70,7 @@ class User
             $entity = $model->entity();
             $em = DB::getManager();
 
-            if ($entity->employee) {
-                $entity->type = UserType::findOneBy(['id' => 1]);
-                $entity->employee->user = $entity;
-                $em->persist($entity->employee);
-                $entity->employee = null;
-            } elseif ($entity->client)
-                $entity->type = UserType::findOneBy(['id' => 3]);
-            else
-                $entity->type = UserType::findOneBy(['id' => 2]);
+            $entity->type = UserType::findOneBy(['id' => 2]);
 
             $em->persist($entity->type);
             $em->persist($entity);
@@ -113,12 +105,6 @@ class User
             /** @var \App\Entity\User\User $entity */
             $entity = $model->entity();
             $em = DB::getManager();
-
-            if ($entity->employee) {
-                $entity->employee->user = $entity;
-                $em->persist($entity->employee);
-                $entity->employee = null;
-            }
 
             $em->persist($entity);
             $em->flush();
