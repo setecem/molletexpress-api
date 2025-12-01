@@ -114,7 +114,8 @@ enum RoleGroup: string
                 Role::ALERT_CREATE,
                 Role::RECEIVE_EMAIL_CREATE,
                 Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE
+                Role::RECEIVE_EMAIL_DELETE,
+                Role::DOWNLOAD
             ]
         ];
     }
