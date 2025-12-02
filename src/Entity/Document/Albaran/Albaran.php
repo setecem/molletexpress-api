@@ -18,4 +18,5 @@ class Albaran extends Documento
     /** @var AlbaranLinea[]|Collection */
     #[ORM\OneToMany(targetEntity: AlbaranLinea::class, mappedBy: 'albaran', cascade: ['persist'])]
     public array|Collection $lineas = [];
+
 }

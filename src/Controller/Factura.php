@@ -161,6 +161,8 @@ class Factura
 
             $em->persist($entity);
             $em->flush();
+            $em->persist($entity);
+            $em->flush();
 
             return new Http\JsonResponse([
                 'message' => "Factura añadida correctamente",
