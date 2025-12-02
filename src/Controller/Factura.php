@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Enum\DocumentStatus;
 use App\Model\DataTable;
 use Cavesman\Db;
+use Cavesman\Enum\Directory;
+use Cavesman\FileSystem;
 use Cavesman\Http;
 use Cavesman\Request;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
+use ReflectionClass;
 
 class Factura
 {
@@ -237,6 +240,93 @@ class Factura
                 'message' => "Factura eliminada correctamente",
                 'item' => $item->model(\App\Model\Document\Factura\Factura::class)->json()
             ]);
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
+    protected static function getClass(): array|false|string|null
+    {
+        return mb_strtolower(new ReflectionClass(static::class)->getShortName());
+    }
+
+    protected static function getEntity($entity = ''): string
+    {
+        return "\\src\\Modules\\Factura\\Entity\\" . ucfirst(self::getClass()) . ucfirst($entity) . "Entity";
+    }
+
+    protected static function export(string $dateStart, string $dateEnd, string $client)
+    {
+        $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
+        try {
+            $em = DB::getManager();
+            if (file_exists(dirname(__FILE__) . "/templates/" . self::getClass() . ".php"))
+                require dirname(__FILE__) . "/templates/" . self::getClass() . ".php";
+            else
+                require dirname(__FILE__) . "/templates/default.php";
+            // Género los namespace de los documentos a generar
+            $namespace = self::getEntity();
+
+            $result_items = $em
+                ->createQueryBuilder()
+                ->select('o')
+                ->from($namespace, "o")
+                ->where('o.date BETWEEN :dateStart AND :dateEnd')
+                ->orderBy("o.reference", "DESC")
+                ->setParameter('dateStart', new DateTime($dateStart))
+                ->setParameter('dateEnd', new DateTime($dateEnd));
+            if ($client !== "false") {
+                $client_ent = $em->getReference(\App\Entity\Client::class, $client);
+                $result_items
+                    ->andWhere("o.client = :client")
+                    ->setParameter('client', $client_ent);
+            }
+            $results = $result_items
+                ->getQuery()
+                ->getResult();
+
+
+            $clients = [];
+            foreach ($results as $item) {
+                if ($item->getClient()) {
+                    if (!isset($clients[$item->getClient()->getId()]))
+                        $clients[$item->getClient()->getId()] = [
+                            "client" => $item->getClient(),
+                            "items" => []
+                        ];
+                    $clients[$item->getClient()->getId()]["items"][] = $item;
+                }
+            }
+            if (!$clients) {
+                return new Http\JsonResponse(['message' => "Ningún documento encontrado"], 404);
+            }
+
+            $zip_file = self::getClass() . "-" . time();
+            if (!is_dir($cacheDirectory . "/pdf/" . $zip_file))
+                mkdir($cacheDirectory . "/pdf/" . $zip_file, 0777, true);
+
+            foreach ($clients as $c) {
+                foreach ($c['items'] as $item) {
+                    $invoice = new FacturaPDF("A4", "€", "es");
+                    $invoice = self::print($item->getId(), true, $invoice);
+                    $invoice->render($cacheDirectory . "/pdf/" . $zip_file . "/" . $item->getNumber() . ".pdf", 'F');
+                }
+            }
+
+            $zip = new \ZipArchive;
+            if ($zip->open($cacheDirectory . "/pdf/" . $zip_file . "/facturas.zip", \ZipArchive::CREATE)) {
+                foreach (glob($cacheDirectory . "/pdf/" . $zip_file . "/*.pdf") as $pdf) {
+                    $zip->addFile($pdf, basename($pdf));
+                }
+                $zip->close();
+            } else {
+                echo 'Failed!';
+            }
+            header('Content-disposition: attachment; filename=' . self::getClass() . "-" . time() . '.zip');
+            header('Content-type: application/zip');
+            readfile($cacheDirectory . "/pdf/" . $zip_file . "/facturas.zip");
+            die("fin");
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }

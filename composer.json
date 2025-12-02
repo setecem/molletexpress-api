@@ -1,36 +1,37 @@
 {
-    "name": "cavesman/crm",
-    "description": "Software de gesti\u00f3n",
-    "type": "project",
-    "require": {
-        "ext-fileinfo": "*",
-        "ext-curl": "*",
-        "ext-pdo": "*",
-        "soanix/cavesman": "^0.5",
-        "doctrine/orm": "^3.5",
-        "phpmailer/phpmailer": "v6.9.3",
-        "phpoffice/phpspreadsheet": "^2.1",
-        "symfony/cache": "^7.3",
-        "firebase/php-jwt": "^6.11",
-        "symfony/var-dumper": "^7.3",
-        "twig/twig": "^3.21"
-    },
-    "authors": [
-        {
-            "name": "Pedro Oliver",
-            "email": "soanix91@gmail.com"
-        }
-    ],
-    "scripts": {
-        "deploy": "deploy.cmd"
-    },
-    "minimum-stability": "stable",
-    "config": {
-        "bin-dir": "bin"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
+  "name": "cavesman/crm",
+  "description": "Software de gesti\u00f3n",
+  "type": "project",
+  "require": {
+    "ext-fileinfo": "*",
+    "ext-curl": "*",
+    "ext-pdo": "*",
+    "soanix/cavesman": "^0.5",
+    "doctrine/orm": "^3.5",
+    "phpmailer/phpmailer": "v6.9.3",
+    "phpoffice/phpspreadsheet": "^2.1",
+    "symfony/cache": "^7.3",
+    "firebase/php-jwt": "^6.11",
+    "symfony/var-dumper": "^7.3",
+    "twig/twig": "^3.21",
+    "ext-zip": "*"
+  },
+  "authors": [
+    {
+      "name": "Pedro Oliver",
+      "email": "soanix91@gmail.com"
     }
+  ],
+  "scripts": {
+    "deploy": "deploy.cmd"
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
 }
