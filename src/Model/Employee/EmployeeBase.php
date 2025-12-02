@@ -18,6 +18,13 @@ class EmployeeBase extends Model
     public ?string $username = null;
     public ?string $email = null;
     public bool $active = true;
+    public ?string $dni = null;
+    public float $salarioBase = 0;
+    public float $salarioMensualNominal = 0;
+    public float $plusExtra = 0;
+    public float $precioHora = 0;
+    public float $precioHoraExtra = 0;
+    public float $precioHoraFestivo = 0;
 
     /** @var EmployeeRole[] $roles  */
     public array $roles = [];

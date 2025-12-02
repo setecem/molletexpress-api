@@ -4,8 +4,10 @@ namespace App\Entity\Employee;
 
 use App\Entity\File;
 use App\Entity\User\User;
+use App\Entity\User\UserHours;
 use App\Enum\Images;
 use Cavesman\Db\Doctrine\Entity\Entity;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,23 +28,45 @@ class Employee extends Entity
     #[ORM\Column(name: 'lastname', type: 'string', nullable: true)]
     public ?string $lastname = null;
 
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: User::class)]
-    public ?User $user = null;
     #[ORM\Column(name: 'dni', type: 'string', nullable: true)]
     public ?string $dni = null;
 
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
 
-    #[ORM\Column(name: 'email', type: 'string', length: 100, nullable: false)]
+    #[ORM\Column(name: 'email', type: 'string', nullable: false)]
     public ?string $email = null;
 
-    #[ORM\Column(name: 'username', type: 'string', length: 50, nullable: false)]
+    #[ORM\Column(name: 'username', type: 'string', nullable: false)]
     public ?string $username = null;
 
     #[ORM\Column(name: 'password', type: 'string', nullable: false)]
     public ?string $password = null;
+
+    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
+    public ?DateTime $dateCreated = null;
+
+    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
+    public ?DateTime $dateModified = null;
+
+    /** Campos traidos de la web */
+    #[ORM\Column(name: 'salario_base', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $salarioBase = 0;
+
+    #[ORM\Column(name: 'salario_mensual_nominal', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $salarioMensualNominal = 0;
+
+    #[ORM\Column(name: 'plus_extra', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $plusExtra = 0;
+
+    #[ORM\Column(name: 'precio_hora', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $precioHora = 0;
+
+    #[ORM\Column(name: 'precio_hora_extra', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $precioHoraExtra = 0;
+
+    #[ORM\Column(name: 'precio_hora_festivo', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
+    public float $precioHoraFestivo = 0;
 
     /** Campos traidos del CRM */
 

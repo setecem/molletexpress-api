@@ -17,6 +17,7 @@ enum Role: string
     case ROLES = 'ROLES';
     case DOWNLOAD = 'DOWNLOAD';
     case PAID_STATUS = 'PAID_STATUS';
+    case GENERATE_ORDER = 'GENERATE_ORDER';
     case COMERCIAL_EDIT = 'COMERCIAL_EDIT';
     case ORIGEN_EDIT = 'ORIGEN_EDIT';
     case ORIGEN_HIDE = 'ORIGEN_HIDE';
