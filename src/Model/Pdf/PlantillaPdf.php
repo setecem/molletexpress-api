@@ -1,101 +1,83 @@
 <?php
-/**
- * Contains the InvoicePrinter class.
- *
- * @author      Farjad Tahir
- *
- * @see         http://www.splashpk.com
- *
- * @license     GPL
- *
- * @since       2017-12-15
- */
 
 namespace App\Model\Pdf;
 
-class PlantillaPDF extends \Fpdf\Fpdf
-{
-    const ICONV_CHARSET_INPUT = 'UTF-8';
-    const ICONV_CHARSET_OUTPUT_A = 'ISO-8859-1//TRANSLIT';
-    const ICONV_CHARSET_OUTPUT_B = 'windows-1252//TRANSLIT';
+use AllowDynamicProperties;
+use DateTimeZone;
+use Exception;
+use Fpdf\Fpdf;
 
-    public $angle = 0;
-    public $font = 'helvetica';                 /* Font Name : See inc/fpdf/font for all supported fonts */
-    public $columnOpacity = 0.06;               /* Items table background color opacity. Range (0.00 - 1) */
-    public $columnSpacing = 0.3;                /* Spacing between Item Tables */
-    public $referenceformat = ['.', ',', 'left', false];    /* Currency formater */
-    public $margins = [
+#[AllowDynamicProperties]
+class PlantillaPdf extends Fpdf
+{
+    const string ICONV_CHARSET_INPUT = 'UTF-8';
+    const string ICONV_CHARSET_OUTPUT_A = 'ISO-8859-1//TRANSLIT';
+    const string ICONV_CHARSET_OUTPUT_B = 'windows-1252//TRANSLIT';
+
+    public int $angle = 0;
+    public string $font = 'helvetica';                 /* Font Name : See inc/fpdf/font for all supported fonts */
+    public float $columnOpacity = 0.06;               /* Items table background color opacity. Range (0.00 - 1) */
+    public float $columnSpacing = 0.3;                /* Spacing between Item Tables */
+    public array $referenceFormat = ['.', ',', 'left', false];    /* Currency formater */
+    public array $margins = [
         'l' => 15,
         't' => 15,
         'r' => 15,
     ]; /* l: Left Side , t: Top Side , r: Right Side */
-    public $fontSizeProductDescription = 7;                /* font size of product description */
+    public int $fontSizeProductDescription = 7;                /* font size of product description */
 
-    public $lang;
-    public $document;
-    public $type;
-    public $reference;
-    public $abonado;
-    public $nif;
-    public $iban_cliente;
-    public $iban;
-    public $pedido;
-    public $logo;
-    public $color;
-    public $badgeColor;
-    public $date;
-    public $time;
-    public $due;
-    public $from;
-    public $to;
-    public $items;
-    public $totals;
-    public $badge;
-    public $addText;
-    public $footernote;
-    public $dimensions;
-    public $display_tofrom = true;
-    public $customHeaders = [];
-    protected $displayToFromHeaders = true;
-    protected $columns;
+    public ?string $lang = null;
+    public array $document = [];
+    public ?string $type = null;
+    public ?string $reference = null;
+    public ?string $abonado = null;
+    public ?string $nif = null;
+    public ?string $ibanCliente = null;
+    public ?string $iban = null;
+    public ?string $pedido = null;
+    public string|false $logo = false;
+    public array $color = [];
+    public array $badgeColor = [];
+    public ?string $date = null;
+    public ?string $time = null;
+    public ?string $due = null;
+    public array $from = [];
+    public array $to = [];
+    public array $items = [];
+    public array $totals = [];
+    public ?string $badge = null;
+    public array $addText = [];
+    public ?string $footerNote = null;
+    public array $dimensions = [];
+    public bool $displayToFrom = true;
+    public array $customHeaders = [];
+    protected bool $displayToFromHeaders = true;
+    protected int $columns = 4;
 
     public function __construct($size = 'A4', $currency = '$', $language = 'en')
     {
-        $this->items = [];
-        $this->totals = [];
-        $this->addText = [];
+        parent::__construct('P', 'mm', [$this->document['w'], $this->document['h']]);
         $this->firstColumnWidth = 100;
         $this->currency = $currency;
         $this->maxImageDimensions = [230, 130];
-        $this->dimensions         = [61.0, 34.0];
-        $this->from               = [''];
-        $this->to                 = [''];
+        $this->dimensions = [61.0, 34.0];
         $this->setLanguage($language);
         $this->setDocumentSize($size);
         $this->setColor('#222222');
-
         $this->recalculateColumns();
-
-        parent::__construct('P', 'mm', [$this->document['w'], $this->document['h']]);
-
         $this->AliasNbPages();
         $this->SetMargins($this->margins['l'], $this->margins['t'], $this->margins['r']);
     }
 
-    private function setLanguage($language)
+    private function setLanguage($language): void
     {
-        $this->language = $language;
-        include dirname(__DIR__).'/templates/inc/languages/'.$language.'.inc';
-        $this->lang = $lang;
+        include dirname(__DIR__) . '/templates/inc/languages/' . $language . '.inc';
+        $this->lang = $language;
     }
 
-    private function setDocumentSize($dsize)
+    private function setDocumentSize($dSize): void
     {
-        switch ($dsize) {
-            case 'A4':
-                $document['w'] = 210;
-                $document['h'] = 297;
-                break;
+        switch ($dSize) {
             case 'letter':
                 $document['w'] = 215.9;
                 $document['h'] = 279.4;
@@ -113,7 +95,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
         $this->document = $document;
     }
 
-    private function resizeToFit($image)
+    private function resizeToFit($image): array
     {
         list($width, $height) = getimagesize($image);
         $newWidth = $this->maxImageDimensions[0] / $width;
@@ -126,7 +108,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
         ];
     }
 
-    private function pixelsToMM($val)
+    private function pixelsToMM($val): float
     {
         $mm_inch = 25.4;
         $dpi = 96;
@@ -134,34 +116,27 @@ class PlantillaPDF extends \Fpdf\Fpdf
         return ($val * $mm_inch) / $dpi;
     }
 
-    private function hex2rgb($hex)
+    private function hex2rgb($hex): array
     {
         $hex = str_replace('#', '', $hex);
         if (strlen($hex) == 3) {
-            $r = hexdec(substr($hex, 0, 1).substr($hex, 0, 1));
-            $g = hexdec(substr($hex, 1, 1).substr($hex, 1, 1));
-            $b = hexdec(substr($hex, 2, 1).substr($hex, 2, 1));
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
         } else {
             $r = hexdec(substr($hex, 0, 2));
             $g = hexdec(substr($hex, 2, 2));
             $b = hexdec(substr($hex, 4, 2));
         }
-        $rgb = [$r, $g, $b];
-
-        return $rgb;
+        return [$r, $g, $b];
     }
 
-    private function br2nl($string)
+    private function br2nl($string): array|string|null
     {
-        return preg_replace('/\<br(\s*)?\/?\>/i', "\n", $string);
+        return preg_replace('/<br(\s*)?\/?>/i', "\n", $string);
     }
 
-    public function changeLanguageTerm($term, $new)
-    {
-        $this->lang[$term] = $new;
-    }
-
-    public function isValidTimezoneId($zone)
+    public function isValidTimezoneId($zone): bool
     {
         try {
             new DateTimeZone($zone);
@@ -172,141 +147,56 @@ class PlantillaPDF extends \Fpdf\Fpdf
         return true;
     }
 
-    public function setTimeZone($zone = '')
+    public function setTimeZone($zone = ''): void
     {
-        if (!empty($zone) and $this->isValidTimezoneId($zone) === true) {
+        if (!empty($zone) and $this->isValidTimezoneId($zone) === true)
             date_default_timezone_set($zone);
-        }
+
     }
 
-    public function setType($title)
+    public function setColor($rgbColor): void
     {
-        $this->title = $title;
+        $this->color = $this->hex2rgb($rgbColor);
     }
 
-    public function setColor($rgbcolor)
+    public function setLogo($logo = 0, $maxWidth = 0, $maxHeight = 0): void
     {
-        $this->color = $this->hex2rgb($rgbcolor);
-    }
-
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    public function setTime($time)
-    {
-        $this->time = $time;
-    }
-
-    public function setDue($date)
-    {
-        $this->due = $date;
-    }
-
-    public function setLogo($logo = 0, $maxWidth = 0, $maxHeight = 0)
-    {
-        if ($maxWidth and $maxHeight) {
+        if ($maxWidth and $maxHeight)
             $this->maxImageDimensions = [$maxWidth, $maxHeight];
-        }
+
         $this->logo = $logo;
         $this->dimensions = $this->resizeToFit($logo);
     }
 
-    public function hide_tofrom()
+    public function setNumberFormat($decimals = '.', $thousands_sep = ',', $alignment = 'left', $space = true): void
     {
-        $this->display_tofrom = false;
+        $this->referenceFormat = [$decimals, $thousands_sep, $alignment, $space];
     }
 
-    public function hideToFromHeaders()
+    public function price($price): string
     {
-        $this->displayToFromHeaders = false;
-    }
-
-    public function setFrom($data)
-    {
-        $this->from = $data;
-    }
-
-    public function setTo($data)
-    {
-        $this->to = $data;
-    }
-
-    public function setReference($reference)
-    {
-        $this->reference = $reference;
-    }
-
-    public function setAbonado($abonado)
-    {
-        $this->abonado = $abonado;
-    }
-    public function setNif($nif)
-    {
-        $this->nif = $nif;
-    }
-
-    public function setIbanCliente($iban_cliente)
-    {
-        $this->iban_cliente = $iban_cliente;
-    }
-
-    public function setIban($iban){
-        $this->iban = $iban;
-    }
-    public function setPedido($pedido){
-        $this->pedido = $pedido;
-    }
-
-    public function setNumberFormat($decimals = '.', $thousands_sep = ',', $alignment = 'left', $space = true)
-    {
-        $this->referenceformat = [$decimals, $thousands_sep, $alignment, $space];
-    }
-
-    public function setFontSizeProductDescription($data)
-    {
-        $this->fontSizeProductDescription = $data;
-    }
-
-    public function flipflop()
-    {
-        $this->flipflop = true;
-    }
-
-    public function price($price)
-    {
-        $decimalPoint = $this->referenceformat[0];
-        $thousandSeparator = $this->referenceformat[1];
-        $alignment = isset($this->referenceformat[2]) ? strtolower($this->referenceformat[2]) : 'left';
-        $spaceBetweenCurrencyAndAmount = isset($this->referenceformat[3]) ? (bool) $this->referenceformat[3] : true;
+        $decimalPoint = $this->referenceFormat[0];
+        $thousandSeparator = $this->referenceFormat[1];
+        $alignment = isset($this->referenceFormat[2]) ? strtolower($this->referenceFormat[2]) : 'left';
+        $spaceBetweenCurrencyAndAmount = !isset($this->referenceFormat[3]) || $this->referenceFormat[3];
         $space = $spaceBetweenCurrencyAndAmount ? ' ' : '';
 
-        if ('right' == $alignment) {
-            return number_format($price, 2, $decimalPoint, $thousandSeparator).$space.$this->currency;
-        } else {
-            return $this->currency.$space.number_format($price, 2, $decimalPoint, $thousandSeparator);
-        }
+        if ('right' == $alignment)
+            return number_format($price, 2, $decimalPoint, $thousandSeparator) . $space . $this->currency;
+        else
+            return $this->currency . $space . number_format($price, 2, $decimalPoint, $thousandSeparator);
     }
 
-    public function addCustomHeader($title, $content)
-    {
-        $this->customHeaders[] = [
-            'title' => $title,
-            'content' => $content,
-        ];
-    }
-
-    public function addItem($item, $description, $quantity, $vat, $price, $discount, $total)
+    public function addItem($item, $description, $quantity, $vat, $price, $discount, $total): void
     {
         $p['item'] = $item;
         $p['description'] = $this->br2nl($description);
 
         if ($vat !== false) {
             $p['vat'] = $vat;
-            if (is_numeric($vat)) {
+            if (is_numeric($vat))
                 $p['vat'] = $this->price($vat);
-            }
+
             $this->vatField = true;
             $this->recalculateColumns();
         }
@@ -317,54 +207,48 @@ class PlantillaPDF extends \Fpdf\Fpdf
         if ($discount !== false) {
             $this->firstColumnWidth = 58;
             $p['discount'] = $discount;
-            if (is_numeric($discount)) {
+            if (is_numeric($discount))
                 $p['discount'] = $this->price($discount);
-            }
+
             $this->discountField = true;
             $this->recalculateColumns();
         }
         $this->items[] = $p;
     }
 
-    public function addTotal($name, $value, $colored = false)
+    public function addTotal($name, $value, $colored = false): void
     {
         $t['name'] = $name;
         $t['value'] = $value;
-        if (is_numeric($value)) {
+        if (is_numeric($value))
             $t['value'] = $this->price($value);
-        }
+
         $t['colored'] = $colored;
         $this->totals[] = $t;
     }
 
-    public function addTitle($title)
+    public function addTitle($title): void
     {
         $this->addText[] = ['title', $title];
     }
 
-    public function addParagraph($paragraph)
+    public function addParagraph($paragraph): void
     {
         $paragraph = $this->br2nl($paragraph);
         $this->addText[] = ['paragraph', $paragraph];
     }
 
-    public function addBadge($badge, $color = false)
+    public function addBadge($badge, $color = false): void
     {
         $this->badge = $badge;
 
-        if ($color) {
+        if ($color)
             $this->badgeColor = $this->hex2rgb($color);
-        } else {
+        else
             $this->badgeColor = $this->color;
-        }
     }
 
-    public function setFooternote($note)
-    {
-        $this->footernote = $note;
-    }
-
-    public function render($name = '', $destination = '')
+    public function render($name = '', $destination = ''): string
     {
         $this->AddPage();
         $this->Body();
@@ -373,7 +257,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
         return $this->Output($destination, $name);
     }
 
-    public function Header()
+    public function Header(): void
     {
         if (isset($this->logo) and !empty($this->logo)) {
             $this->Image($this->logo, $this->margins['l'], $this->margins['t'], $this->dimensions[0],
@@ -383,13 +267,13 @@ class PlantillaPDF extends \Fpdf\Fpdf
         //Title
         $this->SetTextColor(0, 0, 0);
         $this->SetFont($this->font, 'B', 20);
-        if (isset($this->title) and !empty($this->title)) {
+        if (isset($this->title) and !empty($this->title))
             $this->Cell(0, 5, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->title, self::ICONV_CHARSET_INPUT)), 0, 1, 'R');
-        }
+
         $this->SetFont($this->font, '', 9);
         $this->Ln(5);
 
-        $lineheight = 5;
+        $lineHeight = 5;
         //Calculate position of strings
         $this->SetFont($this->font, 'B', 9);
         $positionX = $this->document['w'] - $this->margins['l'] - $this->margins['r']
@@ -401,65 +285,65 @@ class PlantillaPDF extends \Fpdf\Fpdf
 
         //Number
         if (!empty($this->reference)) {
-            $this->Cell($positionX, $lineheight);
+            $this->Cell($positionX, $lineHeight);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-            $this->Cell(32, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT).':'), 0, 0,
+            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
                 'L');
             $this->SetTextColor(50, 50, 50);
             $this->SetFont($this->font, '', 9);
-            $this->Cell(0, $lineheight, $this->reference, 0, 1, 'R');
+            $this->Cell(0, $lineHeight, $this->reference, 0, 1, 'R');
         }
         //Date
-        $this->Cell($positionX, $lineheight);
+        $this->Cell($positionX, $lineHeight);
         $this->SetFont($this->font, 'B', 9);
         $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-        $this->Cell(32, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)).':', 0, 0, 'L');
+        $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
         $this->SetTextColor(50, 50, 50);
         $this->SetFont($this->font, '', 9);
-        $this->Cell(0, $lineheight, $this->date, 0, 1, 'R');
+        $this->Cell(0, $lineHeight, $this->date, 0, 1, 'R');
 
         //Time
         if (!empty($this->time)) {
-            $this->Cell($positionX, $lineheight);
+            $this->Cell($positionX, $lineHeight);
             $this->SetFont($this->font, 'B', 9);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-            $this->Cell(32, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['time'], self::ICONV_CHARSET_INPUT)).':', 0, 0,
+            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['time'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0,
                 'L');
             $this->SetTextColor(50, 50, 50);
             $this->SetFont($this->font, '', 9);
-            $this->Cell(0, $lineheight, $this->time, 0, 1, 'R');
+            $this->Cell(0, $lineHeight, $this->time, 0, 1, 'R');
         }
         //Due date
         if (!empty($this->due)) {
-            $this->Cell($positionX, $lineheight);
+            $this->Cell($positionX, $lineHeight);
             $this->SetFont($this->font, 'B', 9);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-            $this->Cell(32, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)).':', 0, 0, 'L');
+            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
             $this->SetTextColor(50, 50, 50);
             $this->SetFont($this->font, '', 9);
-            $this->Cell(0, $lineheight, $this->due, 0, 1, 'R');
+            $this->Cell(0, $lineHeight, $this->due, 0, 1, 'R');
         }
         //Custom Headers
         if (count($this->customHeaders) > 0) {
             foreach ($this->customHeaders as $customHeader) {
-                $this->Cell($positionX, $lineheight);
+                $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($customHeader['title'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($customHeader['title'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
-                $this->Cell(0, $lineheight, $customHeader['content'], 0, 1, 'R');
+                $this->Cell(0, $lineHeight, $customHeader['content'], 0, 1, 'R');
             }
         }
 
         //First page
         if ($this->PageNo() == 1) {
             $dimensions = $this->dimensions[1] ?? 0;
-            if (($this->margins['t'] + $dimensions) > $this->GetY()) {
+            if (($this->margins['t'] + $dimensions) > $this->GetY())
                 $this->SetY($this->margins['t'] + $dimensions + 5);
-            } else {
+            else
                 $this->SetY($this->GetY() + 10);
-            }
+
             $this->Ln(5);
             $this->SetFillColor($this->color[0], $this->color[1], $this->color[2]);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
@@ -478,41 +362,40 @@ class PlantillaPDF extends \Fpdf\Fpdf
                 $this->from = $to;
             }
 
-            if ($this->display_tofrom === true) {
+            if ($this->displayToFrom === true) {
                 if ($this->displayToFromHeaders === true) {
-                    $this->Cell($width, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['from'], self::ICONV_CHARSET_INPUT)), 0, 0, 'L');
-                    $this->Cell(0, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['to'], self::ICONV_CHARSET_INPUT)), 0, 0, 'L');
+                    $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['from'], self::ICONV_CHARSET_INPUT)), 0, 0, 'L');
+                    $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['to'], self::ICONV_CHARSET_INPUT)), 0, 0, 'L');
                     $this->Ln(7);
                     $this->SetLineWidth(0.4);
                     $this->Line($this->margins['l'], $this->GetY(), $this->margins['l'] + $width - 10, $this->GetY());
                     $this->Line($this->margins['l'] + $width, $this->GetY(), $this->margins['l'] + $width + $width,
                         $this->GetY());
-                } else {
+                } else
                     $this->Ln(2);
-                }
 
                 //Information
                 $this->Ln(5);
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, 'B', 10);
-                $this->Cell($width, $lineheight, $this->from[0] ?? 0, 0, 0, 'L');
-                $this->Cell(0, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A,  $this->to[0] ?? 0), 0, 0, 'L');
+                $this->Cell($width, $lineHeight, $this->from[0] ?? 0, 0, 0, 'L');
+                $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, $this->to[0] ?? 0), 0, 0, 'L');
                 $this->SetFont($this->font, '', 8);
                 $this->SetTextColor(100, 100, 100);
                 $this->Ln(7);
-                for ($i = 1, $iMax = max($this->from === null ? 0 : count($this->from), $this->to === null ? 0 : count($this->to)); $i < $iMax; $i++) {
+                for ($i = 1, $iMax = max(count($this->from), count($this->to)); $i < $iMax; $i++) {
                     // avoid undefined error if TO and FROM array lengths are different
                     if (!empty($this->from[$i]) || !empty($this->to[$i])) {
-                        $this->Cell($width, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
-                        $this->Cell(0, $lineheight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
+                        $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
+                        $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
                     }
                     $this->Ln(5);
                 }
                 $this->Ln(-6);
                 $this->Ln(5);
-            } else {
+            } else
                 $this->Ln(-10);
-            }
+
         }
         //Table header
         if (!isset($this->productsEnded)) {
@@ -544,21 +427,20 @@ class PlantillaPDF extends \Fpdf\Fpdf
             $this->SetDrawColor($this->color[0], $this->color[1], $this->color[2]);
             $this->Line($this->margins['l'], $this->GetY(), $this->document['w'] - $this->margins['r'], $this->GetY());
             $this->Ln(2);
-        } else {
+        } else
             $this->Ln(12);
-        }
+
     }
 
-    public function Body()
+    public function Body(): void
     {
         $width_other = ($this->document['w'] - $this->margins['l'] - $this->margins['r'] - $this->firstColumnWidth - ($this->columns * $this->columnSpacing)) / ($this->columns - 1);
         $cellHeight = 8;
-        $bgcolor = (1 - $this->columnOpacity) * 255;
+        $bgColor = (1 - $this->columnOpacity) * 255;
         if ($this->items) {
             foreach ($this->items as $item) {
-                if ((empty($item['item'])) || (empty($item['description']))) {
+                if ((empty($item['item'])) || (empty($item['description'])))
                     $this->Ln($this->columnSpacing);
-                }
                 if ($item['description']) {
                     //Precalculate height
                     $calculateHeight = new self();
@@ -569,14 +451,13 @@ class PlantillaPDF extends \Fpdf\Fpdf
                         iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, $item['description']), 0, 'L', 1);
                     $descriptionHeight = $calculateHeight->getY() + $cellHeight + 2;
                     $pageHeight = $this->document['h'] - $this->GetY() - $this->margins['t'] - $this->margins['t'];
-                    if ($pageHeight < 35) {
+                    if ($pageHeight < 35)
                         $this->AddPage();
-                    }
                 }
                 $cHeight = $cellHeight;
                 $this->SetFont($this->font, 'b', 8);
                 $this->SetTextColor(50, 50, 50);
-                $this->SetFillColor($bgcolor, $bgcolor, $bgcolor);
+                $this->SetFillColor($bgColor, $bgColor, $bgColor);
                 $this->Cell(1, $cHeight, '', 0, 0, 'L', 1);
                 $x = $this->GetX();
                 $this->Cell($this->firstColumnWidth, $cHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, $item['item']), 0, 0, 'L',
@@ -606,23 +487,21 @@ class PlantillaPDF extends \Fpdf\Fpdf
                 $this->Cell($width_other, $cHeight, $item['quantity'], 0, 0, 'C', 1);
                 if (isset($this->vatField)) {
                     $this->Cell($this->columnSpacing, $cHeight, '', 0, 0, 'L', 0);
-                    if (isset($item['vat'])) {
+                    if (isset($item['vat']))
                         $this->Cell($width_other, $cHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_B, $item['vat']), 0, 0, 'C', 1);
-                    } else {
+                    else
                         $this->Cell($width_other, $cHeight, '', 0, 0, 'C', 1);
-                    }
                 }
                 $this->Cell($this->columnSpacing, $cHeight, '', 0, 0, 'L', 0);
                 $this->Cell($width_other, $cHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_B,
                     $this->price($item['price'])), 0, 0, 'C', 1);
                 if (isset($this->discountField)) {
                     $this->Cell($this->columnSpacing, $cHeight, '', 0, 0, 'L', 0);
-                    if (isset($item['discount'])) {
+                    if (isset($item['discount']))
                         $this->Cell($width_other, $cHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_B, $item['discount']), 0, 0,
                             'C', 1);
-                    } else {
+                    else
                         $this->Cell($width_other, $cHeight, '', 0, 0, 'C', 1);
-                    }
                 }
                 $this->Cell($this->columnSpacing, $cHeight, '', 0, 0, 'L', 0);
                 $this->Cell($width_other, $cHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_B,
@@ -638,7 +517,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
         if ($this->totals) {
             foreach ($this->totals as $total) {
                 $this->SetTextColor(50, 50, 50);
-                $this->SetFillColor($bgcolor, $bgcolor, $bgcolor);
+                $this->SetFillColor($bgColor, $bgColor, $bgColor);
                 $this->Cell(1 + $this->firstColumnWidth, $cellHeight, '', 0, 0, 'L', 0);
                 for ($i = 0; $i < $this->columns - 3; $i++) {
                     $this->Cell($width_other, $cellHeight, '', 0, 0, 'L', 0);
@@ -655,7 +534,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
                     1);
                 $this->Cell($this->columnSpacing, $cellHeight, '', 0, 0, 'L', 0);
                 $this->SetFont($this->font, 'b', 8);
-                $this->SetFillColor($bgcolor, $bgcolor, $bgcolor);
+                $this->SetFillColor($bgColor, $bgColor, $bgColor);
                 if ($total['colored']) {
                     $this->SetTextColor(255, 255, 255);
                     $this->SetFillColor($this->color[0], $this->color[1], $this->color[2]);
@@ -671,7 +550,7 @@ class PlantillaPDF extends \Fpdf\Fpdf
 
         //Badge
         if ($this->badge) {
-            $badge = ' '.mb_strtoupper($this->badge, self::ICONV_CHARSET_INPUT).' ';
+            $badge = ' ' . mb_strtoupper($this->badge, self::ICONV_CHARSET_INPUT) . ' ';
             $resetX = $this->getX();
             $resetY = $this->getY();
             $this->setXY($badgeX, $badgeY + 15);
@@ -683,11 +562,10 @@ class PlantillaPDF extends \Fpdf\Fpdf
             $this->Rect($this->GetX(), $this->GetY(), $this->GetStringWidth($badge) + 2, 10);
             $this->Write(10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_B, mb_strtoupper($badge, self::ICONV_CHARSET_INPUT)));
             $this->Rotate(0);
-            if ($resetY > $this->getY() + 20) {
+            if ($resetY > $this->getY() + 20)
                 $this->setXY($resetX, $resetY);
-            } else {
+            else
                 $this->Ln(18);
-            }
         }
 
         //Add information
@@ -712,27 +590,27 @@ class PlantillaPDF extends \Fpdf\Fpdf
         }
     }
 
-    public function Footer()
+    public function Footer(): void
     {
         $this->SetY(-$this->margins['t']);
         $this->SetFont($this->font, '', 8);
         $this->SetTextColor(50, 50, 50);
-        $this->Cell(0, 10, $this->footernote, 0, 0, 'L');
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', $this->lang['page']).' '.$this->PageNo().' '.$this->lang['page_of'].' {nb}', 0, 0,
+        $this->Cell(0, 10, $this->footerNote, 0, 0, 'L');
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', $this->lang['page']) . ' ' . $this->PageNo() . ' ' . $this->lang['page_of'] . ' {nb}', 0, 0,
             'R');
     }
 
-    public function Rotate($angle, $x = -1, $y = -1)
+    public function Rotate($angle, $x = -1, $y = -1): void
     {
-        if ($x == -1) {
+        if ($x == -1)
             $x = $this->x;
-        }
-        if ($y == -1) {
+
+        if ($y == -1)
             $y = $this->y;
-        }
-        if ($this->angle != 0) {
+
+        if ($this->angle != 0)
             $this->_out('Q');
-        }
+
         $this->angle = $angle;
         if ($angle != 0) {
             $angle *= M_PI / 180;
@@ -745,25 +623,24 @@ class PlantillaPDF extends \Fpdf\Fpdf
         }
     }
 
-    public function _endpage()
+    public function _endPage(): void
     {
         if ($this->angle != 0) {
             $this->angle = 0;
             $this->_out('Q');
         }
-        parent::_endpage();
+        parent::_endPage();
     }
 
-    private function recalculateColumns()
+    private function recalculateColumns(): void
     {
         $this->columns = 4;
 
-        if (isset($this->vatField)) {
+        if (isset($this->vatField))
             $this->columns += 1;
-        }
 
-        if (isset($this->discountField)) {
+        if (isset($this->discountField))
             $this->columns += 1;
-        }
+
     }
 }
