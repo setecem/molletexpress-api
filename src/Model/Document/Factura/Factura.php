@@ -18,8 +18,10 @@ class Factura extends Documento
     {
         return match ($property) {
             'client' => Client::class,
+            'ordenCobro' => OrdenCobro::class,
             'lineas' => FacturaLinea::class,
             default => null
         };
     }
+
 }

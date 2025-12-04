@@ -4,8 +4,11 @@ namespace App\Entity\Document\Factura;
 
 use App\Entity\Document\Documento;
 use App\Entity\OrdenCobro;
+use Cavesman\Db;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Table(name: 'factura')]
 #[ORM\Entity]
@@ -29,5 +32,14 @@ class Factura extends Documento
             return;
 
         $this->number = 'F' . sprintf('%03d-%03d', intdiv($this->id, 1000), $this->id % 1000);
+
+        try {
+            $em = DB::getManager();
+            $em->persist($this);
+            $em->flush();
+        } catch (Exception|ORMException $e) {
+
+        }
+
     }
 }

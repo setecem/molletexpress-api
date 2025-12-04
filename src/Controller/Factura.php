@@ -170,8 +170,6 @@ class Factura
 
             $em->persist($entity);
             $em->flush();
-            $em->persist($entity);
-            $em->flush();
 
             return new Http\JsonResponse([
                 'message' => "Factura añadida correctamente",
@@ -236,8 +234,13 @@ class Factura
             $em = DB::getManager();
 
             $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
-
             $item->deletedOn = new DateTime();
+
+            $itemAlbaran = \App\Entity\Document\Albaran\Albaran::findOneBy(['factura' => $item, 'deletedOn' => null]);
+            if ($itemAlbaran) {
+                $itemAlbaran->factura = null;
+                $em->persist($itemAlbaran);
+            }
 
             $em->persist($item);
             $em->flush();
@@ -251,7 +254,7 @@ class Factura
         }
     }
 
-    protected static function list(string $dateStart, string $dateEnd, string $client): Http\JsonResponse
+    protected static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
     {
         try {
             $em = DB::getManager();
@@ -269,12 +272,10 @@ class Factura
                 ->orderBy("c.num_abonado", "ASC")
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
-            if ($client !== "false") {
-                $clientEnt = $em->getReference(\App\Entity\Client::class, $client);
-                $resultItems
-                    ->andWhere("o.client = :client")
-                    ->setParameter('client', $clientEnt);
-            }
+            $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
+            $resultItems
+                ->andWhere("o.client = :client")
+                ->setParameter('client', $client);
             $result = $resultItems
                 ->getQuery()
                 ->getResult();
@@ -330,7 +331,7 @@ class Factura
         }
     }
 
-    protected static function export(string $dateStart, string $dateEnd, string $client)
+    protected static function export(string $dateStart, string $dateEnd, int $idClient)
     {
         $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
         try {
@@ -348,16 +349,13 @@ class Factura
                 ->orderBy("o.reference", "DESC")
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
-            if ($client !== "false") {
-                $clientEnt = $em->getReference(\App\Entity\Client::class, $client);
-                $resultItems
-                    ->andWhere("o.client = :client")
-                    ->setParameter('client', $clientEnt);
-            }
+            $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
+            $resultItems
+                ->andWhere("o.client = :client")
+                ->setParameter('client', $client);
             $results = $resultItems
                 ->getQuery()
                 ->getResult();
-
 
             $clients = [];
             foreach ($results as $item) {
@@ -373,21 +371,20 @@ class Factura
             if (!$clients)
                 return new Http\JsonResponse(['message' => "Ningún documento encontrado"], 404);
 
-            $zip_file = \App\Entity\Document\Factura\Factura::class . "-" . time();
-            if (!is_dir($cacheDirectory . "/pdf/" . $zip_file))
-                mkdir($cacheDirectory . "/pdf/" . $zip_file, 0777, true);
+            $zipFile = \App\Entity\Document\Factura\Factura::class . "-" . time();
+            if (!is_dir($cacheDirectory . "/pdf/" . $zipFile))
+                mkdir($cacheDirectory . "/pdf/" . $zipFile, 0777, true);
 
             foreach ($clients as $c) {
                 foreach ($c['items'] as $item) {
-                    $invoice = new FacturaPdf("A4", "€", "es");
-                    $invoice = self::print($item->id, true, $invoice);
-                    $invoice->render($cacheDirectory . "/pdf/" . $zip_file . "/" . $item->number . ".pdf", 'F');
+                    $invoice = self::print($item->id, true);
+                    $invoice->render($cacheDirectory . "/pdf/" . $zipFile . "/" . $item->number . ".pdf", 'F');
                 }
             }
 
             $zip = new ZipArchive;
-            if ($zip->open($cacheDirectory . "/pdf/" . $zip_file . "/facturas.zip", ZipArchive::CREATE)) {
-                foreach (glob($cacheDirectory . "/pdf/" . $zip_file . "/*.pdf") as $pdf) {
+            if ($zip->open($cacheDirectory . "/pdf/" . $zipFile . "/facturas.zip", ZipArchive::CREATE)) {
+                foreach (glob($cacheDirectory . "/pdf/" . $zipFile . "/*.pdf") as $pdf) {
                     $zip->addFile($pdf, basename($pdf));
                 }
                 $zip->close();
@@ -396,14 +393,14 @@ class Factura
 
             header('Content-disposition: attachment; filename=' . \App\Entity\Document\Factura\Factura::class . "-" . time() . '.zip');
             header('Content-type: application/zip');
-            readfile($cacheDirectory . "/pdf/" . $zip_file . "/facturas.zip");
+            readfile($cacheDirectory . "/pdf/" . $zipFile . "/facturas.zip");
             die("fin");
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
-    protected static function print(int $id, bool $export = false, FacturaPdf|bool $invoice = false)
+    public static function print(int $id, bool $export = false)
     {
         try {
             if (!$id)
@@ -419,10 +416,10 @@ class Factura
                     require 'src\Model\Pdf\FacturaPdf.php';
                 else
                     require 'src\Model\Pdf\DefaultPdf.php';
-                $invoice = new FacturaPdf("A4", "€", "es");
             }
 
             /* Header settings */
+            $invoice = new FacturaPdf("A4", "€", "es");
             $invoice->setLogo("public/img/logo/logo-mollet.jpg");   //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
             $invoice->type = "factura";    // Invoice Type
@@ -456,9 +453,9 @@ class Factura
             }
 
             foreach ($lineas as $linea) {
-                $albaran = $linea->albaran ? $linea->albaran->number : '';
-                $date = $linea->albaran ? $linea->albaran->date->format("d/m/Y") : '';
-                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $albaran, $date);
+                $factura = $linea->factura  ? $linea->factura ->number : '';
+                $date = $linea->factura  ? $linea->factura ->date->format("d/m/Y") : '';
+                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $factura, $date);
             }
 
             $invoice->addTotal("Importe Bruto", $item->importeBruto);
@@ -504,35 +501,16 @@ class Factura
             else
                 require 'src\Model\Pdf\DefaultPdf.php';
 
-            $item = null;
-            if (count(explode(",", $id)) == 1) {
-                $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
-                $invoice = new FacturaPdf("A4", "€", "es");
-                $invoice = self::print($item->id, true, $invoice);
-                $invoice->render($cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf", 'F');
-                if (!$item->client)
-                    return new Http\JsonResponse(['message' => "El documento seleccionado no tiene cliente asignado"], 400);
+            $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
+            $invoice = self::print($item->id, true);
+            $invoice->render($cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf", 'F');
+            if (!$item->client)
+                return new Http\JsonResponse(['message' => "El documento seleccionado no tiene cliente asignado"], 400);
 
-                $files[$item->client->id][] = [
-                    "name" => $item->number . ".pdf",
-                    "file" => $cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf"
-                ];
-            } else {
-                foreach (explode(",", $id) as $id) {
-                    $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
-                    $invoice = new FacturaPdf("A4", "€", "es");
-                    $invoice = self::print($item->id, true, $invoice);
-                    $invoice->render($cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf", 'F');
-                    if ($item->client) {
-                        if (!isset($files[$item->client->id]))
-                            $files[$item->client->id] = [];
-                        $files[$item->client->id][] = [
-                            "name" => $item->number . ".pdf",
-                            "file" => $cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf"
-                        ];
-                    }
-                }
-            }
+            $files[$item->client->id][] = [
+                "name" => $item->number . ".pdf",
+                "file" => $cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf"
+            ];
 
             $mail = false;
             if ($item != null) {
@@ -624,6 +602,29 @@ class Factura
             }
         } catch (Exception $e) {
             return null;
+        }
+    }
+
+    public static function getLastReference(string $serie = "N", ?DateTime $dateStart = null, ?DateTime $dateEnd = null)
+    {
+        try {
+
+            $query_res = DB::getManager()->getRepository(\App\Entity\Document\Factura\Factura::class)
+                ->createQueryBuilder('p')
+                ->where('p.reference > 0 AND p.date BETWEEN :dateStart AND :dateEnd AND p.serie = :serie')
+                ->orderBy("p.reference", "DESC")
+                ->setParameter('serie', $serie)
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd)
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getOneOrNullResult();
+
+            if ($query_res)
+                return $query_res->getReference() + 1;
+            return 1;
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
