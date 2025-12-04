@@ -259,8 +259,7 @@ class Factura
                 require 'src\Model\Pdf\ListadoPdf.php';
             else
                 require 'src\Model\Pdf\DefaultPdf.php';
-            // Género los namespace de los documentos a generar
-
+            
             $result_items = $em
                 ->createQueryBuilder()
                 ->select('o')
@@ -288,16 +287,16 @@ class Factura
                 $data[] = [
                     $item->number,
                     $item->date->format('d/m/Y'),
-                    str_pad($item->client->getNumAbonado(), 4, "0", STR_PAD_LEFT),
-                    mb_convert_encoding(substr($item->client->getName(), 0, 50), 'ISO-8859-1', 'UTF-8'),
-                    $item->client->getNif(),
-                    $item->getSubTotal(),
-                    ($item->getTotal() - $item->getSubTotal()),
-                    $item->getTotal()
+                    str_pad($item->client->numAbonado, 4, "0", STR_PAD_LEFT),
+                    mb_convert_encoding(substr($item->client->name, 0, 50), 'ISO-8859-1', 'UTF-8'),
+                    $item->client->nif,
+                    $item->subtotal,
+                    ($item->total - $item->subtotal),
+                    $item->total
                 ];
-                $subtotal += $item->getSubTotal();
-                $iva += ($item->getTotal() - $item->getSubTotal());
-                $total += $item->getTotal();
+                $subtotal += $item->subtotal;
+                $iva += ($item->total - $item->subtotal);
+                $total += $item->total;
             }
             $data[] = [
                 '',
@@ -413,7 +412,7 @@ class Factura
             $em = DB::getManager();
             $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
             $lineas = $em->getRepository(FacturaLinea::class)->findOneBy(['factura' => $item]);
-            $client = $item->client ? $item->client : false;
+            $client = $item->client ?? false;
 
             if (!$export) {
                 if (file_exists('src\Model\Pdf\FacturaPdf.php'))
@@ -426,54 +425,54 @@ class Factura
             /* Header settings */
             $invoice->setLogo("public/img/logo/logo-mollet.jpg");   //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
-            $invoice->setType("factura");    // Invoice Type
-            $invoice->setReference($item->number);   // Reference
-            $invoice->setDate($item->date->format("d-m-Y"));   //Billing Date
+            $invoice->type = "factura";    // Invoice Type
+            $invoice->reference = $item->number;   // Reference
+            $invoice->date = $item->date->format("d-m-Y");   //Billing Date
             $invoice->setNumberFormat(",", ".", "right");
 
-            $invoice->setFrom([
+            $invoice->from = [
                 Config::get("modules.factura.empresa.nombre_fiscal"),
                 Config::get("modules.factura.empresa.nombre_fiscal2"),
                 Config::get("modules.factura.empresa.direccion"),
                 Config::get("modules.factura.empresa.localidad"),
                 Config::get("modules.factura.empresa.cp") . " " . Config::get("modules.factura.empresa.provincia"),
                 Config::get("modules.factura.empresa.nif")
-            ]);
+            ];
 
             // Sé que es una guarrada Pedro, pero añadimos 2 líneas en blanco para poder ocultar el nif del cliente de la ventanita de las cartas
             if ($client) {
-                $invoice->setPedido(($client->getNumPedido()) ? $client->getNumPedido() : '-');
-                $invoice->setIbanCliente($client->getIban());
-                $invoice->setAbonado($client->getnumabonado());
-                $invoice->setNif($client->getNif());
-                $invoice->setTo([
-                    $client->getName(),
-                    $client->getDireccion(),
-                    $client->getLocalidad(),
-                    $client->getCodigoPostal() . " " . $client->getProvincia(),
+                $invoice->pedido = $client->numPedido ?? '-';
+                $invoice->ibanCliente = $client->iban;
+                $invoice->abonado = $client->numAbonado;
+                $invoice->nif = $client->nif;
+                $invoice->to = [
+                    $client->name,
+                    $client->direccion,
+                    $client->localidad,
+                    $client->codigoPostal . " " . $client->provincia,
                     " ",
-                    $client->getnif()
-                ]);
+                    $client->nif
+                ];
             }
 
             foreach ($lineas as $linea) {
-                $albaran = $linea->getAlbaran() ? $linea->getAlbaran()->number : '';
-                $date = $linea->getAlbaran() ? $linea->getAlbaran()->date->format("d/m/Y") : '';
-                $invoice->addItem($linea->getReference(), $linea->getDescription(), $linea->getQuantity(), false, $linea->getPrice(), $linea->getDiscount(), $linea->getTotal(), $albaran, $date);
+                $albaran = $linea->albaran ? $linea->albaran->number : '';
+                $date = $linea->albaran ? $linea->albaran->date->format("d/m/Y") : '';
+                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $albaran, $date);
             }
 
-            $invoice->addTotal("Importe Bruto", $item->getImporteBruto());
-            $invoice->addTotal("Dto. Esp " . $item->getDiscount() . "%", $item->getImpDiscount());
-            $invoice->addTotal("Dto. P.P. " . $item->getDiscountPp() . "%", $item->getImpDiscountPp());
-            $invoice->addTotal("Base Imponible", $item->getSubtotal());
-            $invoice->addTotal("Tipo IVA 21%", $item->getTotal() - $item->getSubtotal());
-            $invoice->addTotal("Total", $item->getTotal()); //$invoice->addBadge("Payment Paid");
+            $invoice->addTotal("Importe Bruto", $item->importeBruto);
+            $invoice->addTotal("Dto. Esp " . $item->discount . "%", $item->impDiscount);
+            $invoice->addTotal("Dto. P.P. " . $item->discountPp . "%", $item->impDiscountPp);
+            $invoice->addTotal("Base Imponible", $item->subtotal);
+            $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
+            $invoice->addTotal("Total", $item->total); //$invoice->addBadge("Payment Paid");
             if ($client) {
-                if ($client->getFormaPago() == "TRANSFERENCIA BANCARIA")
+                if ($client->formaPago == "TRANSFERENCIA BANCARIA")
                     $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
             }
 
-            $invoice->setFooternote(Config::get("modules.factura.empresa.registro"));
+            $invoice->footerNote = Config::get("modules.factura.empresa.registro");
 
             if (!$export) {
                 $invoice->render('example1.pdf', 'I');
@@ -610,8 +609,8 @@ class Factura
                 if ($item->client->diaFijoPago > date("t"))
                     $date = $newFecha->modify("last day of this month");
                 else {
-                    $date_factura = $newFecha->format("Y-m");
-                    $date = DateTime::createFromFormat("Y-m-d", $date_factura . "-" . $item->client->diaFijoPago);
+                    $dateFactura = $newFecha->format("Y-m");
+                    $date = DateTime::createFromFormat("Y-m-d", $dateFactura . "-" . $item->client->diaFijoPago);
                 }
                 // FIN CALCULO FECHA VENCIMIENTO
                 return $date;
