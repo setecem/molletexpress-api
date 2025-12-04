@@ -260,7 +260,7 @@ class Factura
             else
                 require 'src\Model\Pdf\DefaultPdf.php';
             
-            $result_items = $em
+            $resultItems = $em
                 ->createQueryBuilder()
                 ->select('o')
                 ->from(\App\Entity\Document\Factura\Factura::class, "o")
@@ -270,12 +270,12 @@ class Factura
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
             if ($client !== "false") {
-                $client_ent = $em->getReference(\App\Entity\Client::class, $client);
-                $result_items
+                $clientEnt = $em->getReference(\App\Entity\Client::class, $client);
+                $resultItems
                     ->andWhere("o.client = :client")
-                    ->setParameter('client', $client_ent);
+                    ->setParameter('client', $clientEnt);
             }
-            $result = $result_items
+            $result = $resultItems
                 ->getQuery()
                 ->getResult();
 
@@ -340,7 +340,7 @@ class Factura
             else
                 require 'src\Model\Pdf\DefaultPdf.php';
 
-            $result_items = $em
+            $resultItems = $em
                 ->createQueryBuilder()
                 ->select('o')
                 ->from(\App\Entity\Document\Factura\Factura::class, "o")
@@ -349,12 +349,12 @@ class Factura
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
             if ($client !== "false") {
-                $client_ent = $em->getReference(\App\Entity\Client::class, $client);
-                $result_items
+                $clientEnt = $em->getReference(\App\Entity\Client::class, $client);
+                $resultItems
                     ->andWhere("o.client = :client")
-                    ->setParameter('client', $client_ent);
+                    ->setParameter('client', $clientEnt);
             }
-            $results = $result_items
+            $results = $resultItems
                 ->getQuery()
                 ->getResult();
 
@@ -403,7 +403,7 @@ class Factura
         }
     }
 
-    protected static function print($id, $export = false, $invoice = false)
+    protected static function print(int $id, bool $export = false, FacturaPdf|bool $invoice = false)
     {
         try {
             if (!$id)
@@ -466,11 +466,15 @@ class Factura
             $invoice->addTotal("Dto. P.P. " . $item->discountPp . "%", $item->impDiscountPp);
             $invoice->addTotal("Base Imponible", $item->subtotal);
             $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
-            $invoice->addTotal("Total", $item->total); //$invoice->addBadge("Payment Paid");
-            if ($client) {
-                if ($client->formaPago == "TRANSFERENCIA BANCARIA")
-                    $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
-            }
+            $invoice->addTotal("Total", $item->total);
+
+            if ($client)
+                $invoice->addParagraph("Forma de pago: " . $client->formaPago);
+
+            $invoice->addParagraph("Vencimiento: " . self::getDueDate($item)->format("d-m-Y"));
+
+            if ($client & $client->formaPago == "TRANSFERENCIA BANCARIA")
+                $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
 
             $invoice->footerNote = Config::get("modules.factura.empresa.registro");
 
@@ -485,7 +489,7 @@ class Factura
         }
     }
 
-    protected static function sendEmail($id): Http\JsonResponse
+    protected static function sendEmail(int $id): Http\JsonResponse
     {
         try {
             $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
@@ -568,9 +572,12 @@ class Factura
         }
     }
 
-    protected static function generateOrdenCobro($doc): Http\JsonResponse
+    protected static function generateOrdenCobro(int $id): Http\JsonResponse
     {
         try {
+
+            $doc = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
+
             if (!$doc->client)
                 return new Http\JsonResponse(['message' => "Factura sin cliente asignado"], 404);
             $em = DB::getManager();
@@ -589,7 +596,7 @@ class Factura
         }
     }
 
-    public static function getDueDate($item)
+    public static function getDueDate(\App\Entity\Document\Factura\Factura $item): DateTime|null
     {
         try {
             if ($item->ordenCobro)
@@ -615,8 +622,9 @@ class Factura
                 // FIN CALCULO FECHA VENCIMIENTO
                 return $date;
             }
-        } catch (Exception|ORMException $e) {
-            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return null;
         }
     }
+
 }
