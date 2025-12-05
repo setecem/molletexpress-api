@@ -4,10 +4,9 @@ namespace App\Model\Employee;
 
 use App\Enum\Images;
 use App\Model\File;
-use App\Model\User\User;
 use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Model\Model;
-use DateTime;
+use Doctrine\Common\Collections\Collection;
 
 class EmployeeBase extends Model
 {
@@ -26,6 +25,9 @@ class EmployeeBase extends Model
     public float $precioHoraExtra = 0;
     public float $precioHoraFestivo = 0;
 
+    /** @var File[] $files */
+    public array $files = [];
+
     /** @var EmployeeRole[] $roles  */
     public array $roles = [];
 
@@ -40,6 +42,7 @@ class EmployeeBase extends Model
     {
         return match($property) {
             'roles' => EmployeeRole::class,
+            'files' => File::class,
             'logos', 'icono', 'fondo' => Images::class,
             default => null
         };

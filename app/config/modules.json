@@ -12,7 +12,12 @@
     },
     "factura": {
         "empresa": {
-            "registro": null
+            "registro": null,
+            "nif": null,
+            "provincia": null,
+            "cp": null,
+            "localidad": null,
+            "direccion": null
         }
     }
 }

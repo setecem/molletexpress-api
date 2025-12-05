@@ -463,7 +463,7 @@ class Factura
 
             $invoice->addTotal("Importe Bruto", $item->importeBruto);
             $invoice->addTotal("Dto. Esp " . $item->discount . "%", $item->impDiscount);
-            $invoice->addTotal("Dto. P.P. " . $item->discountPp . "%", $item->impDiscountPp);
+            $invoice->addTotal("Dto. P.P. " . $item->discountPP . "%", $item->impDiscountPP);
             $invoice->addTotal("Base Imponible", $item->subtotal);
             $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
             $invoice->addTotal("Total", $item->total);
@@ -473,7 +473,7 @@ class Factura
 
             $invoice->addParagraph("Vencimiento: " . self::getDueDate($item)->format("d-m-Y"));
 
-            if ($client & $client->formaPago == "TRANSFERENCIA BANCARIA")
+            if ($client && $client->formaPago == "TRANSFERENCIA BANCARIA")
                 $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
 
             $invoice->footerNote = Config::get("modules.factura.empresa.registro");
