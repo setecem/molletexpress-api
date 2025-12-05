@@ -707,7 +707,6 @@ class Albaran
     {
         try {
             $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
-
             if (!$id)
                 return new Http\JsonResponse(['message' => "ID no encontrada"], 404);
 
