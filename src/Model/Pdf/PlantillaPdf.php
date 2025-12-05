@@ -3,6 +3,8 @@
 namespace App\Model\Pdf;
 
 use AllowDynamicProperties;
+use Cavesman\Enum\Directory;
+use Cavesman\FileSystem;
 use DateTimeZone;
 use Exception;
 use Fpdf\Fpdf;
@@ -26,8 +28,8 @@ class PlantillaPdf extends Fpdf
     ]; /* l: Left Side , t: Top Side , r: Right Side */
     public int $fontSizeProductDescription = 7;                /* font size of product description */
 
-    public ?string $lang = null;
-    public array $document = [];
+    public array $lang = [];
+    public array $document = ['w' => 210, 'h' => 297];
     public ?string $type = null;
     public ?string $reference = null;
     public ?string $abonado = null;
@@ -71,28 +73,28 @@ class PlantillaPdf extends Fpdf
 
     private function setLanguage($language): void
     {
-        include dirname(__DIR__) . '/templates/inc/languages/' . $language . '.inc';
-        $this->lang = $language;
+        $this->language = $language;
+        include FileSystem::getPath(Directory::MODELS) . '/Pdf/inc/languages/' . $language . '.inc';
+        $this->lang = include FileSystem::getPath(Directory::MODELS) . '/Pdf/inc/languages/' . $language . '.inc';
     }
 
     private function setDocumentSize($dSize): void
     {
         switch ($dSize) {
             case 'letter':
-                $document['w'] = 215.9;
-                $document['h'] = 279.4;
+                $this->document['w'] = 215.9;
+                $this->document['h'] = 279.4;
                 break;
             case 'legal':
-                $document['w'] = 215.9;
-                $document['h'] = 355.6;
+                $this->document['w'] = 215.9;
+                $this->document['h'] = 355.6;
                 break;
             default:
-                $document['w'] = 210;
-                $document['h'] = 297;
+                $this->document['w'] = 210;
+                $this->document['h'] = 297;
                 break;
         }
 
-        $this->document = $document;
     }
 
     private function resizeToFit($image): array

@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Referentie';
-    $lang['date']     = 'Aangemaakt';
-    $lang['time']     = 'Tijd';
-    $lang['due']      = 'Vervaldatum';
-    $lang['to']       = 'Begunstigde';
-    $lang['from']     = 'Onze gegevens';
-    $lang['product']  = 'Product';
-    $lang['qty']      = 'Aantal';
-    $lang['price']    = 'Prijs';
-    $lang['discount'] = 'Korting';
-    $lang['vat']      = 'BTW';
-    $lang['total']    = 'Totaal';
-    $lang['page']     = 'Pagina';
-    $lang['page_of']  = 'van';
+// Dutch
+return [
+    'number'   => 'Referentie',
+    'date'     => 'Aangemaakt',
+    'time'     => 'Tijd',
+    'due'      => 'Vervaldatum',
+    'to'       => 'Begunstigde',
+    'from'     => 'Onze gegevens',
+    'product'  => 'Product',
+    'qty'      => 'Aantal',
+    'price'    => 'Prijs',
+    'discount' => 'Korting',
+    'vat'      => 'BTW',
+    'total'    => 'Totaal',
+    'page'     => 'Pagina',
+    'page_of'  => 'van',
+];

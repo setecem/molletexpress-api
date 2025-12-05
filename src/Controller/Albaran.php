@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Document\Albaran\AlbaranLinea;
 use App\Entity\Document\Factura\FacturaLinea;
 use App\Model\DataTable;
+use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
 use Cavesman\Config;
@@ -18,6 +19,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
+use ReflectionClass;
 use ZipArchive;
 
 class Albaran
@@ -303,9 +305,9 @@ class Albaran
             $em = DB::getManager();
 
             if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require 'src\Model\Pdf\FacturaPdf.php';
+                require_once 'src\Model\Pdf\FacturaPdf.php';
             else
-                require 'src\Model\Pdf\DefaultPdf.php';
+                require_once 'src\Model\Pdf\DefaultPdf.php';
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -447,9 +449,9 @@ class Albaran
         try {
             $em = DB::getManager();
             if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require 'src\Model\Pdf\FacturaPdf.php';
+                require_once 'src\Model\Pdf\FacturaPdf.php';
             else
-                require 'src\Model\Pdf\DefaultPdf.php';
+                require_once 'src\Model\Pdf\DefaultPdf.php';
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -518,19 +520,20 @@ class Albaran
 
             $em = DB::getManager();
             $item = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)->findOneBy(['id' => $id]);
-            $lineas = $em->getRepository(AlbaranLinea::class)->findOneBy(['albaran' => $item]);
-            $client = $item->client ?? false;
+            $lineas = $em->getRepository(AlbaranLinea::class)->findBy(['albaran' => $item]);
+            $client = $item->client ?? null;
 
             if (!$export) {
-                if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                    require 'src\Model\Pdf\FacturaPdf.php';
+                if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                    require_once new ReflectionClass(FacturaPdf::class)->getFileName();
                 else
-                    require 'src\Model\Pdf\DefaultPdf.php';
+                    require_once new ReflectionClass(DefaultPdf::class)->getFileName();
             }
 
             /* Header settings */
             $invoice = new FacturaPdf("A4", "€", "es");
-            $invoice->setLogo("public/img/logo/logo-mollet.jpg");   //logo image path
+            $logoPath = FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-mollet.jpg';
+            $invoice->setLogo($logoPath);  //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
             $invoice->type = "albaran";    // Invoice Type
             $invoice->reference = $item->number;   // Reference
@@ -570,7 +573,7 @@ class Albaran
 
             $invoice->addTotal("Importe Bruto", $item->importeBruto);
             $invoice->addTotal("Dto. Esp " . $item->discount . "%", $item->impDiscount);
-            $invoice->addTotal("Dto. P.P. " . $item->discountPp . "%", $item->impDiscountPp);
+            $invoice->addTotal("Dto. P.P. " . $item->discountPP . "%", $item->impDiscountPP);
             $invoice->addTotal("Base Imponible", $item->subtotal);
             $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
             $invoice->addTotal("Total", $item->total);
@@ -580,7 +583,7 @@ class Albaran
 
             $invoice->addParagraph("Vencimiento: " . self::getDueDate($item)->format("d-m-Y"));
 
-            if ($client & $client->formaPago == "TRANSFERENCIA BANCARIA")
+            if ($client && $client->formaPago == "TRANSFERENCIA BANCARIA")
                 $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
 
             $invoice->footerNote = Config::get("modules.factura.empresa.registro");
@@ -628,9 +631,9 @@ class Albaran
         try {
             $em = DB::getManager();
             if (file_exists('src\Model\Pdf\ListadoPdf.php'))
-                require 'src\Model\Pdf\ListadoPdf.php';
+                require_once 'src\Model\Pdf\ListadoPdf.php';
             else
-                require 'src\Model\Pdf\DefaultPdf.php';
+                require_once 'src\Model\Pdf\DefaultPdf.php';
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -711,9 +714,9 @@ class Albaran
             $em = DB::getManager();
             $files = [];
             if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require 'src\Model\Pdf\FacturaPdf.php';
+                require_once 'src\Model\Pdf\FacturaPdf.php';
             else
-                require 'src\Model\Pdf\DefaultPdf.php';
+                require_once 'src\Model\Pdf\DefaultPdf.php';
 
             $item = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)->findOneBy(['id' => $id]);
             $invoice = self::print($item->id, true);

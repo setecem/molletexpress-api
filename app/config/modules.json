@@ -1,0 +1,18 @@
+{
+    "albaran": {
+        "empresa": {
+            "nif": null,
+            "provincia": null,
+            "cp": null,
+            "localidad": null,
+            "direccion": null,
+            "nombre_fiscal2": null,
+            "nombre_fiscal": null
+        }
+    },
+    "factura": {
+        "empresa": {
+            "registro": null
+        }
+    }
+}

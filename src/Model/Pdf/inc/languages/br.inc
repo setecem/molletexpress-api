@@ -1,16 +1,18 @@
 <?php
- // Portuguese (Brazil)
-    $lang['number']   = 'Referência';
-    $lang['date']     = 'Data de cobrança';
-    $lang['time']     = 'Tempo de cobrança';
-    $lang['due']      = 'Data de Vencimento';
-    $lang['to']       = 'Faturamento para';
-    $lang['from']     = 'Faturamento de';
-    $lang['product']  = 'Produto';
-    $lang['qty']      = 'Qtde';
-    $lang['price']    = 'Preço';
-    $lang['discount'] = 'Desconto';
-    $lang['vat']      = 'ICMS';
-    $lang['total']    = 'Total';
-    $lang['page']     = 'Página';
-    $lang['page_of']  = 'de';
+// Portuguese (Brazil)
+return [
+    'number' => 'Referência',
+    'date' => 'Data de cobrança',
+    'time' => 'Tempo de cobrança',
+    'due' => 'Data de Vencimento',
+    'to' => 'Faturamento para',
+    'from' => 'Faturamento de',
+    'product' => 'Produto',
+    'qty' => 'Qtde',
+    'price' => 'Preço',
+    'discount' => 'Desconto',
+    'vat' => 'ICMS',
+    'total' => 'Total',
+    'page' => 'Página',
+    'page_of' => 'de',
+];

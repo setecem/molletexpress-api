@@ -2,11 +2,6 @@
 
 namespace App\Model\Pdf;
 
-define('EURO', chr(128));
-define('EURO_VAL', 6.55957);
-
-require dirname(__FILE__) . "/PlantillaPdf.php";
-
 class FacturaPdf extends PlantillaPdf
 {
 
@@ -213,6 +208,7 @@ class FacturaPdf extends PlantillaPdf
 
     private function br2nl($string): array|string|null
     {
+        $string = $string ?? '';
         return preg_replace('/<br(\s*)?\/?>/i', "\n", $string);
     }
 

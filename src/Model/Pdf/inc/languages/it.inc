@@ -1,14 +1,17 @@
 <?php
-    $lang['number']   = 'Riferimento';
-    $lang['date']     = 'Data di fatturazione';
-    $lang['due']      = 'Scadenza';
-    $lang['to']       = 'Fatturazione per';
-    $lang['from']     = 'Nostre informazioni';
-    $lang['product']  = 'Prodotto';
-    $lang['qty']      = 'Quantità';
-    $lang['price']    = 'Prezzo';
-    $lang['discount'] = 'Sconto';
-    $lang['vat']      = 'Imposta';
-    $lang['total']    = 'Totale';
-    $lang['page']     = 'Pagina';
-    $lang['page_of']  = 'di';
+// Italian
+return [
+    'number'   => 'Riferimento',
+    'date'     => 'Data di fatturazione',
+    'due'      => 'Scadenza',
+    'to'       => 'Fatturazione per',
+    'from'     => 'Nostre informazioni',
+    'product'  => 'Prodotto',
+    'qty'      => 'Quantità',
+    'price'    => 'Prezzo',
+    'discount' => 'Sconto',
+    'vat'      => 'Imposta',
+    'total'    => 'Totale',
+    'page'     => 'Pagina',
+    'page_of'  => 'di',
+];

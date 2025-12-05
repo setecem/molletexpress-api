@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Rechnungsnummer';
-    $lang['date']     = 'Rechnungsdatum';
-    $lang['time']     = 'Rechnungs-Uhrzeit';
-    $lang['due']      = 'Fälligkeitsdatum';
-    $lang['to']       = 'Rechnungsempfänger';
-    $lang['from']     = 'Rechnung von';
-    $lang['product']  = 'Produkt';
-    $lang['qty']      = 'Menge';
-    $lang['price']    = 'Preis';
-    $lang['discount'] = 'Rabatt';
-    $lang['vat']      = 'MwSt';
-    $lang['total']    = 'Gesamt';
-    $lang['page']     = 'Seite';
-    $lang['page_of']  = 'von';
+// German (Deutsch)
+return [
+    'number'   => 'Rechnungsnummer',
+    'date'     => 'Rechnungsdatum',
+    'time'     => 'Rechnungs-Uhrzeit',
+    'due'      => 'Fälligkeitsdatum',
+    'to'       => 'Rechnungsempfänger',
+    'from'     => 'Rechnung von',
+    'product'  => 'Produkt',
+    'qty'      => 'Menge',
+    'price'    => 'Preis',
+    'discount' => 'Rabatt',
+    'vat'      => 'MwSt',
+    'total'    => 'Gesamt',
+    'page'     => 'Seite',
+    'page_of'  => 'von',
+];

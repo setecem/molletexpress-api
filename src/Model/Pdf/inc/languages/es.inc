@@ -1,15 +1,17 @@
 <?php
-    $lang['number']   = 'Referencia';
-    $lang['date']     = 'Fecha';
-    $lang['due']      = 'Fecha de vencimiento';
-    $lang['time']     = 'Fecha de factura';
-    $lang['to']       = 'Facturación a';
-    $lang['from']     = 'Nuestra información ';
-    $lang['product']  = 'Producto';
-    $lang['qty']      = 'Cantidad';
-    $lang['price']    = 'Precio';
-    $lang['discount'] = 'Descuento';
-    $lang['vat']      = 'Impuestos';
-    $lang['total']    = 'Total de';
-    $lang['page']     = 'Página';
-    $lang['page_of']  = 'de';
+return [
+    'number'   => 'Referencia',
+    'date'     => 'Fecha',
+    'due'      => 'Fecha de vencimiento',
+    'time'     => 'Fecha de factura',
+    'to'       => 'Facturación a',
+    'from'     => 'Nuestra información',
+    'product'  => 'Producto',
+    'qty'      => 'Cantidad',
+    'price'    => 'Precio',
+    'discount' => 'Descuento',
+    'vat'      => 'Impuestos',
+    'total'    => 'Total de',
+    'page'     => 'Página',
+    'page_of'  => 'de',
+];

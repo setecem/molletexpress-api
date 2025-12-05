@@ -26,6 +26,9 @@ Router::mount('/api/v1/delivery-note', function () {
     /** @see Albaran::get() */
     Router::get('/(\d+)', Albaran::class . '@get');
 
+    /** @see Albaran::print() */
+    Router::get('/(\d+)/print', Albaran::class . '@print');
+
     /** @see Albaran::factura() */
     Router::get('/(\d+)/factura', Albaran::class . '@factura');
 

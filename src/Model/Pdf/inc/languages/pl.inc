@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Numer';
-    $lang['date']     = 'Data';
-    $lang['time']     = 'Godzina';
-    $lang['due']      = 'Termin płatności';
-    $lang['to']       = 'Nabywca';
-    $lang['from']     = 'Sprzedawca';
-    $lang['product']  = 'Produkt';
-    $lang['qty']      = 'Ilość';
-    $lang['price']    = 'Cena';
-    $lang['discount'] = 'Rabat';
-    $lang['vat']      = 'Vat';
-    $lang['total']    = 'Razem';
-    $lang['page']     = 'Strona';
-    $lang['page_of']  = 'z';
+// Polish
+return [
+    'number'   => 'Numer',
+    'date'     => 'Data',
+    'time'     => 'Godzina',
+    'due'      => 'Termin płatności',
+    'to'       => 'Nabywca',
+    'from'     => 'Sprzedawca',
+    'product'  => 'Produkt',
+    'qty'      => 'Ilość',
+    'price'    => 'Cena',
+    'discount' => 'Rabat',
+    'vat'      => 'Vat',
+    'total'    => 'Razem',
+    'page'     => 'Strona',
+    'page_of'  => 'z',
+];

@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Sąskaitos numeris';
-    $lang['date']     = 'Data';
-    $lang['time']     = 'Laikas';
-    $lang['due']      = 'Sumokėti iki';
-    $lang['to']       = 'Pirkėjas';
-    $lang['from']     = 'Pardavėjas';
-    $lang['product']  = 'Prekės';
-    $lang['qty']      = 'Kiekis';
-    $lang['price']    = 'Kaina';
-    $lang['discount'] = 'Nuolaida';
-    $lang['vat']      = 'PVM';
-    $lang['total']    = 'Suma';
-    $lang['page']     = 'Puslapis';
-    $lang['page_of']  = 'iš';
+// Lithuanian
+return [
+    'number'   => 'Sąskaitos numeris',
+    'date'     => 'Data',
+    'time'     => 'Laikas',
+    'due'      => 'Sumokėti iki',
+    'to'       => 'Pirkėjas',
+    'from'     => 'Pardavėjas',
+    'product'  => 'Prekės',
+    'qty'      => 'Kiekis',
+    'price'    => 'Kaina',
+    'discount' => 'Nuolaida',
+    'vat'      => 'PVM',
+    'total'    => 'Suma',
+    'page'     => 'Puslapis',
+    'page_of'  => 'iš',
+];

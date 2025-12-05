@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Reference';
-    $lang['date']     = 'Billing date';
-    $lang['time']     = 'Billing time';
-    $lang['due']      = 'Due date';
-    $lang['to']       = 'Billing to';
-    $lang['from']     = 'Billing from';
-    $lang['product']  = 'Product';
-    $lang['qty']      = 'Qty';
-    $lang['price']    = 'Price';
-    $lang['discount'] = 'Discount';
-    $lang['vat']      = 'Vat';
-    $lang['total']    = 'Total';
-    $lang['page']     = 'Page';
-    $lang['page_of']  = 'of';
+// English
+return [
+    'number'   => 'Reference',
+    'date'     => 'Billing date',
+    'time'     => 'Billing time',
+    'due'      => 'Due date',
+    'to'       => 'Billing to',
+    'from'     => 'Billing from',
+    'product'  => 'Product',
+    'qty'      => 'Qty',
+    'price'    => 'Price',
+    'discount' => 'Discount',
+    'vat'      => 'Vat',
+    'total'    => 'Total',
+    'page'     => 'Page',
+    'page_of'  => 'of',
+];

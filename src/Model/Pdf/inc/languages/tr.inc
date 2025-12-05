@@ -1,15 +1,18 @@
 <?php
-    $lang['number']   = 'Fatura No';
-    $lang['date']     = 'Fatura tarihi';
-    $lang['time']     = 'Fatura zamanı';
-    $lang['due']      = 'Vadesi';
-    $lang['to']       = 'Firma';
-    $lang['from']     = 'Müşteri';
-    $lang['product']  = 'Ürün';
-    $lang['qty']      = 'Adet';
-    $lang['price']    = 'Fiyat';
-    $lang['discount'] = 'İndirim';
-    $lang['vat']      = 'Vergi';
-    $lang['total']    = 'Toplam';
-    $lang['page']     = 'Sayfa';
-    $lang['page_of']  = 'arasında';
+// Turkish
+return [
+    'number'   => 'Fatura No',
+    'date'     => 'Fatura tarihi',
+    'time'     => 'Fatura zamanı',
+    'due'      => 'Vadesi',
+    'to'       => 'Firma',
+    'from'     => 'Müşteri',
+    'product'  => 'Ürün',
+    'qty'      => 'Adet',
+    'price'    => 'Fiyat',
+    'discount' => 'İndirim',
+    'vat'      => 'Vergi',
+    'total'    => 'Toplam',
+    'page'     => 'Sayfa',
+    'page_of'  => 'arasında',
+];
