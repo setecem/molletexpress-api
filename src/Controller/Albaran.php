@@ -304,10 +304,10 @@ class Albaran
 
             $em = DB::getManager();
 
-            if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require_once 'src\Model\Pdf\FacturaPdf.php';
+            if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                require_once new ReflectionClass(FacturaPdf::class)->getFileName();
             else
-                require_once 'src\Model\Pdf\DefaultPdf.php';
+                require_once new ReflectionClass(DefaultPdf::class)->getFileName();
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -448,10 +448,10 @@ class Albaran
         $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
         try {
             $em = DB::getManager();
-            if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require_once 'src\Model\Pdf\FacturaPdf.php';
+            if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                require_once new ReflectionClass(FacturaPdf::class)->getFileName();
             else
-                require_once 'src\Model\Pdf\DefaultPdf.php';
+                require_once new ReflectionClass(DefaultPdf::class)->getFileName();
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -630,10 +630,10 @@ class Albaran
     {
         try {
             $em = DB::getManager();
-            if (file_exists('src\Model\Pdf\ListadoPdf.php'))
-                require_once 'src\Model\Pdf\ListadoPdf.php';
+            if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                require_once new ReflectionClass(FacturaPdf::class)->getFileName();
             else
-                require_once 'src\Model\Pdf\DefaultPdf.php';
+                require_once new ReflectionClass(DefaultPdf::class)->getFileName();
 
             $resultItems = $em
                 ->createQueryBuilder()
@@ -713,10 +713,10 @@ class Albaran
 
             $em = DB::getManager();
             $files = [];
-            if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                require_once 'src\Model\Pdf\FacturaPdf.php';
+            if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                require_once new ReflectionClass(FacturaPdf::class)->getFileName();
             else
-                require_once 'src\Model\Pdf\DefaultPdf.php';
+                require_once new ReflectionClass(DefaultPdf::class)->getFileName();
 
             $item = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)->findOneBy(['id' => $id]);
             $invoice = self::print($item->id, true);
