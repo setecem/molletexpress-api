@@ -256,7 +256,7 @@ class Factura
         }
     }
 
-    protected static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
+    public static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
     {
         try {
             $em = DB::getManager();
@@ -333,7 +333,7 @@ class Factura
         }
     }
 
-    protected static function export(string $dateStart, string $dateEnd, int $idClient)
+    public static function export(string $dateStart, string $dateEnd, int $idClient)
     {
         $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
         try {
@@ -489,7 +489,7 @@ class Factura
         }
     }
 
-    protected static function sendEmail(int $id): Http\JsonResponse
+    public static function sendEmail(int $id): Http\JsonResponse
     {
         try {
             $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
@@ -506,7 +506,12 @@ class Factura
 
             $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
             $invoice = self::print($item->id, true);
+
+            if(!is_dir($cacheDirectory . '/pdf'))
+                mkdir($cacheDirectory . '/pdf', 0777, true);
+
             $invoice->render($cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf", 'F');
+
             if (!$item->client)
                 return new Http\JsonResponse(['message' => "El documento seleccionado no tiene cliente asignado"], 400);
 
@@ -528,7 +533,7 @@ class Factura
                     }
                     $sent = Mail::send(
                         $addresses,
-                        "Nuevo documento de " . \App\Entity\Document\Factura\Factura::class,
+                        "Nuevo documento de " . (new ReflectionClass(\App\Entity\Document\Factura\Factura::class)->getShortName()),
                         '<html lang="">
                         <head>
                             <meta charset="utf8">
@@ -553,7 +558,7 @@ class Factura
         }
     }
 
-    protected static function generateOrdenCobro(int $id): Http\JsonResponse
+    public static function generateOrdenCobro(int $id): Http\JsonResponse
     {
         try {
 

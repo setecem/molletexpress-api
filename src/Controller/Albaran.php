@@ -443,7 +443,7 @@ class Albaran
         }
     }
 
-    protected static function export(string $dateStart, string $dateEnd, int $idClient)
+    public static function export(string $dateStart, string $dateEnd, int $idClient)
     {
         $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
         try {
@@ -626,7 +626,7 @@ class Albaran
         }
     }
 
-    protected static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
+    public static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
     {
         try {
             $em = DB::getManager();
@@ -703,7 +703,7 @@ class Albaran
         }
     }
 
-    protected static function sendEmail(int $id): Http\JsonResponse
+    public static function sendEmail(int $id): Http\JsonResponse
     {
         try {
             $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
@@ -716,6 +716,9 @@ class Albaran
                 require_once new ReflectionClass(FacturaPdf::class)->getFileName();
             else
                 require_once new ReflectionClass(DefaultPdf::class)->getFileName();
+
+            if(!is_dir($cacheDirectory . '/pdf'))
+                mkdir($cacheDirectory . '/pdf', 0777, true);
 
             $item = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)->findOneBy(['id' => $id]);
             $invoice = self::print($item->id, true);
@@ -741,7 +744,7 @@ class Albaran
                     }
                     $sent = Mail::send(
                         $addresses,
-                        "Nuevo documento de " . \App\Entity\Document\Albaran\Albaran::class,
+                        "Nuevo documento de " . (new ReflectionClass(\App\Entity\Document\Albaran\Albaran::class)->getShortName()),
                         '<html lang="">
                         <head>
                             <meta charset="utf8">
