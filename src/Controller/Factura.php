@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Document\Factura\FacturaLinea;
 use App\Enum\DocumentStatus;
 use App\Model\DataTable;
+use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
 use Cavesman\Config;
@@ -18,6 +19,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
+use ReflectionClass;
 use ZipArchive;
 
 class Factura
@@ -408,19 +410,20 @@ class Factura
 
             $em = DB::getManager();
             $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
-            $lineas = $em->getRepository(FacturaLinea::class)->findOneBy(['factura' => $item]);
-            $client = $item->client ?? false;
+            $lineas = $em->getRepository(FacturaLinea::class)->findBy(['factura' => $item]);
+            $client = $item->client ?? null;
 
             if (!$export) {
-                if (file_exists('src\Model\Pdf\FacturaPdf.php'))
-                    require 'src\Model\Pdf\FacturaPdf.php';
+                if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
+                    require_once new ReflectionClass(FacturaPdf::class)->getFileName();
                 else
-                    require 'src\Model\Pdf\DefaultPdf.php';
+                    require_once new ReflectionClass(DefaultPdf::class)->getFileName();
             }
 
             /* Header settings */
             $invoice = new FacturaPdf("A4", "€", "es");
-            $invoice->setLogo("public/img/logo/logo-mollet.jpg");   //logo image path
+            $logoPath = FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-mollet.jpg';
+            $invoice->setLogo($logoPath);  //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
             $invoice->type = "factura";    // Invoice Type
             $invoice->reference = $item->number;   // Reference
