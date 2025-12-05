@@ -26,6 +26,9 @@ Router::mount('/api/v1/invoice', function () {
     /** @see Factura::get() */
     Router::get('/(\d+)', Factura::class . '@get');
 
+    /** @see Factura::print() */
+    Router::get('/(\d+)/print', Factura::class . '@print');
+
     /** @see Factura::active() */
     Router::get('/(\d+)/active', Factura::class . '@active');
 
