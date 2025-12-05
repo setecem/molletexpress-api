@@ -32,4 +32,6 @@ enum Role: string
     case RECEIVE_EMAIL_EDIT = 'RECEIVE_EMAIL_EDIT';
     case RECEIVE_EMAIL_DELETE = 'RECEIVE_EMAIL_DELETE';
     case SEND_EMAIL = 'SEND_EMAIL';
+    case EXPORT = 'EXPORT';
+    case LIST = 'LIST';
 }

@@ -76,7 +76,9 @@ enum RoleGroup: string
                 Role::SEND_EMAIL,
                 Role::ACTIVE,
                 Role::PAID_STATUS,
-                Role::GENERATE_ORDER
+                Role::GENERATE_ORDER,
+                Role::EXPORT,
+                Role::LIST,
             ]
         ];
     }
@@ -108,7 +110,9 @@ enum RoleGroup: string
                 Role::RECEIVE_EMAIL_EDIT,
                 Role::RECEIVE_EMAIL_DELETE,
                 Role::DOWNLOAD,
-                Role::SEND_EMAIL
+                Role::SEND_EMAIL,
+                Role::EXPORT,
+                Role::LIST,
             ]
         ];
     }
