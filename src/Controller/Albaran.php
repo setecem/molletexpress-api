@@ -641,7 +641,7 @@ class Albaran
                 ->from(\App\Entity\Document\Albaran\Albaran::class, "o")
                 ->innerJoin('o.client', 'c')
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
-                ->orderBy("c.num_abonado", "ASC")
+                ->orderBy("c.numAbonado", "ASC")
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
             $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
@@ -682,7 +682,7 @@ class Albaran
                 $total
             ];
 
-            require_once 'src\Model\Pdf\ListadoPdf.php';
+            require_once new ReflectionClass(ListadoPdf::class)->getFileName();
 
             $pdf = new ListadoPdf();
             $pdf->AliasNbPages();
@@ -694,7 +694,7 @@ class Albaran
 
             $pdf->AddPage();
             $pdf->resetFont();
-            $pdf->title('Listado de ' . \App\Entity\Document\Albaran\Albaran::class);
+            $pdf->title('Listado de ' . (new ReflectionClass(\App\Entity\Document\Albaran\Albaran::class)->getShortName()));
             $pdf->ImprovedTable($header, $data);
             $pdf->Output();
             die();

@@ -2,6 +2,8 @@
 
 
 namespace App\Model\Pdf;
+
+use DateTime;
 use Fpdf;
 
 class ListadoPdf extends Fpdf\Fpdf
@@ -88,9 +90,16 @@ class ListadoPdf extends Fpdf\Fpdf
         // Select Arial italic 8
         $this->SetFont('Arial', 'I', 8);
         // Print centered page number
-        setlocale(LC_TIME, "es_ES");
-        // TODO: DEPRECATED Cambiar strftime?
-        $date = strftime("%A, %d de %B de %Y");
+
+        $dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+        $meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        $fecha = new DateTime();
+        $day = $dias[(int)$fecha->format('w')];
+        $numero = $fecha->format('d');
+        $month = $meses[(int)$fecha->format('n') - 1];
+        $year = $fecha->format('Y');
+
+        $date = "$day, $numero de $month de $year";
         $this->Cell(0, 10, $date, 0, 0, 'L');
         $this->Cell(0, 10, mb_convert_encoding('Página ' . $this->PageNo() . ' de {nb}', 'ISO-8859-1', 'UTF-8'), 0, 0, 'R');
     }

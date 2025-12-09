@@ -56,7 +56,7 @@ class PlantillaPdf extends Fpdf
     protected bool $displayToFromHeaders = true;
     protected int $columns = 4;
 
-    public function __construct($size = 'A4', $currency = '$', $language = 'en')
+    public function __construct($size = 'A4', $currency = '$', $language = 'es')
     {
         parent::__construct('P', 'mm', [$this->document['w'], $this->document['h']]);
         $this->firstColumnWidth = 100;

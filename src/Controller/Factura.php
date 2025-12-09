@@ -271,7 +271,7 @@ class Factura
                 ->from(\App\Entity\Document\Factura\Factura::class, "o")
                 ->innerJoin('o.client', 'c')
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
-                ->orderBy("c.num_abonado", "ASC")
+                ->orderBy("c.numAbonado", "ASC")
                 ->setParameter('dateStart', new DateTime($dateStart))
                 ->setParameter('dateEnd', new DateTime($dateEnd));
             $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
@@ -312,7 +312,7 @@ class Factura
                 $total
             ];
 
-            require_once 'src\Model\Pdf\ListadoPdf.php';
+            require_once new ReflectionClass(ListadoPdf::class)->getFileName();
 
             $pdf = new ListadoPdf();
             $pdf->AliasNbPages();
@@ -324,7 +324,7 @@ class Factura
 
             $pdf->AddPage();
             $pdf->resetFont();
-            $pdf->title('Listado de ' . \App\Entity\Document\Factura\Factura::class);
+            $pdf->title('Listado de ' . (new ReflectionClass(\App\Entity\Document\Factura\Factura::class)->getShortName()));
             $pdf->ImprovedTable($header, $data);
             $pdf->Output();
             die();
