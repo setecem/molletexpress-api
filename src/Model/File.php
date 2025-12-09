@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use App\Enum\FileType;
-use App\Model\Contact\Contact;
 use App\Model\Document\Albaran\Albaran;
 use App\Model\Document\Factura\Factura;
 use App\Model\Employee\Employee;
@@ -27,7 +26,6 @@ final class File extends Model
     {
         return match ($property) {
             'employee' => Employee::class,
-            'contact' => Contact::class,
             'albaran' => Albaran::class,
             'factura' => Factura::class,
             'type' => FileType::class,

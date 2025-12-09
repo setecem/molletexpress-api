@@ -37,7 +37,7 @@ class OrdenCobro extends Entity
     public ?DateTime $dateModified = null;
 
     /** @var Factura[]|Collection */
-    #[ORM\OneToMany(targetEntity: Factura::class, mappedBy: 'orden')]
+    #[ORM\OneToMany(targetEntity: Factura::class, mappedBy: 'ordenCobro')]
     public array|Collection $facturas = [];
 
 

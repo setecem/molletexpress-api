@@ -91,9 +91,7 @@ class Albaran
 
             $qb = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)
                 ->createQueryBuilder('i')
-                ->where('i.deletedOn IS NULL')
-                ->andWhere('c.id = :id')
-                ->setParameter('id', $id);
+                ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
 

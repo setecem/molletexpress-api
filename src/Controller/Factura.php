@@ -89,10 +89,7 @@ class Factura
 
             $qb = $em->getRepository(\App\Entity\Document\Factura\Factura::class)
                 ->createQueryBuilder('i')
-                ->where('i.deletedOn IS NULL')
-                ->andWhere('c.id = :id')
-                ->setParameter('id', $id);
-
+                ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
 
@@ -572,6 +569,12 @@ class Factura
 
             $client = \App\Entity\Client::findOneBy(['id' => $doc->client->id, 'deletedOn' => null]);
             $orden = \App\Entity\OrdenCobro::findOneBy([ "client" => $client,"date" => $date, "active" => false]);
+            if (!$orden) {
+                $orden = new \App\Entity\OrdenCobro();
+                $orden->client = $client;
+                $orden->date = $date;
+                $orden->reference = $client->id . "-" . $date->format("ymd");
+            }
             $em->persist($orden);
             $doc->ordenCobro = $orden;
             $em->persist($doc);
