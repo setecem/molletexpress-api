@@ -1,25 +1,81 @@
 {
-    "albaran": {
-        "empresa": {
-            "nif": null,
-            "provincia": null,
-            "cp": null,
-            "localidad": null,
-            "direccion": null,
-            "nombre_fiscal2": null,
-            "nombre_fiscal": null
-        }
+    "client": {
+        "name": "client",
+        "active": 1
+    },
+    "crud": {
+        "name": "crud",
+        "active": 1
+    },
+    "dashboard": {
+        "name": "dashboard",
+        "active": false
+    },
+    "employee": {
+        "name": "employee",
+        "active": 1
     },
     "factura": {
+        "name": "factura",
+        "active": 1,
+        "impuestos": [
+            21,
+            10,
+            4,
+            0
+        ],
+        "presupuesto": {
+            "serie": "P",
+            "formato": "{serie}2{year}-{reference}",
+            "ref_length": 3
+        },
+        "factura": {
+            "serie": "F",
+            "formato": "{serie}2{year}-{reference}",
+            "ref_length": 3
+        },
+        "pedido": {
+            "serie": "PE",
+            "formato": "{serie}2{year}-{reference}",
+            "ref_length": 3
+        },
+        "albaran": {
+            "serie": "A",
+            "formato": "{serie}2{year}-{reference}",
+            "ref_length": 3
+        },
         "empresa": {
-            "registro": null,
-            "nif": null,
-            "provincia": null,
-            "cp": null,
-            "localidad": null,
-            "direccion": null,
-            "nombre_fiscal2": null,
-            "nombre_fiscal": null
+            "nombre_fiscal": "SERV. DE MENSAJERIA Y TRANSPORTE",
+            "nombre_fiscal2": "MOLLET EXPRESS, S.L.",
+            "direccion": "AVENIDA JAUME I, 96 - 3",
+            "localidad": "Mollet del Vallés",
+            "cp": "08100",
+            "provincia": "Barcelona",
+            "nif": "B58921073",
+            "bic": "123",
+            "iban": "ES4801823415980200065620",
+            "creditor_id": "ES77001B58921073",
+            "registro": "R.M.B. Tomo 10007 Libro 457 secc.3 folio 122 hoja num.8274 inscr.1a"
         }
+    },
+    "lang": {
+        "name": "Lang",
+        "active": 1
+    },
+    "mail": {
+        "name": "mail",
+        "active": 1
+    },
+    "ordencobro": {
+        "name": "ordencobro",
+        "active": 1
+    },
+    "producto": {
+        "name": "producto",
+        "active": 1
+    },
+    "user": {
+        "name": "user",
+        "active": 1
     }
 }

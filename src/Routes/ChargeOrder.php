@@ -23,4 +23,10 @@ Router::mount('/api/v1/charge-order', function () {
     /** @see OrdenCobro::delete() */
     Router::delete('/(\d+)', OrdenCobro::class . '@delete');
 
+    /** @see OrdenCobro::print() */
+    Router::get('/(\d+)/print', OrdenCobro::class . '@print');
+
+    /** @see OrdenCobro::generarAdeudos() */
+    Router::get('/print', OrdenCobro::class . '@generarAdeudos');
+
 });
