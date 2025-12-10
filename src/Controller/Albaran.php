@@ -74,9 +74,10 @@ class Albaran
             $datatable->recordsTotal = $recordsTotal;
             $datatable->recordsFiltered = $recordsTotal;
 
+            /** @var \App\Entity\Document\Albaran\Albaran $item */
             foreach ($list as $item) {
-                if ($item->factura->ordenCobro)
-                    $item->factura->ordenCobro->facturas = [];
+                if ($item->factura && $item->factura->ordenCobro)
+                    $item->factura->ordenCobro = null;
                 /** @var \App\Model\Document\Albaran\Albaran $model */
                 $model = $item->model(\App\Model\Document\Albaran\Albaran::class);
                 $datatable->data[] = $model->json();

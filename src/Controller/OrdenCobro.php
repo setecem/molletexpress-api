@@ -257,7 +257,7 @@ class OrdenCobro
 
                 $directDebit->addPaymentInfo($orden->reference, array(
                     'id' => 'firstPayment',
-                    'dueDate' => ($orden->date ? new DateTime($orden->date) : null), // optional. Otherwise, default period is used
+                    'dueDate' => $orden->date, // optional. Otherwise, default period is used
                     'creditorName' => Config::get("modules.factura.empresa.nombre_fiscal"),
                     'creditorAccountIBAN' => Config::get("modules.factura.empresa.iban"),
                     'creditorAgentBIC' => Config::get("modules.factura.empresa.bic"),
@@ -304,6 +304,23 @@ class OrdenCobro
             } else {
                 die("Algo ha fallado");
             }
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function hasUnpaid(): Http\JsonResponse
+    {
+        try {
+
+            $em = DB::getManager();
+            $ordenes = $em->getRepository(\App\Entity\OrdenCobro::class)->findBy(['pagada' => false]);
+
+            if (count($ordenes) == 0)
+                return new Http\JsonResponse(['message' => "No se encontraron adeudos sin pagar"], 404);
+            else
+                return new Http\JsonResponse(['total' => count($ordenes)]);
+
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }

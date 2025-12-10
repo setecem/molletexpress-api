@@ -272,13 +272,18 @@ class Employee
 
             $model = \App\Model\Employee\Employee::fromRequest();
 
-            if (!$model->username || !$model->password || !$model->name)
+            if (!$model->username || !$model->password || !$model->name || !$model->email)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos'], 400);
 
             $item = \App\Entity\Employee\Employee::findOneBy(['username' => $model->username]);
 
             if ($item)
                 return new Http\JsonResponse(['message' => 'Este usuario ya existe'], 400);
+
+            $item = \App\Entity\Employee\Employee::findOneBy(['email' => $model->email]);
+
+            if ($item)
+                return new Http\JsonResponse(['message' => 'Este email ya existe'], 400);
 
             $model->password = password_hash($model->password, PASSWORD_DEFAULT);password_hash($model->password, PASSWORD_DEFAULT);
 
@@ -326,7 +331,7 @@ class Employee
 
             $model = \App\Model\Employee\Employee::fromRequest();
 
-            if (!$model->username || !$model->name)
+            if (!$model->username || !$model->name || !$model->email)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos'], 400);
 
             if ($id != $model->id)
@@ -351,6 +356,17 @@ class Employee
 
             if ($otherItem)
                 return new Http\JsonResponse(['message' => 'Este usuario ya existe'], 400);
+
+            $otherItem = $em->createQueryBuilder()
+                ->select('i')
+                ->from(\App\Entity\Employee\Employee::class, 'i')
+                ->where('i.id != :id AND i.deletedOn IS NULL AND i.email IS NOT NULL AND i.email = :email')
+                ->setParameter('id', $id)
+                ->setParameter('email', $model->email)
+                ->getQuery()->getOneOrNullResult();
+
+            if ($otherItem)
+                return new Http\JsonResponse(['message' => 'Este email ya existe'], 400);
 
             if ($model->password && $item->password != $model->password)
                 $model->password = password_hash($model->password, PASSWORD_DEFAULT);

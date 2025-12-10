@@ -29,4 +29,7 @@ Router::mount('/api/v1/charge-order', function () {
     /** @see OrdenCobro::generarAdeudos() */
     Router::get('/print', OrdenCobro::class . '@generarAdeudos');
 
+    /** @see OrdenCobro::hasUnpaid() */
+    Router::get('/has/unpaid', OrdenCobro::class . '@hasUnpaid');
+
 });
