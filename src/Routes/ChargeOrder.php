@@ -11,11 +11,8 @@ Router::mount('/api/v1/charge-order', function () {
     /** @see OrdenCobro::get() */
     Router::get('/(\d+)', OrdenCobro::class . '@get');
 
-    /** @see OrdenCobro::filterAll() */
-    Router::get('/all/filter', OrdenCobro::class . '@filterAll');
-
     /** @see OrdenCobro::filter() */
-    Router::get('/(\d+)/filter', OrdenCobro::class . '@filter');
+    Router::get('/filter', OrdenCobro::class . '@filter');
 
     /** @see OrdenCobro::add() */
     Router::post('/', OrdenCobro::class . '@add');

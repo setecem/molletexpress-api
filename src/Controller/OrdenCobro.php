@@ -16,7 +16,7 @@ use Exception;
 class OrdenCobro
 {
 
-    public static function filterAll(): Http\JsonResponse
+    public static function filter(): Http\JsonResponse
     {
         try {
             $em = Db::getManager();
@@ -35,60 +35,9 @@ class OrdenCobro
                 }
             }
 
-            if ($filter->order && $filter->columns) {
-                foreach ($filter->order as $order) {
-                    $index = $order->column;
-                    $columnName = $filter->columns[$index]->data;
-                    $dir = strtoupper($order->dir);
-                    if ($dir === 'ASC' || $dir === 'DESC')
-                        $qb->addOrderBy('i.' . $columnName, $dir);
-                }
-            }
-
             $total = clone $qb;
-
-            if ($filter->length ?? false) {
-                $qb->setMaxResults($filter->length)
-                    ->setFirstResult($filter->start);
-            }
-
-            /** @var \App\Entity\OrdenCobro[] $list */
-            $list = $qb->getQuery()->getResult();
-
-            $datatable = new DataTable();
-            $datatable->recordsTotal = count($total->getQuery()->getResult());
-            foreach ($list as $item) {
-                /** @var \App\Model\OrdenCobro $model */
-                $model = $item->model(\App\Model\OrdenCobro::class);
-                $datatable->data[] = $model->json();
-            }
-            $datatable->recordsFiltered = count($total->getQuery()->getResult());
-
-            return new  Http\JsonResponse($datatable);
-        } catch (Exception $e) {
-            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
-        }
-
-    }
-
-    public static function filter(int $id): Http\JsonResponse
-    {
-        try {
-            $em = Db::getManager();
-
-            $qb = $em->getRepository(\App\Entity\OrdenCobro::class)
-                ->createQueryBuilder('i')
-                ->where('i.deletedOn IS NULL');
-
-            $filter = json_decode(Request::get('filter', '[]'));
-
-            if ($filter && $filter->search) {
-                foreach (explode(' ', $filter->search->value) as $key => $string) {
-                    $qb
-                        ->andWhere('i.reference LIKE :search_' . $key)
-                        ->setParameter('search_' . $key, '%' . $string . '%');
-                }
-            }
+            $total->select('COUNT(i.id)');
+            $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
 
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
@@ -100,8 +49,6 @@ class OrdenCobro
                 }
             }
 
-            $total = clone $qb;
-
             if ($filter->length ?? false) {
                 $qb->setMaxResults($filter->length)
                     ->setFirstResult($filter->start);
@@ -111,13 +58,17 @@ class OrdenCobro
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
-            $datatable->recordsTotal = count($total->getQuery()->getResult());
+            $datatable->recordsTotal = $recordsTotal;
+            $datatable->recordsFiltered = $recordsTotal;
+
             foreach ($list as $item) {
+                foreach ($item->facturas as $factura) {
+                    $factura->ordenCobro = null;
+                }
                 /** @var \App\Model\OrdenCobro $model */
                 $model = $item->model(\App\Model\OrdenCobro::class);
                 $datatable->data[] = $model->json();
             }
-            $datatable->recordsFiltered = count($total->getQuery()->getResult());
 
             return new  Http\JsonResponse($datatable);
         } catch (Exception $e) {
@@ -131,7 +82,9 @@ class OrdenCobro
         try {
 
             $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
-
+            foreach ($item->facturas as $factura) {
+                $factura->ordenCobro = null;
+            }
             return new Http\JsonResponse($item->model(\App\Model\OrdenCobro::class)->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -144,7 +97,7 @@ class OrdenCobro
 
             $model = \App\Model\OrdenCobro::fromRequest();
 
-            if (!$model->ref)
+            if (!$model->reference)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             /** @var \App\Entity\OrdenCobro $entity */
@@ -173,7 +126,7 @@ class OrdenCobro
 
             $model = \App\Model\OrdenCobro::fromRequest();
 
-            if (!$model->ref)
+            if (!$model->reference)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
             if ($id != $model->id)
@@ -201,6 +154,11 @@ class OrdenCobro
             $em = DB::getManager();
 
             $item = \App\Entity\OrdenCobro::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            foreach ($item->facturas as $factura) {
+                $factura->ordenCobro = null;
+                $em->persist($factura);
+            }
 
             $item->deletedOn = new DateTime();
 

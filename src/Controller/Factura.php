@@ -24,7 +24,8 @@ use ZipArchive;
 
 class Factura
 {
-    public static function filterAll(): Http\JsonResponse
+
+    public static function filter(): Http\JsonResponse
     {
         try {
             $em = Db::getManager();
@@ -38,13 +39,19 @@ class Factura
             if ($filter && $filter->search) {
                 foreach (explode(' ', $filter->search->value) as $key => $string) {
                     $qb
-                        ->andWhere('i.serie LIKE :search_' . $key . ' OR i.number LIKE :search_' . $key
-                            . ' OR i.observaciones LIKE :search_' . $key . ' OR i.tax LIKE :search_' . $key
+                        ->andWhere('i.serie LIKE :search_' . $key
+                            . ' OR i.number LIKE :search_' . $key
+                            . ' OR i.observaciones LIKE :search_' . $key
+                            . ' OR i.tax LIKE :search_' . $key
                             . ' OR i.comments LIKE :search_' . $key
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }
             }
+
+            $total = clone $qb;
+            $total->select('COUNT(i.id)');
+            $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
 
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
@@ -56,8 +63,6 @@ class Factura
                 }
             }
 
-            $total = clone $qb;
-
             if ($filter->length ?? false) {
                 $qb->setMaxResults($filter->length)
                     ->setFirstResult($filter->start);
@@ -67,71 +72,16 @@ class Factura
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
-            $datatable->recordsTotal = count($total->getQuery()->getResult());
+            $datatable->recordsTotal = $recordsTotal;
+            $datatable->recordsFiltered = $recordsTotal;
+
             foreach ($list as $item) {
+                if ($item->ordenCobro)
+                    $item->ordenCobro->facturas = [];
                 /** @var \App\Model\Document\Factura\Factura $model */
                 $model = $item->model(\App\Model\Document\Factura\Factura::class);
                 $datatable->data[] = $model->json();
             }
-            $datatable->recordsFiltered = count($total->getQuery()->getResult());
-
-            return new  Http\JsonResponse($datatable);
-        } catch (Exception $e) {
-            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
-        }
-
-    }
-
-    public static function filter(int $id): Http\JsonResponse
-    {
-        try {
-            $em = Db::getManager();
-
-            $qb = $em->getRepository(\App\Entity\Document\Factura\Factura::class)
-                ->createQueryBuilder('i')
-                ->where('i.deletedOn IS NULL');
-
-            $filter = json_decode(Request::get('filter', '[]'));
-
-            if ($filter && $filter->search) {
-                foreach (explode(' ', $filter->search->value) as $key => $string) {
-                    $qb
-                        ->andWhere('i.serie LIKE :search_' . $key . ' OR i.number LIKE :search_' . $key
-                            . ' OR i.observaciones LIKE :search_' . $key . ' OR i.tax LIKE :search_' . $key
-                            . ' OR i.comments LIKE :search_' . $key
-                        )
-                        ->setParameter('search_' . $key, '%' . $string . '%');
-                }
-            }
-
-            if ($filter->order && $filter->columns) {
-                foreach ($filter->order as $order) {
-                    $index = $order->column;
-                    $columnName = $filter->columns[$index]->data;
-                    $dir = strtoupper($order->dir);
-                    if ($dir === 'ASC' || $dir === 'DESC')
-                        $qb->addOrderBy('i.' . $columnName, $dir);
-                }
-            }
-
-            $total = clone $qb;
-
-            if ($filter->length ?? false) {
-                $qb->setMaxResults($filter->length)
-                    ->setFirstResult($filter->start);
-            }
-
-            /** @var \App\Entity\Document\Factura\Factura[] $list */
-            $list = $qb->getQuery()->getResult();
-
-            $datatable = new DataTable();
-            $datatable->recordsTotal = count($total->getQuery()->getResult());
-            foreach ($list as $item) {
-                /** @var \App\Model\Document\Factura\Factura $model */
-                $model = $item->model(\App\Model\Document\Factura\Factura::class);
-                $datatable->data[] = $model->json();
-            }
-            $datatable->recordsFiltered = count($total->getQuery()->getResult());
 
             return new  Http\JsonResponse($datatable);
         } catch (Exception $e) {
@@ -145,6 +95,9 @@ class Factura
         try {
 
             $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            if ($item->ordenCobro)
+                $item->ordenCobro->facturas = [];
 
             return new Http\JsonResponse($item->model(\App\Model\Document\Factura\Factura::class)->json());
         } catch (Exception $e) {
@@ -239,6 +192,12 @@ class Factura
             if ($itemAlbaran) {
                 $itemAlbaran->factura = null;
                 $em->persist($itemAlbaran);
+            }
+
+            $itemOrdenCobro= \App\Entity\OrdenCobro::findOneBy(['factura' => $item, 'deletedOn' => null]);
+            if ($itemOrdenCobro) {
+                $itemAlbaran->factura = null;
+                $em->persist($itemOrdenCobro);
             }
 
             $em->persist($item);

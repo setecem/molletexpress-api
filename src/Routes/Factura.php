@@ -5,11 +5,8 @@ use Cavesman\Router;
 
 Router::mount('/api/v1/invoice', function () {
 
-    /** @see Factura::filterAll() */
-    Router::get('/all/filter', Factura::class . '@filterAll');
-
     /** @see Factura::filter() */
-    Router::get('/(\d+)/filter', Factura::class . '@filter');
+    Router::get('/filter', Factura::class . '@filter');
 
     /** @see Factura::export() */
     Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)/export', Factura::class . '@export');
