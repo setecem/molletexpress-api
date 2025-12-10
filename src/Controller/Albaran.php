@@ -48,6 +48,10 @@ class Albaran
                 }
             }
 
+            $total = clone $qb;
+            $total->select('COUNT(i.id)');
+            $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
+
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
                     $index = $order->column;
@@ -58,24 +62,25 @@ class Albaran
                 }
             }
 
-            $total = clone $qb;
-
             if ($filter->length ?? false) {
                 $qb->setMaxResults($filter->length)
                     ->setFirstResult($filter->start);
             }
 
-            /** @var \App\Entity\Document\Albaran\Albaran[] $list */
+            /** @var \App\Entity\Document\Albaran\Albaran $list */
             $list = $qb->getQuery()->getResult();
 
             $datatable = new DataTable();
-            $datatable->recordsTotal = count($total->getQuery()->getResult());
+            $datatable->recordsTotal = $recordsTotal;
+            $datatable->recordsFiltered = $recordsTotal;
+
             foreach ($list as $item) {
+                if ($item->factura->ordenCobro)
+                    $item->factura->ordenCobro->facturas = [];
                 /** @var \App\Model\Document\Albaran\Albaran $model */
                 $model = $item->model(\App\Model\Document\Albaran\Albaran::class);
                 $datatable->data[] = $model->json();
             }
-            $datatable->recordsFiltered = count($total->getQuery()->getResult());
 
             return new  Http\JsonResponse($datatable);
         } catch (Exception $e) {
@@ -657,7 +662,7 @@ class Albaran
             else
                 require_once new ReflectionClass(DefaultPdf::class)->getFileName();
 
-            if(!is_dir($cacheDirectory . '/pdf'))
+            if (!is_dir($cacheDirectory . '/pdf'))
                 mkdir($cacheDirectory . '/pdf', 0777, true);
 
             $item = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)->findOneBy(['id' => $id]);
