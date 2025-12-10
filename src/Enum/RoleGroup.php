@@ -39,7 +39,6 @@ enum RoleGroup: string
                 Role::FILES,
                 Role::CREATE,
                 Role::PRIVATE,
-                Role::VIEW_ALL,
                 Role::VIEW,
                 Role::ACTIVE
             ]
@@ -92,7 +91,6 @@ enum RoleGroup: string
                 Role::FILES,
                 Role::CREATE,
                 Role::FEED,
-                Role::VIEW_ALL,
                 Role::VIEW,
                 Role::PRIVATE,
                 Role::COMERCIAL_EDIT,
@@ -125,7 +123,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::FILES,
                 Role::CREATE,
-                Role::VIEW_ALL,
                 Role::VIEW,
                 Role::PRIVATE,
                 Role::RECEIVE_EMAIL_CREATE,

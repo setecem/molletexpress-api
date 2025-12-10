@@ -5,11 +5,8 @@ use Cavesman\Router;
 
 Router::mount('/api/v1/delivery-note', function () {
 
-    /** @see Albaran::filterAll() */
-    Router::get('/all/filter', Albaran::class . '@filterAll');
-
     /** @see Albaran::filter() */
-    Router::get('/(\d+)/filter', Albaran::class . '@filter');
+    Router::get('/filter', Albaran::class . '@filter');
 
     /** @see Albaran::export() */
     Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)/export', Albaran::class . '@export');
