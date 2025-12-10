@@ -85,7 +85,14 @@ class OrdenCobro
             foreach ($item->facturas as $factura) {
                 $factura->ordenCobro = null;
             }
-            return new Http\JsonResponse($item->model(\App\Model\OrdenCobro::class)->json());
+
+            /** @var \App\Model\OrdenCobro $model */
+            $model = ($item->model(\App\Model\OrdenCobro::class));
+            foreach ($model->facturas as $factura) {
+                $factura->date = $factura->date->format('Y-m-d\TH:i');
+            }
+
+            return new Http\JsonResponse($model->json());
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
@@ -125,6 +132,8 @@ class OrdenCobro
                 return new Http\JsonResponse(['message' => "Orden de cobro no encontrado"], 404);
 
             $model = \App\Model\OrdenCobro::fromRequest();
+
+            $model->facturas = [];
 
             if (!$model->reference)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
@@ -219,7 +228,8 @@ class OrdenCobro
         }
     }
 
-    public static function generarAdeudos() {
+    public static function generarAdeudos()
+    {
         try {
             $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
 
@@ -234,31 +244,31 @@ class OrdenCobro
 
             $directDebit = TransferFileFacadeFactory::createDirectDebit('Ymd', Config::get("modules.factura.empresa.nombre_fiscal"));
 
-            foreach($ordenes as $orden) {
+            foreach ($ordenes as $orden) {
 
                 $total = 0;
 
-                foreach($orden->getFacturas() as $factura)
+                foreach ($orden->getFacturas() as $factura)
                     $total += $factura->getTotal();
 
-                $directDebit->addPaymentInfo( $orden->getReference(), array(
-                    'id'                    => 'firstPayment',
-                    'dueDate'               => $orden->getDate(), // optional. Otherwise, default period is used
-                    'creditorName'          => Config::get("modules.factura.empresa.nombre_fiscal"),
-                    'creditorAccountIBAN'   => Config::get("modules.factura.empresa.iban"),
-                    'creditorAgentBIC'      => Config::get("modules.factura.empresa.bic"),
-                    'seqType'               => PaymentInformation::S_ONEOFF,
-                    'creditorId'            => Config::get("modules.factura.empresa.creditor_id"),
-                    'localInstrumentCode'   => 'CORE' // default. optional.
+                $directDebit->addPaymentInfo($orden->getReference(), array(
+                    'id' => 'firstPayment',
+                    'dueDate' => $orden->getDate(), // optional. Otherwise, default period is used
+                    'creditorName' => Config::get("modules.factura.empresa.nombre_fiscal"),
+                    'creditorAccountIBAN' => Config::get("modules.factura.empresa.iban"),
+                    'creditorAgentBIC' => Config::get("modules.factura.empresa.bic"),
+                    'seqType' => PaymentInformation::S_ONEOFF,
+                    'creditorId' => Config::get("modules.factura.empresa.creditor_id"),
+                    'localInstrumentCode' => 'CORE' // default. optional.
                 ));
 
                 // Add a Single Transaction to the named payment
-                $directDebit->addTransfer( $orden->getReference(), array(
-                    'amount'                => $total*100,
-                    'debtorIban'            => str_replace(" ", "", $orden->getClient()->getIban()),
-                    'debtorBic'             => $orden->getClient()->getBanco(),
-                    'debtorName'            => $orden->getClient()->getName(),
-                    'debtorMandate'         => '',
+                $directDebit->addTransfer($orden->getReference(), array(
+                    'amount' => $total * 100,
+                    'debtorIban' => str_replace(" ", "", $orden->getClient()->getIban()),
+                    'debtorBic' => $orden->getClient()->getBanco(),
+                    'debtorName' => $orden->getClient()->getName(),
+                    'debtorMandate' => '',
                     'debtorMandateSignDate' => '',
                     'remittanceInformation' => $orden->getFacturas()->first()->getNumber()
                 ));
@@ -282,12 +292,12 @@ class OrdenCobro
                 echo 'Failed!';
             }*/
 
-            if(file_exists($cacheDirectory . "/sepa/" . $zip_file . "/" . date('d-m-Y') . ".xml")){
+            if (file_exists($cacheDirectory . "/sepa/" . $zip_file . "/" . date('d-m-Y') . ".xml")) {
                 header('Content-disposition: attachment; filename=' . "SEPA" . "-" . time() . '.xml');
                 header('Content-type: text/xml');
                 readfile($cacheDirectory . "/sepa/" . $zip_file . "/" . date('d-m-Y') . ".xml");
                 exit();
-            }else{
+            } else {
                 die("Algo ha fallado");
             }
         } catch (Exception|ORMException $e) {
