@@ -3,7 +3,7 @@
     "description": "Software de gesti\u00f3n",
     "type": "project",
     "require": {
-        "digitick/sepa-xml" : "dev-master",
+        "digitick/sepa-xml": "dev-master",
         "ext-fileinfo": "*",
         "ext-curl": "*",
         "ext-pdo": "*",

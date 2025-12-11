@@ -43,9 +43,9 @@
     "role.role.ALERT_CREATE": "Crear alerta",
     "role.role.VIEW": "Ver registro",
     "role.role.RECEIVE_EMAIL": "Recibir email",
-    "role.role.RECEIVE_EMAIL_CREATE": "Recibir email de contacto creado",
-    "role.role.RECEIVE_EMAIL_EDIT": "Recibir email de contacto actualizado",
-    "role.role.RECEIVE_EMAIL_DELETE": "Recibir email de contacto borrado",
+    "role.role.RECEIVE_EMAIL_CREATE": "Recibir email de creado",
+    "role.role.RECEIVE_EMAIL_EDIT": "Recibir email de actualizado",
+    "role.role.RECEIVE_EMAIL_DELETE": "Recibir email de borrado",
     "role.role.ORIGEN_HIDE": "Ocultar origen",
     "role.group.INVOICE": "Factura",
     "role.group.DELIVERY_NOTE": "Albarán",
@@ -54,5 +54,7 @@
     "role.role.ACTIVE": "Activar",
     "role.role.DOWNLOAD": "Descargar",
     "role.role.PAID_STATUS": "Editar estado de pagado",
-    "role.role.SEND_EMAIL": "Enviar email"
+    "role.role.SEND_EMAIL": "Enviar email",
+    "role.role.EXPORT": "Hacer exportación",
+    "role.role.LIST": "Hacer listado"
 }

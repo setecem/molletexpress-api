@@ -176,15 +176,15 @@
         "replace": []
     },
     "role.role.RECEIVE_EMAIL_CREATE": {
-        "message": "Receive email from created contact",
+        "message": "Receive email from created",
         "replace": []
     },
     "role.role.RECEIVE_EMAIL_EDIT": {
-        "message": "Receive email from updated contact",
+        "message": "Receive email from updated",
         "replace": []
     },
     "role.role.RECEIVE_EMAIL_DELETE": {
-        "message": "Receive email from deleted contact",
+        "message": "Receive email from deleted",
         "replace": []
     },
     "role.role.ORIGEN_HIDE": {
@@ -221,6 +221,14 @@
     },
     "role.role.SEND_EMAIL": {
         "message": "Send email",
+        "replace": []
+    },
+    "role.role.EXPORT": {
+        "message": "Make export",
+        "replace": []
+    },
+    "role.role.LIST": {
+        "message": "Make list",
         "replace": []
     }
 }
