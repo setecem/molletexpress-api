@@ -24,9 +24,6 @@ enum RoleGroup: string
                 Role::PRIVATE,
                 Role::VIEW_ALL,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::ROLES
             ]
         ];
@@ -41,9 +38,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::CREATE,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::ACTIVE
             ]
         ];
@@ -58,9 +52,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::CREATE,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::DOWNLOAD,
                 Role::SEND_EMAIL,
                 Role::ACTIVE,
@@ -80,9 +71,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::CREATE,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::DOWNLOAD,
                 Role::SEND_EMAIL,
                 Role::EXPORT,
@@ -100,9 +88,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::CREATE,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::ACTIVE
             ]
         ];
@@ -117,9 +102,6 @@ enum RoleGroup: string
                 Role::DELETE,
                 Role::CREATE,
                 Role::VIEW,
-                Role::RECEIVE_EMAIL_CREATE,
-                Role::RECEIVE_EMAIL_EDIT,
-                Role::RECEIVE_EMAIL_DELETE,
                 Role::ACTIVE,
                 Role::DOWNLOAD,
                 Role::PAID_STATUS
