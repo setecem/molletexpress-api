@@ -38,4 +38,7 @@ Router::mount('/api/v1/invoice', function () {
     /** @see Factura::delete() */
     Router::delete('/(\d+)', Factura::class . '@delete');
 
+    /** @see Factura::generateReference() */
+    Router::get('/reference/(\d+)/([\w-]+)', Factura::class . '@generateReference');
+
 });

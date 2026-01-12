@@ -4,7 +4,11 @@ namespace App\Entity\Document\Factura;
 
 use App\Entity\Document\Documento;
 use App\Entity\OrdenCobro;
+use Cavesman\Config;
 use Cavesman\Db;
+use Cavesman\Exception\ModuleException;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,22 +28,4 @@ class Factura extends Documento
     #[ORM\ManyToOne(targetEntity: OrdenCobro::class)]
     public ?OrdenCobro $ordenCobro = null;
 
-    #[ORM\PostPersist]
-    public function generateNumber(): void
-    {
-
-        if ($this->number !== null)
-            return;
-
-        $this->number = 'F' . sprintf('%03d-%03d', intdiv($this->id, 1000), $this->id % 1000);
-
-        try {
-            $em = DB::getManager();
-            $em->persist($this);
-            $em->flush();
-        } catch (Exception|ORMException $e) {
-
-        }
-
-    }
 }

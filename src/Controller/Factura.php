@@ -194,12 +194,6 @@ class Factura
                 $em->persist($itemAlbaran);
             }
 
-            $itemOrdenCobro= \App\Entity\OrdenCobro::findOneBy(['factura' => $item, 'deletedOn' => null]);
-            if ($itemOrdenCobro) {
-                $itemAlbaran->factura = null;
-                $em->persist($itemOrdenCobro);
-            }
-
             $em->persist($item);
             $em->flush();
 
@@ -212,6 +206,52 @@ class Factura
         }
     }
 
+    public static function generateReference(int $id = 0, string $serie = 'F'): Http\JsonResponse
+    {
+        try {
+
+            if ($id !== 0) {
+                $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+                if ($item->number !== null)
+                    return new Http\JsonResponse(['reference' => $item->reference, 'number' => $item->number]);
+                else
+                    $serie = $item->serie;
+            }
+
+            $date_start = new DateTime();
+            $date_start->setDate($date_start->format('Y'), 1, 1)->setTime(0, 0);
+            $date_end = clone $date_start;
+            $date_end->add(new DateInterval("P1Y"))->sub(new DateInterval("P1D"));
+            $query_res = DB::getManager()->getRepository(\App\Entity\Document\Factura\Factura::class)
+                ->createQueryBuilder('p')
+                ->where('p.reference > 0 AND p.date BETWEEN :date_start AND :date_end AND p.serie = :serie')
+                ->orderBy("p.reference", "DESC")
+                ->setParameter('serie', $serie)
+                ->setParameter('date_start', $date_start)
+                ->setParameter('date_end', $date_end)
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getOneOrNullResult();
+
+            if ($query_res) {
+                $reference = $query_res->reference + 1;
+                if (!$reference) {
+                    $reference = 1;
+                }
+            } else {
+                $reference = 1;
+            }
+
+            $number = $serie . sprintf('2%02d-%03d', $date_start->format('Y') % 100, $reference);
+
+            return new Http\JsonResponse(['reference' => $reference, 'number' => $number]);
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+
+    }
+
     public static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
     {
         try {
@@ -220,7 +260,7 @@ class Factura
                 require_once new ReflectionClass(ListadoPdf::class)->getFileName();
             else
                 require_once new ReflectionClass(DefaultPdf::class)->getFileName();
-            
+
             $resultItems = $em
                 ->createQueryBuilder()
                 ->select('o')
@@ -412,8 +452,8 @@ class Factura
             }
 
             foreach ($lineas as $linea) {
-                $factura = $linea->factura  ? $linea->factura ->number : '';
-                $date = $linea->factura  ? $linea->factura ->date->format("d/m/Y") : '';
+                $factura = $linea->factura ? $linea->factura->number : '';
+                $date = $linea->factura ? $linea->factura->date->format("d/m/Y") : '';
                 $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $factura, $date);
             }
 
@@ -463,7 +503,7 @@ class Factura
             $item = $em->getRepository(\App\Entity\Document\Factura\Factura::class)->findOneBy(['id' => $id]);
             $invoice = self::print($item->id, true);
 
-            if(!is_dir($cacheDirectory . '/pdf'))
+            if (!is_dir($cacheDirectory . '/pdf'))
                 mkdir($cacheDirectory . '/pdf', 0777, true);
 
             $invoice->render($cacheDirectory . "/pdf/" . hash("sha256", $item->id) . ".pdf", 'F');
@@ -527,7 +567,7 @@ class Factura
             $date = self::getDueDate($doc);
 
             $client = \App\Entity\Client::findOneBy(['id' => $doc->client->id, 'deletedOn' => null]);
-            $orden = \App\Entity\OrdenCobro::findOneBy([ "client" => $client,"date" => $date, "active" => false]);
+            $orden = \App\Entity\OrdenCobro::findOneBy(["client" => $client, "date" => $date, "active" => false]);
             if (!$orden) {
                 $orden = new \App\Entity\OrdenCobro();
                 $orden->client = $client;
