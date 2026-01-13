@@ -734,4 +734,50 @@ class Albaran
         $format = str_replace("{year}", $date->format("y"), $format);
         return str_replace("{reference}", str_pad($reference, $length, "0", STR_PAD_LEFT), $format);
     }
+
+    public static function generateReference(int $id = 0, string $serie = 'A'): Http\JsonResponse
+    {
+        try {
+
+            if ($id !== 0) {
+                $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+                if ($item->number !== null)
+                    return new Http\JsonResponse(['reference' => $item->reference, 'number' => $item->number]);
+                else
+                    $serie = $item->serie;
+            }
+
+            $date_start = new DateTime();
+            $date_start->setDate($date_start->format('Y'), 1, 1)->setTime(0, 0);
+            $date_end = clone $date_start;
+            $date_end->add(new DateInterval("P1Y"))->sub(new DateInterval("P1D"));
+            $query_res = DB::getManager()->getRepository(\App\Entity\Document\Albaran\Albaran::class)
+                ->createQueryBuilder('p')
+                ->where('p.reference > 0 AND p.date BETWEEN :date_start AND :date_end AND p.serie = :serie')
+                ->orderBy("p.reference", "DESC")
+                ->setParameter('serie', $serie)
+                ->setParameter('date_start', $date_start)
+                ->setParameter('date_end', $date_end)
+                ->getQuery()
+                ->setMaxResults(1)
+                ->getOneOrNullResult();
+
+            if ($query_res) {
+                $reference = $query_res->reference + 1;
+                if (!$reference) {
+                    $reference = 1;
+                }
+            } else {
+                $reference = 1;
+            }
+
+            $number = $serie . sprintf('2%02d-%03d', $date_start->format('Y') % 100, $reference);
+
+            return new Http\JsonResponse(['reference' => $reference, 'number' => $number]);
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+
+    }
 }

@@ -41,4 +41,6 @@ Router::mount('/api/v1/delivery-note', function () {
     /** @see Albaran::delete() */
     Router::delete('/(\d+)', Albaran::class . '@delete');
 
+    /** @see Albaran::generateReference() */
+    Router::get('/reference/(\d+)/([\w-]+)', Albaran::class . '@generateReference');
 });
