@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Document\Albaran\AlbaranLinea;
 use App\Entity\Document\Factura\FacturaLinea;
+use App\Enum\DocumentStatus;
 use App\Model\DataTable;
 use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
@@ -161,6 +162,7 @@ class Albaran
                 $linea->albaran = $entity;
             }
 
+            $entity->status = DocumentStatus::ACTIVE;
             $em->persist($entity);
             $em->flush();
 

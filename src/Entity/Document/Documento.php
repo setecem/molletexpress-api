@@ -27,13 +27,13 @@ abstract class Documento extends Entity
     #[ORM\Column(name: 'number', type: 'string', nullable: true)]
     public ?string $number = null;
 
-    #[ORM\Column(name: 'date', type: 'datetime', nullable: false, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    public DateTime $date;
+    #[ORM\Column(name: 'date', type: 'datetime', nullable: true, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    public ?DateTime $date;
 
     #[ORM\Column(name: 'observaciones', type: 'text', nullable: true)]
     public ?string $observaciones = null;
 
-    #[ORM\JoinColumn(name: 'client', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'client', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: Client::class)]
     public ?Client $client = null;
 
