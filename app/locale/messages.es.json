@@ -56,5 +56,6 @@
     "role.role.PAID_STATUS": "Editar estado de pagado",
     "role.role.SEND_EMAIL": "Enviar email",
     "role.role.EXPORT": "Hacer exportación",
-    "role.role.LIST": "Hacer listado"
+    "role.role.LIST": "Hacer listado",
+    "role.role.INVOICE": "Facturar"
 }

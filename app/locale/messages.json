@@ -230,5 +230,9 @@
     "role.role.LIST": {
         "message": "Make list",
         "replace": []
+    },
+    "role.role.INVOICE": {
+      "message": "To invoice",
+      "replace": []
     }
 }

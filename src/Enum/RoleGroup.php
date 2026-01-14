@@ -73,8 +73,10 @@ enum RoleGroup: string
                 Role::VIEW,
                 Role::DOWNLOAD,
                 Role::SEND_EMAIL,
+                Role::INVOICE,
                 Role::EXPORT,
                 Role::LIST,
+
             ]
         ];
     }

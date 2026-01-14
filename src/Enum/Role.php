@@ -34,4 +34,5 @@ enum Role: string
     case SEND_EMAIL = 'SEND_EMAIL';
     case EXPORT = 'EXPORT';
     case LIST = 'LIST';
+    case INVOICE = 'INVOICE';
 }
