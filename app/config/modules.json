@@ -77,5 +77,11 @@
     "user": {
         "name": "user",
         "active": 1
+    },
+    "albaran": {
+        "empresa": {
+            "nif": null,
+            "provincia": null
+        }
     }
 }

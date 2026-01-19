@@ -744,7 +744,7 @@ class Albaran
             if ($id !== 0) {
                 $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-                if ($item->number !== null)
+                if ($item->number)
                     return new Http\JsonResponse(['reference' => $item->reference, 'number' => $item->number]);
                 else
                     $serie = $item->serie;

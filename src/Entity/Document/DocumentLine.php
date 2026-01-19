@@ -9,13 +9,13 @@ abstract class DocumentLine extends Entity
 {
 
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'reference', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'reference', type: 'string', nullable: true)]
     public ?string $reference = null;
 
     #[ORM\Column(name: 'unidad_medida', type: 'string', nullable: true)]
     public ?string $unidadMedida = null;
 
-    #[ORM\Column(name: 'description', type: 'text', nullable: false)]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     public ?string $description = null;
 
     #[ORM\Column(name: 'quantity', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
