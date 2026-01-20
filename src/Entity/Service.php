@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Service extends Entity
 {
 
-    #[ORM\Column(name: 'reference', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'reference', type: 'string', unique: true, nullable: true)]
     public ?string $ref = null;
 
     #[ORM\Column(name: 'name', type: 'string', nullable: true)]

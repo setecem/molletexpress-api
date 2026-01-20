@@ -92,6 +92,11 @@ class Service
             if (!$model->ref || !$model->name)
                 return new Http\JsonResponse(['message' => 'No se ha recibido todos los datos requeridos *'], 400);
 
+            $item = \App\Entity\Service::findOneBy(['ref' => $model->ref]);
+
+            if ($item)
+                return new Http\JsonResponse(['message' => 'Referencia ya existente'], 400);
+
             /** @var \App\Entity\Service $entity */
             $entity = $model->entity();
 
