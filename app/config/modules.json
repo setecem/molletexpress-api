@@ -81,7 +81,8 @@
     "albaran": {
         "empresa": {
             "nif": null,
-            "provincia": null
+            "provincia": null,
+            "cp": null
         }
     }
 }

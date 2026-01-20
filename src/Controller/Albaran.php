@@ -162,7 +162,11 @@ class Albaran
                 $linea->albaran = $entity;
             }
 
-            $entity->status = DocumentStatus::ACTIVE;
+            if (empty($entity->number))
+                $entity->status = DocumentStatus::DRAFT;
+            else
+                $entity->status = DocumentStatus::ACTIVE;
+
             $em->persist($entity);
             $em->flush();
 
@@ -780,6 +784,5 @@ class Albaran
         } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
-
     }
 }
