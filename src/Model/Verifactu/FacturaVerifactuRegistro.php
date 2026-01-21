@@ -8,8 +8,9 @@ class FacturaVerifactuRegistro
     public ?string $nif_emisor = null;
     public ?string $num_serie = null;
     public ?string $fecha_expedicion = null;
-    public ?string $subsanacion = null;
-    public ?string $rechazo_previo = null;
+    public ?bool $subsanacion = null;
+    public ?bool $rechazo_previo = null;
+
     public ?string $tipo_factura = null;
     public ?string $descripcion = null;
     public ?string $nif_destinatario = null;

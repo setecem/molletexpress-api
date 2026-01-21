@@ -5,15 +5,8 @@ namespace App\Entity\Document\Factura;
 use App\Entity\Document\Albaran\Albaran;
 use App\Entity\Document\Documento;
 use App\Entity\OrdenCobro;
-use Cavesman\Config;
-use Cavesman\Db;
-use Cavesman\Exception\ModuleException;
-use DateInterval;
-use DateTime;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 
 #[ORM\Table(name: 'factura')]
 #[ORM\Entity]
@@ -32,4 +25,6 @@ class Factura extends Documento
     #[ORM\ManyToOne(targetEntity: OrdenCobro::class)]
     public ?OrdenCobro $ordenCobro = null;
 
+    #[ORM\Column(name: 'verifactu', type: 'string', nullable: true)]
+    public ?string $verifactu = null;
 }
