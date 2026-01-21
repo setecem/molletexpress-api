@@ -3,6 +3,7 @@
 namespace App\Entity\Document\Albaran;
 
 use App\Entity\Document\DocumentLine;
+use App\Entity\Document\Factura\Factura;
 use App\Entity\Document\Factura\FacturaLinea;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class AlbaranLinea extends DocumentLine
 {
+    #[ORM\JoinColumn(name: 'factura', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Factura::class)]
+    public ?Factura $factura = null;
+
     #[ORM\JoinColumn(name: 'albaran', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Albaran::class)]
     public ?Albaran $albaran = null;
