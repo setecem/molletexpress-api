@@ -56,6 +56,9 @@
             "iban": "ES4801823415980200065620",
             "creditor_id": "ES77001B58921073",
             "registro": "R.M.B. Tomo 10007 Libro 457 secc.3 folio 122 hoja num.8274 inscr.1a"
+        },
+        "App\\Entity\\Document\\Albaran\\Albaran": {
+            "ref_length": null
         }
     },
     "lang": {

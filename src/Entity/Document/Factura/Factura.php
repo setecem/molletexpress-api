@@ -2,6 +2,7 @@
 
 namespace App\Entity\Document\Factura;
 
+use App\Entity\Document\Albaran\Albaran;
 use App\Entity\Document\Documento;
 use App\Entity\OrdenCobro;
 use Cavesman\Config;
@@ -19,6 +20,9 @@ use Exception;
 #[ORM\HasLifecycleCallbacks]
 class Factura extends Documento
 {
+    #[ORM\JoinColumn(name: 'albaran', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Albaran::class, inversedBy: 'albaranes')]
+    public ?Albaran $albaran = null;
 
     /** @var FacturaLinea[]|Collection */
     #[ORM\OneToMany(targetEntity: FacturaLinea::class, mappedBy: 'factura', cascade: ['persist'])]

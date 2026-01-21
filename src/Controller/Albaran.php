@@ -6,6 +6,7 @@ use App\Entity\Document\Albaran\AlbaranLinea;
 use App\Entity\Document\Factura\FacturaLinea;
 use App\Enum\DocumentStatus;
 use App\Model\DataTable;
+use App\Model\FacturarIntervalDates;
 use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
@@ -246,13 +247,19 @@ class Albaran
         }
     }
 
-    public static function facturar(string $dateStart, string $dateEnd, int $idClient, string $dateFactura): Http\JsonResponse
+    public static function facturar(): Http\JsonResponse
     {
         try {
-            $dateStart = new DateTime($dateStart);
-            $dateEnd = new DateTime($dateEnd);
-            $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
-            $dateFactura = new DateTime($dateFactura);
+            $model = FacturarIntervalDates::fromRequest();
+
+            $dateStart = $model->start instanceof DateTime ? $model->start : new DateTime($model->start);
+            $dateEnd = $model->end instanceof DateTime ? $model->end : new DateTime($model->end);
+            $dateFactura = $model->dateInvoice instanceof DateTime ? $model->dateInvoice : new DateTime($model->dateInvoice);
+
+            $clients = [];
+            foreach ($model->clients as $client) {
+                $clients[] = \App\Entity\Client::findOneBy(['id' => $client->id, 'deletedOn' => null]);
+            }
 
             $em = DB::getManager();
 
@@ -274,8 +281,8 @@ class Albaran
                 ->setParameter('dateStart', $dateStart)
                 ->setParameter('dateEnd', $dateEnd);
             $resultItems
-                ->andWhere("o.client = :client")
-                ->setParameter('client', $client);
+                ->andWhere("o.client IN (:clients)")
+                ->setParameter('clients', $clients);
             $results = $resultItems
                 ->getQuery()
                 ->getResult();
@@ -343,12 +350,12 @@ class Albaran
                 $total = 0;
 
                 foreach ($c['items'] as $item) {
-                    $lines = $em->getRepository(FacturaLinea::class)->findBy(['client' => $item]);
-
+                    $fn = "findBy" . ucfirst('albaran');
+                    $lines = $em->getRepository(AlbaranLinea::class)->$fn($item);
                     foreach ($lines as $l) {
-                        $line = new AlbaranLinea();
+                        $line = new FacturaLinea();
                         $line->albaran = $item;
-                        $line->facturaLinea = $l;
+                        $line->albaranLinea = $l;
                         $line->reference = $item->number;
                         $line->description = $l->description;
                         $line->discount = $l->discount;
@@ -721,19 +728,20 @@ class Albaran
         }
     }
 
-    private static function parseFormat(string $serie = "", ?object $date = NULL, int $reference = 0): string
+    private static function parseFormat(string $serie = "", ?object $date = NULL, int $reference = 0, string $class = ''): string
     {
+        $class = $class ? $class : 'factura';
 
-        $format = Config::get("modules.factura." . \App\Entity\Document\Albaran\Albaran::class . ".formato");
+        $format = Config::get("modules.factura." . $class . ".formato");
         if (!$format) {
-            if (isset(self::$config[\App\Entity\Document\Albaran\Albaran::class]['formato']))
-                $format = self::$config[\App\Entity\Document\Albaran\Albaran::class]['formato'];
+            if (isset(self::$config[$class]['formato']))
+                $format = self::$config[$class]['formato'];
         }
 
-        $length = Config::get("modules.factura." . \App\Entity\Document\Albaran\Albaran::class . ".ref_length");
+        $length = Config::get("modules.factura." . $class . ".ref_length");
         if (!$length) {
-            if (isset(self::$config[\App\Entity\Document\Albaran\Albaran::class]['ref_length']))
-                $format = self::$config[\App\Entity\Document\Albaran\Albaran::class]['ref_length'];
+            if (isset(self::$config[$class]['ref_length']))
+                $format = self::$config[$class]['ref_length'];
         }
 
         $format = str_replace("{serie}", $serie, $format);

@@ -15,7 +15,7 @@ Router::mount('/api/v1/delivery-note', function () {
     Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)', Albaran::class . '@list');
 
     /** @see Albaran::facturar() */
-    Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)/(\d{4}-\d{2}-\d{2})', Albaran::class . '@facturar');
+    Router::post('/facturar', Albaran::class . '@facturar');
 
     /** @see Albaran::sendEmail() */
     Router::get('/(\d+)/email', Albaran::class . '@sendEmail');
