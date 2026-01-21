@@ -120,6 +120,11 @@ class Factura
                 $linea->factura = $entity;
             }
 
+            if (empty($entity->number))
+                $entity->status = DocumentStatus::DRAFT;
+            else
+                $entity->status = DocumentStatus::ACTIVE;
+
             $em->persist($entity);
             $em->flush();
 
@@ -166,6 +171,11 @@ class Factura
             foreach ($entity->lineas as $linea) {
                 $linea->factura = $entity;
             }
+
+            if (empty($entity->number))
+                $entity->status = DocumentStatus::DRAFT;
+            else
+                $entity->status = DocumentStatus::ACTIVE;
 
             $em->persist($entity);
             $em->flush();
@@ -578,7 +588,7 @@ class Factura
             $doc->ordenCobro = $orden;
             $em->persist($doc);
             $em->flush();
-            return new Http\JsonResponse(['item' => $doc->model(\App\Model\Document\Factura\Factura::class)->json()]);
+            return new Http\JsonResponse(['message' => 'Orden de cobro generada correctamente','item' => $doc->model(\App\Model\Document\Factura\Factura::class)->json()]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
