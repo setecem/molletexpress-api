@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Document\Albaran\AlbaranLinea;
 use App\Entity\Document\Factura\FacturaLinea;
 use App\Enum\DocumentStatus;
 use App\Model\DataTable;
@@ -196,13 +197,31 @@ class Factura
             $em = DB::getManager();
 
             $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
-            $item->deletedOn = new DateTime();
 
             $itemAlbaran = \App\Entity\Document\Albaran\Albaran::findOneBy(['factura' => $item, 'deletedOn' => null]);
             if ($itemAlbaran) {
                 $itemAlbaran->factura = null;
                 $em->persist($itemAlbaran);
             }
+
+            $listAlbaranLineas = AlbaranLinea::findBy(['factura' => $item, 'deletedOn' => null]);
+            if ($listAlbaranLineas) {
+                foreach ($listAlbaranLineas as $linea) {
+                    $linea->factura = null;
+                    $linea->facturaLinea = null;
+                    $em->persist($linea);
+                }
+            }
+
+            foreach ($item->lineas as $linea) {
+                $linea->deletedOn = new DateTime();
+                $linea->albaranLinea = null;
+                $linea->albaran = null;
+                $em->persist($linea);
+            }
+
+            $item->deletedOn = new DateTime();
+            $item->albaran = null;
 
             $em->persist($item);
             $em->flush();

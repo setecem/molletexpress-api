@@ -20,7 +20,7 @@ class AlbaranLinea extends DocumentLine
     public ?Albaran $albaran = null;
 
     #[ORM\JoinColumn(name: 'factura_linea', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: FacturaLinea::class, inversedBy: 'factura_linea')]
+    #[ORM\OneToOne(targetEntity: FacturaLinea::class)]
     public ?FacturaLinea $facturaLinea = null;
 
 }

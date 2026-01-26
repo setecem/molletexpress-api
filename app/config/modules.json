@@ -85,7 +85,8 @@
         "empresa": {
             "nif": null,
             "provincia": null,
-            "cp": null
+            "cp": null,
+            "localidad": null
         }
     }
 }

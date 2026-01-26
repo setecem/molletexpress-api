@@ -229,6 +229,11 @@ class Albaran
                 $linea->factura = $facturaEntity;
             }
 
+            if (empty($facturaEntity->number))
+                $facturaEntity->status = DocumentStatus::DRAFT;
+            else
+                $facturaEntity->status = DocumentStatus::ACTIVE;
+
             $em = DB::getManager();
             $em->persist($facturaEntity);
             $em->flush();
@@ -332,6 +337,10 @@ class Albaran
                     $f->reference = $reference;
                     $f->client = $c['client'];
                     $f->date = $dateFactura;
+                    if (empty($f->number))
+                        $f->status = DocumentStatus::DRAFT;
+                    else
+                        $f->status = DocumentStatus::ACTIVE;
                 } else {
                     $lineas = $em->getRepository(FacturaLinea::class)->findBy(['factura' => $f]);
                     foreach ($lineas as $l) {
@@ -355,8 +364,9 @@ class Albaran
                     foreach ($lines as $l) {
                         $line = new FacturaLinea();
                         $line->albaran = $item;
+                        $line->factura = $f;
                         $line->albaranLinea = $l;
-                        $line->reference = $item->number;
+                        $line->reference = $l->reference;
                         $line->description = $l->description;
                         $line->discount = $l->discount;
                         $line->price = $l->price;
@@ -374,7 +384,7 @@ class Albaran
                 }
                 $f->importeBruto = $subtotal;
                 if ($c['client']->descuento) {
-                    $f->discount = $c['client']->discount;
+                    $f->discount = $c['client']->descuento;
                     $descuento = $subtotal * $c['client']->descuento / 100;
                     $subtotal = $subtotal - $descuento;
                     $f->impDiscount = $descuento;
@@ -394,9 +404,21 @@ class Albaran
                     return new Http\JsonResponse(['message' => $e->getMessage()], 500);
                 }
                 $invoice = Factura::print($f->id, true);
-                $invoice->render($cacheDirectory . "/pdf/" . $zipFile . "/" . $f->getNumber() . ".pdf", 'F');
+                $invoice->render($cacheDirectory . "/pdf/" . $zipFile . "/" . $f->number . ".pdf", 'F');
             }
-            die();
+            $zip = new ZipArchive;
+            if ($zip->open($cacheDirectory . "/pdf/" . $zipFile . "/albaranes.zip", ZipArchive::CREATE)) {
+                foreach (glob($cacheDirectory . "/pdf/" . $zipFile . "/*.pdf") as $pdf) {
+                    $zip->addFile($pdf, basename($pdf));
+                }
+                $zip->close();
+            } else
+                echo 'Failed!';
+
+            header('Content-disposition: attachment; filename=' . \App\Entity\Document\Albaran\Albaran::class . "-" . time() . '.zip');
+            header('Content-type: application/zip');
+            readfile($cacheDirectory . "/pdf/" . $zipFile . "/albaranes.zip");
+            die("fin");
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
