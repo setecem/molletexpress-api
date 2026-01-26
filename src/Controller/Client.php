@@ -75,7 +75,7 @@ class Client
     {
         try {
 
-            $list = \App\Entity\Client::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Client::findBy(['deletedOn' => null, 'active' => true]);
 
             return new Http\JsonResponse(array_map(fn(\App\Entity\Client $client) => $client->model(\App\Model\Client::class)->json(), $list));
         } catch (Exception $e) {

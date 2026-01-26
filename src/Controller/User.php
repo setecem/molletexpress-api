@@ -15,7 +15,7 @@ class User
     {
         try {
 
-            $list = \App\Entity\User\User::findBy(['deletedOn' => null]);
+            $list = \App\Entity\User\User::findBy(['deletedOn' => null, 'active' => true]);
 
             return new Http\JsonResponse(array_map(fn(\App\Entity\User\User $user) => $user->model(\App\Model\User\User::class)->json(), $list));
         } catch (Exception $e) {

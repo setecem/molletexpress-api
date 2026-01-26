@@ -111,7 +111,7 @@ class Employee
     {
         try {
 
-            $list = \App\Entity\Employee\Employee::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Employee\Employee::findBy(['deletedOn' => null, 'active' => true]);
 
             return new Http\JsonResponse(array_map(fn(\App\Entity\Employee\Employee $employee) => $employee->model(EmployeeBase::class)->json(), $list));
         } catch (Exception $e) {

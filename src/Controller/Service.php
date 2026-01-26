@@ -16,7 +16,7 @@ class Service
     {
         try {
 
-            $list = \App\Entity\Service::findBy(['deletedOn' => null]);
+            $list = \App\Entity\Service::findBy(['deletedOn' => null, 'active' => true]);
 
             return new Http\JsonResponse(array_map(fn(\App\Entity\Service $service) => $service->model(\App\Model\Service::class)->json(), $list));
         } catch (Exception $e) {

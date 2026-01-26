@@ -206,4 +206,4 @@ Ahora son createdOn, updatedOn
     private $albaranes;
 
 ## Entidades
-No hay Pedido, PedidoLinea, Presupuesto, PresupuestoLinea
+No hay Pedido, PedidoLinea, Presupuesto, PresupuestoLinea, User, Profile (ni se usan)
