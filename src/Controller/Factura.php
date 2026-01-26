@@ -198,7 +198,34 @@ class Factura
 
             $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
 
+            if ($item->ordenCobro) {
+                $orden = $item->ordenCobro;
+
+                $facturasCount = $em->createQueryBuilder()
+                    ->select('count(f.id)')
+                    ->from(\App\Entity\Document\Factura\Factura::class, 'f')
+                    ->where('f.ordenCobro = :ordenCobro')
+                    ->setParameter('ordenCobro', $orden)
+                    ->getQuery()
+                    ->getSingleScalarResult();
+
+                $belongs = $em->createQueryBuilder()
+                        ->select('count(f.id)')
+                        ->from(\App\Entity\Document\Factura\Factura::class, 'f')
+                        ->where('f.ordenCobro = :ordenCobro AND f.id = :facturaId')
+                        ->setParameter('ordenCobro', $orden)
+                        ->setParameter('facturaId', $item->id)
+                        ->getQuery()
+                        ->getSingleScalarResult() > 0;
+
+                if ($facturasCount == 0 || ($belongs && $facturasCount == 1)) {
+                    $orden->deletedOn = new \DateTime();
+                    $em->persist($orden);
+                }
+            }
+
             $itemAlbaran = \App\Entity\Document\Albaran\Albaran::findOneBy(['factura' => $item, 'deletedOn' => null]);
+
             if ($itemAlbaran) {
                 $itemAlbaran->factura = null;
                 $em->persist($itemAlbaran);
@@ -222,8 +249,10 @@ class Factura
 
             $item->deletedOn = new DateTime();
             $item->albaran = null;
+            $item->ordenCobro = null;
 
             $em->persist($item);
+
             $em->flush();
 
             return new Http\JsonResponse([
@@ -607,7 +636,7 @@ class Factura
             $doc->ordenCobro = $orden;
             $em->persist($doc);
             $em->flush();
-            return new Http\JsonResponse(['message' => 'Orden de cobro generada correctamente','item' => $doc->model(\App\Model\Document\Factura\Factura::class)->json()]);
+            return new Http\JsonResponse(['message' => 'Orden de cobro generada correctamente', 'item' => $doc->model(\App\Model\Document\Factura\Factura::class)->json()]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }

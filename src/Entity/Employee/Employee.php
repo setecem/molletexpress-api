@@ -3,8 +3,6 @@
 namespace App\Entity\Employee;
 
 use App\Entity\File;
-use App\Entity\User\User;
-use App\Entity\User\UserHours;
 use App\Enum\Images;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;

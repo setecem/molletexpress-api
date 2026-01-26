@@ -36,5 +36,4 @@ abstract class DocumentLine extends Entity
     #[ORM\Column(name: 'total', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
     public float $total = 0;
 
-
 }
