@@ -224,11 +224,13 @@ class Factura
                 }
             }
 
-            $itemAlbaran = \App\Entity\Document\Albaran\Albaran::findOneBy(['factura' => $item, 'deletedOn' => null]);
+            $listAlbaran = \App\Entity\Document\Albaran\Albaran::findBy(['factura' => $item, 'deletedOn' => null]);
 
-            if ($itemAlbaran) {
-                $itemAlbaran->factura = null;
-                $em->persist($itemAlbaran);
+            if ($listAlbaran) {
+                foreach ($listAlbaran as $albaran) {
+                    $albaran->factura = null;
+                    $em->persist($albaran);
+                }
             }
 
             $listAlbaranLineas = AlbaranLinea::findBy(['factura' => $item, 'deletedOn' => null]);
