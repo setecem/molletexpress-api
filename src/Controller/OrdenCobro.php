@@ -171,7 +171,7 @@ class OrdenCobro
                 $em->persist($factura);
             }
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em->persist($item);
             $em->flush();

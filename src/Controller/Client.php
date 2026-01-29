@@ -178,7 +178,7 @@ class Client
 
             $item = \App\Entity\Client::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em->persist($item);
             $em->flush();

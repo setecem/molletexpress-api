@@ -125,7 +125,7 @@ class User
 
             $item =  \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em = DB::getManager();
             $em->persist($item);

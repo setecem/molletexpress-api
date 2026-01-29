@@ -411,7 +411,7 @@ class Employee
 
             $item = \App\Entity\Employee\Employee::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em = DB::getManager();
             $em->persist($item);

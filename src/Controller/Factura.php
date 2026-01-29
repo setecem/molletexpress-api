@@ -161,7 +161,7 @@ class Factura
 
             foreach ($item->lineas as $linea) {
                 if (!in_array($linea->id, $idLineas)) {
-                    $linea->deletedOn = new DateTime();
+                    $linea->delete();
                     $em->persist($linea);
                 }
             }
@@ -219,7 +219,7 @@ class Factura
                         ->getSingleScalarResult() > 0;
 
                 if ($facturasCount == 0 || ($belongs && $facturasCount == 1)) {
-                    $orden->deletedOn = new \DateTime();
+                    $orden->delete();
                     $em->persist($orden);
                 }
             }
@@ -241,13 +241,13 @@ class Factura
             }
 
             foreach ($item->lineas as $linea) {
-                $linea->deletedOn = new DateTime();
+                $linea->delete();
                 $linea->albaranLinea = null;
                 $linea->albaran = null;
                 $em->persist($linea);
             }
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
             $item->albaran = null;
             $item->ordenCobro = null;
 

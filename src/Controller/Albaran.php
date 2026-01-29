@@ -151,7 +151,7 @@ class Albaran
 
             foreach ($item->lineas as $linea) {
                 if (!in_array($linea->id, $idLineas)) {
-                    $linea->deletedOn = new DateTime();
+                    $linea->deleted();
                     $em->persist($linea);
                 }
             }
@@ -188,7 +188,7 @@ class Albaran
 
             $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em->persist($item);
             $em->flush();

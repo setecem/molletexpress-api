@@ -152,7 +152,7 @@ class Service
 
             $item = \App\Entity\Service::findOneBy(['id' => $id, 'deletedOn' => null]);
 
-            $item->deletedOn = new DateTime();
+            $item->delete();
 
             $em->persist($item);
             $em->flush();
