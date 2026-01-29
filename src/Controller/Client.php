@@ -6,7 +6,6 @@ use App\Model\DataTable;
 use Cavesman\Db;
 use Cavesman\Http;
 use Cavesman\Request;
-use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 
@@ -114,7 +113,7 @@ class Client
                 $return['message'] = "Cliente desactivado correctamente";
 
             return new Http\JsonResponse($return);
-        } catch (Exception | ORMException $e) {
+        } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
@@ -184,7 +183,7 @@ class Client
             $em->flush();
 
             return new Http\JsonResponse(['message' => "Cliente eliminado correctamente"]);
-        } catch (Exception | ORMException $e) {
+        } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }

@@ -9,7 +9,6 @@ use Cavesman\Enum\Directory;
 use Cavesman\FileSystem;
 use Cavesman\Http;
 use Cavesman\Request;
-use DateTime;
 use Digitick\Sepa\PaymentInformation;
 use Digitick\Sepa\TransferFile\Factory\TransferFileFacadeFactory;
 use Doctrine\ORM\Exception\ORMException;
@@ -200,7 +199,7 @@ class OrdenCobro
                 $total += $factura->total;
             //Set the initial information
             // third parameter 'pain.008.003.02' is optional would default to 'pain.008.002.02' if not changed
-            $directDebit = TransferFileFacadeFactory::createDirectDebit($orden->reference,Config::get("modules.factura.empresa.nombre_fiscal"), 'pain.008.003.02');
+            $directDebit = TransferFileFacadeFactory::createDirectDebit($orden->reference, Config::get("modules.factura.empresa.nombre_fiscal"), 'pain.008.003.02');
 
             // create a payment, it's possible to create multiple payments,
             // "firstPayment" is the identifier for the transactions

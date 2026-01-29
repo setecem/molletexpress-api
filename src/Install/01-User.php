@@ -1,13 +1,15 @@
 <?php
 
+use App\Entity\Employee\Employee;
 use Cavesman\Console;
+use Cavesman\Db;
 use Cavesman\Enum\Console\Type;
 use Doctrine\ORM\Exception\ORMException;
 
 try {
-    $em = \Cavesman\Db::getManager();
-    $admin = \App\Entity\Employee\Employee::findOneBy(['username' => 'admin']);
-    if(!$admin) {
+    $em = Db::getManager();
+    $admin = Employee::findOneBy(['username' => 'admin']);
+    if (!$admin) {
         $admin = new App\Model\Employee\Employee([
             'name' => 'Admin',
             'username' => 'admin',

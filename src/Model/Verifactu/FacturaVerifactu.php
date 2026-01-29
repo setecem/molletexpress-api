@@ -7,7 +7,7 @@ class FacturaVerifactu
     public ?string $serie = null;
     public ?string $numero = null;
     public ?string $fecha_expedicion = null;
-    public ?bool   $rechazo_previo = null;
+    public ?bool $rechazo_previo = null;
     public ?string $tipo_factura = null;
     public ?string $descripcion = null;
     public ?string $nif = null;

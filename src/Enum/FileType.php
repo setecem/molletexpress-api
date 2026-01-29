@@ -2,6 +2,7 @@
 
 namespace App\Enum;
 
-enum FileType: string {
+enum FileType: string
+{
     case GENERAL = 'GENERAL';
 }

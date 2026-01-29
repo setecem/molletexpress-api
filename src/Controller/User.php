@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User\UserType;
 use Cavesman\Db;
 use Cavesman\Http;
-use DateTime;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 
@@ -53,7 +52,7 @@ class User
                 $return['message'] = "Usuario desactivado correctamente";
 
             return new Http\JsonResponse($return);
-        } catch (Exception | ORMException $e) {
+        } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
@@ -123,7 +122,7 @@ class User
     {
         try {
 
-            $item =  \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
+            $item = \App\Entity\User\User::findOneBy(['id' => $id, 'deletedOn' => null]);
 
             $item->delete();
 
@@ -134,7 +133,7 @@ class User
             //TODO Buscar en user_department qué líneas hay asociadas al usuario y borrarlas
 
             return new Http\JsonResponse(['message' => "Usuario eliminado correctamente"]);
-        } catch (Exception | ORMException $e) {
+        } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }

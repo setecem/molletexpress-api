@@ -28,7 +28,7 @@ try {
 
             $employeeRole = EmployeeRole::findOneBy(['employee' => $admin, 'role' => $role, 'group' => $roleGroup]);
 
-            if(!$employeeRole) {
+            if (!$employeeRole) {
                 $employeeRole = new EmployeeRole();
                 $employeeRole->employee = $admin;
                 $employeeRole->role = $role;

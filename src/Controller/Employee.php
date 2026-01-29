@@ -5,14 +5,13 @@ namespace App\Controller;
 use App\Entity\Employee\EmployeeRole;
 use App\Entity\User\User;
 use App\Enum\RoleGroup;
-use App\Model\Employee\EmployeeBase;
 use App\Model\DataTable;
+use App\Model\Employee\EmployeeBase;
 use Cavesman\Console;
 use Cavesman\Db;
 use Cavesman\Enum\Console\Type;
 use Cavesman\Http;
 use Cavesman\Request;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
@@ -29,13 +28,13 @@ class Employee
             if (!$item)
                 Console::output('ERROR: Username not found');
             else {
-                 $password = Console::requestValue('Escribe una nueva constraseña:');
+                $password = Console::requestValue('Escribe una nueva constraseña:');
 
-                 $item->password = password_hash($password, PASSWORD_DEFAULT);
+                $item->password = password_hash($password, PASSWORD_DEFAULT);
 
-                 $em = Db::getManager();
-                 $em->persist($item);
-                 $em->flush();
+                $em = Db::getManager();
+                $em->persist($item);
+                $em->flush();
             }
 
         } catch (Exception|ORMException $e) {
@@ -44,6 +43,7 @@ class Employee
             exit();
         }
     }
+
     public static function migrateUsers(): void
     {
         try {
@@ -285,7 +285,8 @@ class Employee
             if ($item)
                 return new Http\JsonResponse(['message' => 'Este email ya existe'], 400);
 
-            $model->password = password_hash($model->password, PASSWORD_DEFAULT);password_hash($model->password, PASSWORD_DEFAULT);
+            $model->password = password_hash($model->password, PASSWORD_DEFAULT);
+            password_hash($model->password, PASSWORD_DEFAULT);
 
             if (is_string($model->logo))
                 $model->logo = \App\Enum\Images::from($model->logo);

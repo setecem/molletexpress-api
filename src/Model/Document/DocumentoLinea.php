@@ -4,7 +4,8 @@ namespace App\Model\Document;
 
 use Cavesman\Db\Doctrine\Model\Model;
 
-class DocumentoLinea extends Model {
+class DocumentoLinea extends Model
+{
     public ?string $reference = null;
     public ?string $unidadMedida = null;
     public ?string $description = null;

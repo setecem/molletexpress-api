@@ -3,10 +3,11 @@
 namespace App\Service;
 
 use App\Entity\Document\Factura\Factura;
-use Cavesman\Config;
 use App\Model\Verifactu\FacturaVerifactu;
 use App\Model\Verifactu\FacturaVerifactuRegistro;
 use App\Model\Verifactu\VerifactuEstado;
+use Cavesman\Config;
+use RuntimeException;
 
 class Verifacti
 {
@@ -14,10 +15,10 @@ class Verifacti
     // Core HTTP
     // =========================
     private static function request(
-        string $method,
-        string $path,
+        string            $method,
+        string            $path,
         array|object|null $body = null,
-        array $query = []
+        array             $query = []
     ): array
     {
         $url = rtrim(Config::get('verifacti.endpoint'), '/') . $path;
@@ -36,8 +37,8 @@ class Verifacti
 
         $opts = [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => $headers,
         ];
 
         if ($body !== null) {
@@ -47,19 +48,19 @@ class Verifacti
         curl_setopt_array($curl, $opts);
 
         $response = curl_exec($curl);
-        $status   = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($response === false) {
             $err = curl_error($curl);
             curl_close($curl);
-            throw new \RuntimeException("cURL error: {$err}");
+            throw new RuntimeException("cURL error: {$err}");
         }
 
         curl_close($curl);
 
         return [
             'status' => $status,
-            'body'   => json_decode($response, true),
+            'body' => json_decode($response, true),
         ];
     }
 

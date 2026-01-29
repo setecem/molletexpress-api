@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity\Employee;
+
 use App\Enum\Role;
 use App\Enum\RoleGroup;
 use Cavesman\Db\Doctrine\Entity\Base;

@@ -1,7 +1,7 @@
 <?php
 
-use App\Controller\Role;
 use App\Controller\Auth;
+use App\Controller\Role;
 use Cavesman\Router;
 
 Router::mount('/api/v1/role', function (): void {

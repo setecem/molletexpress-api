@@ -35,7 +35,7 @@ class Verifacti
      */
     public static function crearFacturasBulk(array $facturas)
     {
-        $items = array_map(fn (\App\Entity\Document\Factura\Factura $factura)  => self::factura($factura), $facturas);
+        $items = array_map(fn(\App\Entity\Document\Factura\Factura $factura) => self::factura($factura), $facturas);
         return \App\Service\Verifacti::createFacturasBulk($items);
     }
 
@@ -130,7 +130,8 @@ class Verifacti
     }
 
 
-    private static function factura(\App\Entity\Document\Factura\Factura $factura): FacturaVerifactu {
+    private static function factura(\App\Entity\Document\Factura\Factura $factura): FacturaVerifactu
+    {
         $item = new FacturaVerifactu();
         $item->serie = $factura->serie;
         $item->numero = $factura->number;

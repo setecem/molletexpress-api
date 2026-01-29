@@ -33,7 +33,7 @@ class User extends Model
 
     public function typeOfCollection(string $property): ?string
     {
-        return match($property) {
+        return match ($property) {
             'employee' => Employee::class,
             'client' => Client::class,
             'type' => UserType::class,

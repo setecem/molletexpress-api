@@ -91,8 +91,8 @@ class ListadoPdf extends Fpdf\Fpdf
         $this->SetFont('Arial', 'I', 8);
         // Print centered page number
 
-        $dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-        $meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+        $dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
         $fecha = new DateTime();
         $day = $dias[(int)$fecha->format('w')];
         $numero = $fecha->format('d');

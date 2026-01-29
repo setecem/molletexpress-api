@@ -6,7 +6,6 @@ use App\Enum\Images;
 use App\Model\File;
 use Cavesman\Db\Doctrine\Entity\Base;
 use Cavesman\Db\Doctrine\Model\Model;
-use Doctrine\Common\Collections\Collection;
 
 class EmployeeBase extends Model
 {
@@ -28,7 +27,7 @@ class EmployeeBase extends Model
     /** @var File[] $files */
     public array $files = [];
 
-    /** @var EmployeeRole[] $roles  */
+    /** @var EmployeeRole[] $roles */
     public array $roles = [];
 
     public Images|string $logo = Images::logoWhiteTextSetecem;
@@ -40,7 +39,7 @@ class EmployeeBase extends Model
 
     public function typeOfCollection(string $property): ?string
     {
-        return match($property) {
+        return match ($property) {
             'roles' => EmployeeRole::class,
             'files' => File::class,
             'logos', 'icono', 'fondo' => Images::class,

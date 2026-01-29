@@ -23,7 +23,7 @@ class OrdenCobro extends Model
 
     public function typeOfCollection(string $property): ?string
     {
-        return match($property) {
+        return match ($property) {
             'client' => Client::class,
             'facturas' => Factura::class,
             default => null

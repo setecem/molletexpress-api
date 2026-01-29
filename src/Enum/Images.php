@@ -44,7 +44,9 @@ enum Images: string
             self::bgSlots
         ];
     }
-    public static function listLogo(): array {
+
+    public static function listLogo(): array
+    {
         return [
             self::logoBlueSetecem,
             self::logoBlueTextSetecem,
@@ -58,7 +60,8 @@ enum Images: string
         ];
     }
 
-    public static function listIcon(): array {
+    public static function listIcon(): array
+    {
         return [
             self::logoBlueSetecem,
             self::logoBlueTextSetecem,

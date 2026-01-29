@@ -7,7 +7,7 @@ use Cavesman\Router;
 Router::set404(fn() => new JsonResponse(['Route not found'], 404));
 
 Router::get('/', fn() => new Cavesman\Http\JsonResponse(['message' => 'Welcome to Cavesman Framework!']));
-Router::get('/info', function() {
+Router::get('/info', function () {
     phpinfo();
     exit();
 });

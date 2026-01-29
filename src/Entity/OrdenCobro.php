@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Document\Albaran\Albaran;
 use App\Entity\Document\Factura\Factura;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use DateTime;

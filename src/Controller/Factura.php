@@ -693,7 +693,7 @@ class Factura
             if ($query_res)
                 return $query_res->reference + 1;
             return 1;
-        } catch (Exception|ORMException $e) {
+        } catch (Exception $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
