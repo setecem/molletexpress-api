@@ -5,7 +5,6 @@ namespace App\Entity\Employee;
 use App\Entity\File;
 use App\Enum\Images;
 use Cavesman\Db\Doctrine\Entity\Entity;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,12 +40,6 @@ class Employee extends Entity
     #[ORM\Column(name: 'password', type: 'string', nullable: false)]
     public ?string $password = null;
 
-    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
-    public ?DateTime $dateCreated = null;
-
-    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
-    public ?DateTime $dateModified = null;
-
     /** Campos traidos de la web */
     #[ORM\Column(name: 'salario_base', type: 'decimal', precision: 12, scale: 2, nullable: false, options: ['default' => '0.00'])]
     public float $salarioBase = 0;
@@ -69,7 +62,7 @@ class Employee extends Entity
     /** Campos traidos del CRM */
 
     /** @var File[]|Collection */
-    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'employee')]
+    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'employee', cascade: ['persist', 'remove'])]
     public array|Collection $files = [];
 
     /** @var EmployeeRole[]|Collection */

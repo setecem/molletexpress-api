@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User\User;
 use Cavesman\Config;
 use Cavesman\Db;
 use Cavesman\Http\JsonResponse;
@@ -27,12 +26,12 @@ final class Recovery
 
             $em = Db::getManager();
 
-            $user = $em->getRepository(User::class)->findOneBy(['email' => $email, 'deletedOn' => null]);
+            $user = $em->getRepository(\App\Entity\Employee\Employee::class)->findOneBy(['email' => $email, 'deletedOn' => null]);
 
             if (!$user)
                 return new JsonResponse(['message' => 'recovery.email.error'], 404);
 
-            $jwt = base64_encode(JWT::encode(['email' => $user->getEmail()]));
+            $jwt = base64_encode(JWT::encode(['email' => $user->email]));
 
             $link = Config::get('api.frontend') . '/recovery/' . $jwt;
 
@@ -62,12 +61,12 @@ final class Recovery
 
             $jwt = JWT::decode(base64_decode($token));
 
-            $user = $em->getRepository(User::class)->findOneBy(['email' => $jwt->email, 'deletedOn' => null]);
+            $user = $em->getRepository(\App\Entity\Employee\Employee::class)->findOneBy(['email' => $jwt->email, 'deletedOn' => null]);
 
             if (!$user)
                 return new JsonResponse(['message' => 'recovery.email.error'], 404);
 
-            $user->setPassword($password);
+            $user->password = $password;
 
             $em->persist($user);
             $em->flush();

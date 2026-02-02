@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\User\User;
 use Cavesman\Db\Doctrine\Entity\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,10 +15,6 @@ class Client extends Entity
 
     #[ORM\Column(name: 'name_comercial', type: 'string', nullable: true)]
     public ?string $nameComercial = null;
-
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    public ?User $user = null;
 
     #[ORM\Column(name: 'nif', type: 'string', nullable: true)]
     public ?string $nif = null;

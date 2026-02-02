@@ -15,7 +15,7 @@ abstract class Documento extends Model
     public ?Client $client = null;
     public string $serie = 'P';
     public ?int $reference = null;
-    public ?int $numPedido = 0;
+    public ?string $numPedido = null;
     public ?string $number = null;
     public DateTime|string|null $date = null;
     public ?string $observaciones = null;

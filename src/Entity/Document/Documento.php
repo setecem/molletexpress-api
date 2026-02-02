@@ -21,13 +21,13 @@ abstract class Documento extends Entity
     #[ORM\Column(name: 'reference', type: 'integer', nullable: true)]
     public ?int $reference = null;
 
-    #[ORM\Column(name: 'num_pedido', type: 'integer', nullable: true, options: ['default' => 0])]
-    public int|null $numPedido = 0;
+    #[ORM\Column(name: 'num_pedido', type: 'string', nullable: true)]
+    public ?string $numPedido = null;
 
     #[ORM\Column(name: 'number', type: 'string', nullable: true)]
     public ?string $number = null;
 
-    #[ORM\Column(name: 'date', type: 'datetime', nullable: true, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(name: 'date', type: 'date', nullable: true, options: ['default' => 'CURRENT_DATE'])]
     public ?DateTime $date;
 
     #[ORM\Column(name: 'observaciones', type: 'text', nullable: true)]

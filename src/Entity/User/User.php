@@ -34,10 +34,6 @@ class User extends Entity
     #[ORM\Column(name: 'ccc_num', type: 'string', nullable: true)]
     public ?string $cccNum = null;
 
-    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: UserType::class, cascade: ['persist'], inversedBy: 'users')]
-    public ?UserType $type = null;
-
     #[ORM\Column(name: 'contract', type: 'integer', nullable: true, options: ['default' => 0])]
     public int $contract = 0;
 
@@ -74,26 +70,6 @@ class User extends Entity
     #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
     public ?DateTime $dateModified = null;
 
-    #[ORM\OneToMany(targetEntity: UserDepartment::class, mappedBy: 'user')]
-    #[ORM\OrderBy(['id' => 'DESC'])]
-    public array|Collection $departments;
-
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
-
-    #[ORM\OneToMany(targetEntity: UserHours::class, mappedBy: 'user')]
-    #[ORM\OrderBy(['id' => 'ASC'])]
-    public array|Collection $hours;
-
-    public array|Collection $actions;
-
-    public array|Collection $children;
-
-    public function __construct()
-    {
-        $this->departments = new ArrayCollection();
-        $this->hours = new ArrayCollection();
-        $this->actions = new ArrayCollection();
-        $this->children = new ArrayCollection();
-    }
 }

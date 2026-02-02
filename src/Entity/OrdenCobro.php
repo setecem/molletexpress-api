@@ -29,12 +29,6 @@ class OrdenCobro extends Entity
     #[ORM\Column(name: 'pagada', type: 'boolean', nullable: false, options: ['default' => false])]
     public bool $pagada = false;
 
-    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
-    public ?DateTime $dateCreated = null;
-
-    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
-    public ?DateTime $dateModified = null;
-
     /** @var Factura[]|Collection */
     #[ORM\OneToMany(targetEntity: Factura::class, mappedBy: 'ordenCobro')]
     public array|Collection $facturas = [];

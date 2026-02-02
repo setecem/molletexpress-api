@@ -17,7 +17,7 @@ class EmployeeFile extends Entity
     #[ORM\Column(name: 'name', type: 'string', nullable: true)]
     public ?string $name = null;
 
-    #[ORM\JoinColumn(name: 'employee', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'employee_id', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: Employee::class)]
     public ?Employee $employee = null;
 

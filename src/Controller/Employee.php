@@ -53,51 +53,37 @@ class Employee
 
             if (sizeof($users)) {
                 foreach ($users as $user) {
-                    $entity = \App\Entity\Employee\Employee::findOneBy(['user' => $user->id]);
-                    if ($entity) {
-                        $entity->username = $user->username;
-                        $entity->password = $user->password;
-                        $entity->createdOn = $entity->dateCreated;
-                        $entity->updatedOn = $entity->dateModified;
-                    } else {
-                        $entity = new \App\Entity\Employee\Employee();
-                        $entity->name = $user->firstname;
-                        $entity->lastname = $user->lastname;
-                        $entity->email = $user->email;
-                        $entity->username = $user->username;
-                        $entity->password = $user->password;
-                        $entity->createdOn = $user->dateCreated;
-                        $entity->updatedOn = $user->dateModified;
-                    }
+                    $entity = new \App\Entity\Employee\Employee();
+                    $entity->name = $user->firstname;
+                    $entity->lastname = $user->lastname;
+                    $entity->username = $user->username;
+                    $entity->password = $user->password;
+                    $entity->email = $user->email;
+                    $entity->dni = $user->nif;
+                    $entity->createdOn = $user->createdOn;
+                    $entity->updatedOn = $user->updatedOn;
+                    $entity->deletedOn = $user->deletedOn;
                     $em->persist($entity);
                 }
                 $em->flush();
 
                 $employee = \App\Entity\Employee\Employee::findOneBy(['username' => 'admin']);
 
-                if (!$employee) {
-                    $employee = new \App\Entity\Employee\Employee();
-                    $employee->name = 'Administrador';
-                    $employee->lastname = 'General';
-                    $employee->username = 'admin';
-                    $employee->password = password_hash('1234', PASSWORD_DEFAULT);
-                    $em->persist($employee);
+                if ($employee) {
+                    foreach (array_merge(RoleGroup::rolesEmployee(), RoleGroup::rolesClient(), RoleGroup::rolesService(), RoleGroup::rolesInvoice(), RoleGroup::rolesDeliveryNote(), RoleGroup::rolesChargeOrder()) as $groupName => $roles) {
+                        $group = RoleGroup::from($groupName);
+                        foreach ($roles as $item) {
+                            $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
+                            if (!$employeeRole)
+                                $employeeRole = new EmployeeRole();
+                            $employeeRole->employee = $employee;
+                            $employeeRole->role = $item;
+                            $employeeRole->group = $group;
+                            $em->persist($employeeRole);
+                        }
+                    }
                     $em->flush();
                 }
-
-                foreach (array_merge(RoleGroup::rolesEmployee()) as $groupName => $roles) {
-                    $group = RoleGroup::from($groupName);
-                    foreach ($roles as $item) {
-                        $employeeRole = $em->getRepository(EmployeeRole::class)->findOneBy(['employee' => $employee, 'role' => $item, 'group' => $group]);
-                        if (!$employeeRole)
-                            $employeeRole = new EmployeeRole();
-                        $employeeRole->employee = $employee;
-                        $employeeRole->role = $item;
-                        $employeeRole->group = $group;
-                        $em->persist($employeeRole);
-                    }
-                }
-                $em->flush();
             }
         } catch (Exception|ORMException $e) {
             Console::output($e->getMessage(), Type::WARNING);

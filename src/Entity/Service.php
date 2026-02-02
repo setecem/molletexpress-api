@@ -36,9 +36,4 @@ class Service extends Entity
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
 
-    #[ORM\Column(name: 'date_created', type: 'datetime', nullable: true)]
-    public ?DateTime $dateCreated = null;
-
-    #[ORM\Column(name: 'date_modified', type: 'datetime', nullable: true)]
-    public ?DateTime $dateModified = null;
 }

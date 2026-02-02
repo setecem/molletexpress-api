@@ -11,7 +11,9 @@ use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
 use Cavesman\Config;
+use Cavesman\Console;
 use Cavesman\Db;
+use Cavesman\Enum\Console\Type;
 use Cavesman\Enum\Directory;
 use Cavesman\FileSystem;
 use Cavesman\Http;
@@ -28,6 +30,32 @@ class Albaran
 {
     public static array $config = [];
 
+    public static function checkAllStatus(): void
+    {
+        try {
+
+            $em = DB::getManager();
+            $list = \App\Entity\Document\Albaran\Albaran::findBy([]);
+
+            /** @var \App\Entity\Document\Albaran\Albaran $entity */
+            foreach ($list as $entity) {
+                if (empty($entity->number))
+                    $entity->status = DocumentStatus::DRAFT;
+                else
+                    $entity->status = DocumentStatus::ACTIVE;
+
+                $em->persist($entity);
+                $em->flush();
+            }
+
+
+        } catch (Exception|ORMException $e) {
+            Console::output($e->getMessage(), Type::WARNING);
+            Console::output($e->getTraceAsString(), Type::ERROR);
+            exit();
+        }
+    }
+
     public static function filter(): Http\JsonResponse
     {
         try {
@@ -35,6 +63,7 @@ class Albaran
 
             $qb = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)
                 ->createQueryBuilder('i')
+                ->join('i.client', 'c')
                 ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
@@ -44,7 +73,7 @@ class Albaran
                     $qb
                         ->andWhere('i.serie LIKE :search_' . $key . ' OR i.number LIKE :search_' . $key
                             . ' OR i.observaciones LIKE :search_' . $key . ' OR i.tax LIKE :search_' . $key
-                            . ' OR i.comments LIKE :search_' . $key
+                            . ' OR i.comments LIKE :search_' . $key . ' OR c.name LIKE :search_' . $key
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }
