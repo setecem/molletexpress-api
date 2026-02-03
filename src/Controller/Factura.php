@@ -544,7 +544,7 @@ class Factura
             foreach ($lineas as $linea) {
                 $factura = $linea->factura ? $linea->factura->number : '';
                 $date = $linea->factura ? $linea->factura->date->format("d/m/Y") : '';
-                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $factura, $date);
+                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $linea->albaran->number, $date);
             }
 
             $invoice->addTotal("Importe Bruto", $item->importeBruto);
