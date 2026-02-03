@@ -1,6 +1,6 @@
 ## Como migrar
 
-#### 1. Crear bdd vacía con nombre: molletexpress_api
+#### 1. Crear bdd vacía
 #### 2. Importar estructura de la bdd
 #### 3. Importar datos de la bdd
 #### 4. Ejecutar script.sql para:
