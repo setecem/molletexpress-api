@@ -459,7 +459,7 @@ class Factura
             if (!$clients)
                 return new Http\JsonResponse(['message' => "Ningún documento encontrado"], 404);
 
-            $zipFile = \App\Entity\Document\Factura\Factura::class . "-" . time();
+            $zipFile = "Facturas-" . time();
             if (!is_dir($cacheDirectory . "/pdf/" . $zipFile))
                 mkdir($cacheDirectory . "/pdf/" . $zipFile, 0777, true);
 
