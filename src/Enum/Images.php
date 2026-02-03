@@ -22,6 +22,7 @@ enum Images: string
     public static function list(): array
     {
         return [
+            self::molletexpress,
             self::bgSetecem,
             self::bgSlots,
             self::logoBlueSetecem,
@@ -49,6 +50,7 @@ enum Images: string
     public static function listLogo(): array
     {
         return [
+            self::molletexpress,
             self::logoBlueSetecem,
             self::logoBlueTextSetecem,
             self::logoBlueEspSetecem,
@@ -64,6 +66,7 @@ enum Images: string
     public static function listIcon(): array
     {
         return [
+            self::molletexpress,
             self::logoBlueSetecem,
             self::logoBlueTextSetecem,
             self::logoBlueEspSetecem,

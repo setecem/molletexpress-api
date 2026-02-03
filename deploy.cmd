@@ -3,13 +3,13 @@
 git push origin main
 
 :: Directorio donde está la app
-set DIRECTORY=/root/webserver/web/dev.crm.setecem.com/api
+set DIRECTORY=/root/webserver/web/mollet.setecem.com/api
 
 :: Directorio donde está la app en el docker
-set DIRECTORY_DOCKER=/var/www/site/dev.crm.setecem.com/api
+set DIRECTORY_DOCKER=/var/www/site/mollet.setecem.com/api
 
 :: Nombre del contenedor de docker
-set CONTAINER=setecem-crm-api
+set CONTAINER=molletexpress-api
 
 :: Usuario@servidor remoto
 set SERVER=root@sv5.setecem.com
