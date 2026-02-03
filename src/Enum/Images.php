@@ -4,6 +4,7 @@ namespace App\Enum;
 
 enum Images: string
 {
+    case molletexpress = 'molletexpress.jpg';
     case bgSetecem = 'bg-setecem.jpg';
     case bgSlots = 'bg-slots.jpg';
     case logoBlueSetecem = 'logo-blue-textless.svg';
