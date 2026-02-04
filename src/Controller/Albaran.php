@@ -545,23 +545,23 @@ class Albaran
             $logoPath = FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-mollet.jpg';
             $invoice->setLogo($logoPath);  //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
-            $invoice->type = "albaran";    // Invoice Type
+            $invoice->setType(strtoupper("albaran"));   // Invoice Type
             $invoice->reference = $item->number;   // Reference
             $invoice->date = $item->date->format("d-m-Y");   //Billing Date
             $invoice->setNumberFormat(",", ".", "right");
 
             $invoice->from = [
-                Config::get("modules.albaran.empresa.nombre_fiscal"),
-                Config::get("modules.albaran.empresa.nombre_fiscal2"),
-                Config::get("modules.albaran.empresa.direccion"),
-                Config::get("modules.albaran.empresa.localidad"),
-                Config::get("modules.albaran.empresa.cp") . " " . Config::get("modules.albaran.empresa.provincia"),
-                Config::get("modules.albaran.empresa.nif")
+                Config::get("modules.factura.empresa.nombre_fiscal"),
+                Config::get("modules.factura.empresa.nombre_fiscal2"),
+                Config::get("modules.factura.empresa.direccion"),
+                Config::get("modules.factura.empresa.localidad"),
+                Config::get("modules.factura.empresa.cp") . " " . Config::get("modules.factura.empresa.provincia"),
+                Config::get("modules.factura.empresa.nif")
             ];
 
             // Sé que es una guarrada Pedro, pero añadimos 2 líneas en blanco para poder ocultar el nif del cliente de la ventanita de las cartas
             if ($client) {
-                $invoice->pedido = $client->numPedido ?? '-';
+                $invoice->pedido = $client->numPedido ?: '-';
                 $invoice->ibanCliente = $client->iban;
                 $invoice->abonado = $client->numAbonado;
                 $invoice->nif = $client->nif;
