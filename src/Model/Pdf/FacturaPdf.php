@@ -27,9 +27,9 @@ class FacturaPdf extends PlantillaPdf
             $this->SetFont($this->font, 'B', 9);
 
             $positionX = $this->document['w'] - $this->margins['l'] - $this->margins['r']
-                - max($this->GetStringWidth(mb_strtoupper("number", self::ICONV_CHARSET_INPUT)),
-                    $this->GetStringWidth(mb_strtoupper("date", self::ICONV_CHARSET_INPUT)),
-                    $this->GetStringWidth(mb_strtoupper("due", self::ICONV_CHARSET_INPUT)))
+                - max($this->GetStringWidth(mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT)),
+                    $this->GetStringWidth(mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)),
+                    $this->GetStringWidth(mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)))
                 - max($this->GetStringWidth(mb_strtoupper($this->reference, self::ICONV_CHARSET_INPUT)),
                     $this->GetStringWidth(mb_strtoupper($this->date, self::ICONV_CHARSET_INPUT)));
 
@@ -37,7 +37,7 @@ class FacturaPdf extends PlantillaPdf
             if (!empty($this->reference)) {
                 $this->Cell($positionX, $lineHeight);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("number", self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
                     'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
@@ -47,7 +47,7 @@ class FacturaPdf extends PlantillaPdf
             $this->Cell($positionX, $lineHeight);
             $this->SetFont($this->font, 'B', 9);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("date", self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
             $this->SetTextColor(50, 50, 50);
             $this->SetFont($this->font, '', 9);
             $this->Cell(0, $lineHeight, $this->date, 0, 1, 'R');
@@ -56,7 +56,7 @@ class FacturaPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("pedido", self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('pedido', self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
                     'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
@@ -69,7 +69,7 @@ class FacturaPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("time", self::ICONV_CHARSET_INPUT)) . ':', 0, 0,
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['time'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0,
                     'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
@@ -80,7 +80,7 @@ class FacturaPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("due", self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
                 $this->Cell(0, $lineHeight, $this->due, 0, 1, 'R');
@@ -90,7 +90,7 @@ class FacturaPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("Abonado", self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('Abonado', self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
                 $this->Cell(0, $lineHeight, $this->abonado, 0, 1, 'R');
@@ -100,10 +100,10 @@ class FacturaPdf extends PlantillaPdf
             if ($this->PageNo() == 1) {
                 $width = ($this->document['w'] - $this->margins['l'] - $this->margins['r']) / 2;
                 if (isset($this->flipflop)) {
-                    $to = $this->to;
-                    $from = $this->from;
-                    $this->to = $from;
-                    $this->from = $to;
+                    $to = $this->lang['to'];
+                    $from = $this->lang['from'];
+                    $this->to = $to;
+                    $this->from = $from;
                 }
 
                 if ($this->displayToFrom === true) {
@@ -123,10 +123,10 @@ class FacturaPdf extends PlantillaPdf
                                 $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
                                 $this->SetFont($this->font, '', 9);
                                 $this->SetTextColor(50, 50, 50);
-                            } else
+                            } else {
                                 $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
-
-                            $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
+                                $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
+                            }
                         }
                         $this->Ln(5);
                     }
@@ -159,30 +159,29 @@ class FacturaPdf extends PlantillaPdf
 
             // Title Albarán
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("Albarán", self::ICONV_CHARSET_INPUT)), 0, 0, 'L', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('Albarán', self::ICONV_CHARSET_INPUT)), 0, 0, 'L', 0);
 
             // Title fecha
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("Fecha", self::ICONV_CHARSET_INPUT)), 0, 0, 'L', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('Fecha', self::ICONV_CHARSET_INPUT)), 0, 0, 'L', 0);
 
             // Title description
             $this->Cell(1, 10, '', 0, 0, 'L', 0);
-            $this->Cell($this->firstColumnWidth, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("Concepto", self::ICONV_CHARSET_INPUT)),
+            $this->Cell($this->firstColumnWidth, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('Concepto', self::ICONV_CHARSET_INPUT)),
                 0, 0, 'L', 0);
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
 
             // Title Total
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("total", self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper('total', self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
 
             $this->Ln();
             $this->SetLineWidth(0.3);
             $this->SetDrawColor($this->color[0], $this->color[1], $this->color[2]);
             $this->Line($this->margins['l'], $this->GetY(), $this->document['w'] - $this->margins['r'], $this->GetY());
             $this->Ln(2);
-        } else {
+        } else
             $this->Ln(12);
-        }
     }
 
     /**

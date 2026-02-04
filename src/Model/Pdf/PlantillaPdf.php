@@ -58,7 +58,6 @@ class PlantillaPdf extends Fpdf
 
     public function __construct($size = 'A4', $currency = '$', $language = 'es')
     {
-        parent::__construct('P', 'mm', [$this->document['w'], $this->document['h']]);
         $this->firstColumnWidth = 100;
         $this->currency = $currency;
         $this->maxImageDimensions = [230, 130];
@@ -66,7 +65,11 @@ class PlantillaPdf extends Fpdf
         $this->setLanguage($language);
         $this->setDocumentSize($size);
         $this->setColor('#222222');
+
         $this->recalculateColumns();
+
+        parent::__construct('P', 'mm', [$this->document['w'], $this->document['h']]);
+
         $this->AliasNbPages();
         $this->SetMargins($this->margins['l'], $this->margins['t'], $this->margins['r']);
     }
@@ -74,8 +77,9 @@ class PlantillaPdf extends Fpdf
     private function setLanguage($language): void
     {
         $this->language = $language;
-        include FileSystem::getPath(Directory::MODELS) . '/Pdf/inc/languages/' . $language . '.inc';
-        $this->lang = include FileSystem::getPath(Directory::MODELS) . '/Pdf/inc/languages/' . $language . '.inc';
+        $path = FileSystem::getPath(Directory::MODELS)
+            . '/Pdf/inc/languages/' . $language . '.inc';
+        $this->lang = require $path;
     }
 
     private function setDocumentSize($dSize): void
@@ -154,6 +158,11 @@ class PlantillaPdf extends Fpdf
         if (!empty($zone) and $this->isValidTimezoneId($zone) === true)
             date_default_timezone_set($zone);
 
+    }
+
+    public function setType($title): void
+    {
+        $this->title = $title;
     }
 
     public function setColor($rgbColor): void
@@ -356,10 +365,6 @@ class PlantillaPdf extends Fpdf
             if (isset($this->flipflop)) {
                 $to = $this->lang['to'];
                 $from = $this->lang['from'];
-                $this->lang['to'] = $from;
-                $this->lang['from'] = $to;
-                $to = $this->to;
-                $from = $this->from;
                 $this->to = $from;
                 $this->from = $to;
             }

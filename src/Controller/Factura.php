@@ -511,7 +511,7 @@ class Factura
             $logoPath = FileSystem::getPath(Directory::PUBLIC) . '/img/logo/logo-mollet.jpg';
             $invoice->setLogo($logoPath);  //logo image path
             $invoice->setColor("#007fff");      // pdf color scheme
-            $invoice->type = "factura";    // Invoice Type
+            $invoice->setType(strtoupper("factura"));  // Invoice Type
             $invoice->reference = $item->number;   // Reference
             $invoice->date = $item->date->format("d-m-Y");   //Billing Date
             $invoice->setNumberFormat(",", ".", "right");
@@ -527,7 +527,7 @@ class Factura
 
             // Sé que es una guarrada Pedro, pero añadimos 2 líneas en blanco para poder ocultar el nif del cliente de la ventanita de las cartas
             if ($client) {
-                $invoice->pedido = $client->numPedido ?? '-';
+                $invoice->pedido = $client->numPedido ?: '-';
                 $invoice->ibanCliente = $client->iban;
                 $invoice->abonado = $client->numAbonado;
                 $invoice->nif = $client->nif;
@@ -542,9 +542,9 @@ class Factura
             }
 
             foreach ($lineas as $linea) {
-                $factura = $linea->factura ? $linea->factura->number : '';
+                $albaran = $linea->albaran ? $linea->albaran->number : '';
                 $date = $linea->factura ? $linea->factura->date->format("d/m/Y") : '';
-                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $linea->albaran->number, $date);
+                $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $albaran, $date);
             }
 
             $invoice->addTotal("Importe Bruto", $item->importeBruto);
@@ -553,11 +553,6 @@ class Factura
             $invoice->addTotal("Base Imponible", $item->subtotal);
             $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
             $invoice->addTotal("Total", $item->total);
-
-            if ($client)
-                $invoice->addParagraph("Forma de pago: " . $client->formaPago);
-
-            $invoice->addParagraph("Vencimiento: " . self::getDueDate($item)->format("d-m-Y"));
 
             if ($client && $client->formaPago == "TRANSFERENCIA BANCARIA")
                 $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));

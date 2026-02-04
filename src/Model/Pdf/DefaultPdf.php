@@ -60,9 +60,9 @@ class DefaultPdf extends PlantillaPdf
             //Calculate position of strings
             $this->SetFont($this->font, 'B', 9);
             $positionX = $this->document['w'] - $this->margins['l'] - $this->margins['r']
-                - max($this->GetStringWidth(mb_strtoupper("number", self::ICONV_CHARSET_INPUT)),
-                    $this->GetStringWidth(mb_strtoupper("date", self::ICONV_CHARSET_INPUT)),
-                    $this->GetStringWidth(mb_strtoupper("due", self::ICONV_CHARSET_INPUT)))
+                - max($this->GetStringWidth(mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT)),
+                    $this->GetStringWidth(mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)),
+                    $this->GetStringWidth(mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)))
                 - max($this->GetStringWidth(mb_strtoupper($this->reference, self::ICONV_CHARSET_INPUT)),
                     $this->GetStringWidth(mb_strtoupper($this->date, self::ICONV_CHARSET_INPUT)));
 
@@ -70,7 +70,7 @@ class DefaultPdf extends PlantillaPdf
             if (!empty($this->reference)) {
                 $this->Cell($positionX, $lineHeight);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("number", self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['number'], self::ICONV_CHARSET_INPUT) . ':'), 0, 0,
                     'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
@@ -80,7 +80,7 @@ class DefaultPdf extends PlantillaPdf
             $this->Cell($positionX, $lineHeight);
             $this->SetFont($this->font, 'B', 9);
             $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("date", self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+            $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['date'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
             $this->SetTextColor(50, 50, 50);
             $this->SetFont($this->font, '', 9);
             $this->Cell(0, $lineHeight, $this->date, 0, 1, 'R');
@@ -103,7 +103,7 @@ class DefaultPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("time", self::ICONV_CHARSET_INPUT)) . ':', 0, 0,
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['time'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0,
                     'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
@@ -114,7 +114,7 @@ class DefaultPdf extends PlantillaPdf
                 $this->Cell($positionX, $lineHeight);
                 $this->SetFont($this->font, 'B', 9);
                 $this->SetTextColor($this->color[0], $this->color[1], $this->color[2]);
-                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("due", self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
+                $this->Cell(32, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['due'], self::ICONV_CHARSET_INPUT)) . ':', 0, 0, 'L');
                 $this->SetTextColor(50, 50, 50);
                 $this->SetFont($this->font, '', 9);
                 $this->Cell(0, $lineHeight, $this->due, 0, 1, 'R');
@@ -167,8 +167,8 @@ class DefaultPdf extends PlantillaPdf
                 //$this->SetFont($this->font, 'B', 10);
                 $width = ($this->document['w'] - $this->margins['l'] - $this->margins['r']) / 2;
                 if (isset($this->flipflop)) {
-                    $to = $this->to;
-                    $from = $this->from;
+                    $to = $this->lang['to'];
+                    $from = $this->lang['from'];
                     $this->to = $from;
                     $this->from = $to;
                 }
@@ -224,26 +224,26 @@ class DefaultPdf extends PlantillaPdf
             $this->Ln(5);
             $this->SetFont($this->font, 'B', 9);
             $this->Cell(1, 10, '', 0, 0, 'L', 0);
-            $this->Cell($this->firstColumnWidth, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("product", self::ICONV_CHARSET_INPUT)),
+            $this->Cell($this->firstColumnWidth, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['product'], self::ICONV_CHARSET_INPUT)),
                 0, 0, 'L', 0);
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("qty", self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['qty'], self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
 
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("price", self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['price'], self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
 
             if (isset($this->discountField)) {
                 $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-                $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("discount", self::ICONV_CHARSET_INPUT)), 0, 0,
+                $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['discount'], self::ICONV_CHARSET_INPUT)), 0, 0,
                     'C', 0);
             }
             if (isset($this->vatField)) {
                 $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-                $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("vat", self::ICONV_CHARSET_INPUT)), 0, 0, 'C',
+                $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['vat'], self::ICONV_CHARSET_INPUT)), 0, 0, 'C',
                     0);
             }
             $this->Cell($this->columnSpacing, 10, '', 0, 0, 'L', 0);
-            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper("total", self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
+            $this->Cell($width_other, 10, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, mb_strtoupper($this->lang['total'], self::ICONV_CHARSET_INPUT)), 0, 0, 'C', 0);
             $this->Ln();
             $this->SetLineWidth(0.3);
             $this->SetDrawColor($this->color[0], $this->color[1], $this->color[2]);
