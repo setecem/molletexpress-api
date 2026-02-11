@@ -9,10 +9,10 @@ Router::mount('/api/v1/delivery-note', function () {
     Router::get('/filter', Albaran::class . '@filter');
 
     /** @see Albaran::export() */
-    Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)/export', Albaran::class . '@export');
+    Router::post('/export', Albaran::class . '@export');
 
     /** @see Albaran::list() */
-    Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)', Albaran::class . '@list');
+    Router::post('/list', Albaran::class . '@list');
 
     /** @see Albaran::facturar() */
     Router::post('/facturar', Albaran::class . '@facturar');

@@ -9,10 +9,10 @@ Router::mount('/api/v1/invoice', function () {
     Router::get('/filter', Factura::class . '@filter');
 
     /** @see Factura::export() */
-    Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)/export', Factura::class . '@export');
+    Router::post('/export', Factura::class . '@export');
 
     /** @see Factura::list() */
-    Router::get('/(\d{4}-\d{2}-\d{2})/(\d{4}-\d{2}-\d{2})/(\d+)', Factura::class . '@list');
+    Router::post('/list', Factura::class . '@list');
 
     /** @see Factura::sendEmail() */
     Router::get('/(\d+)/email', Factura::class . '@sendEmail');

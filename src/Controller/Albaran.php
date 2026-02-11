@@ -7,6 +7,7 @@ use App\Entity\Document\Factura\FacturaLinea;
 use App\Enum\DocumentStatus;
 use App\Model\DataTable;
 use App\Model\FacturarIntervalDates;
+use App\Model\MultiClientIntervalDates;
 use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
@@ -77,6 +78,19 @@ class Albaran
                         )
                         ->setParameter('search_' . $key, '%' . $string . '%');
                 }
+            }
+
+            if (!empty($filter->minDate)) {
+                $qb->andWhere('i.date >= :minDate')
+                    ->setParameter('minDate', new DateTime($filter->minDate));
+            }
+
+            if (!empty($filter->maxDate)) {
+                $maxDate = new DateTime($filter->maxDate);
+                $maxDate->setTime(23, 59, 59);
+
+                $qb->andWhere('i.date <= :maxDate')
+                    ->setParameter('maxDate', $maxDate);
             }
 
             $total = clone $qb;
@@ -453,10 +467,20 @@ class Albaran
         }
     }
 
-    public static function export(string $dateStart, string $dateEnd, int $idClient)
+    public static function export()
     {
         $cacheDirectory = FileSystem::getPath(Directory::APP) . '/cache';
         try {
+            $model = MultiClientIntervalDates::fromRequest();
+
+            $dateStart = $model->start instanceof DateTime ? $model->start : new DateTime($model->start);
+            $dateEnd = $model->end instanceof DateTime ? $model->end : new DateTime($model->end);
+
+            $clients = [];
+            foreach ($model->clients as $client) {
+                $clients[] = \App\Entity\Client::findOneBy(['id' => $client->id, 'deletedOn' => null]);
+            }
+
             $em = DB::getManager();
             if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
                 require_once new ReflectionClass(FacturaPdf::class)->getFileName();
@@ -469,12 +493,15 @@ class Albaran
                 ->from(\App\Entity\Document\Albaran\Albaran::class, "o")
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
                 ->orderBy("o.reference", "DESC")
-                ->setParameter('dateStart', new DateTime($dateStart))
-                ->setParameter('dateEnd', new DateTime($dateEnd));
-            $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
-            $resultItems
-                ->andWhere("o.client = :client")
-                ->setParameter('client', $client);
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd);
+
+            if (!empty($clients)) {
+                $resultItems
+                    ->andWhere('o.client IN (:clients)')
+                    ->setParameter('clients', $clients);
+            }
+
             $results = $resultItems
                 ->getQuery()
                 ->getResult();
@@ -636,9 +663,19 @@ class Albaran
         }
     }
 
-    public static function list(string $dateStart, string $dateEnd, int $idClient): Http\JsonResponse
+    public static function list(): Http\JsonResponse
     {
         try {
+            $model = MultiClientIntervalDates::fromRequest();
+
+            $dateStart = $model->start instanceof DateTime ? $model->start : new DateTime($model->start);
+            $dateEnd = $model->end instanceof DateTime ? $model->end : new DateTime($model->end);
+
+            $clients = [];
+            foreach ($model->clients as $client) {
+                $clients[] = \App\Entity\Client::findOneBy(['id' => $client->id, 'deletedOn' => null]);
+            }
+
             $em = DB::getManager();
             if (file_exists(new ReflectionClass(FacturaPdf::class)->getFileName()))
                 require_once new ReflectionClass(FacturaPdf::class)->getFileName();
@@ -652,12 +689,15 @@ class Albaran
                 ->innerJoin('o.client', 'c')
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
                 ->orderBy("c.numAbonado", "ASC")
-                ->setParameter('dateStart', new DateTime($dateStart))
-                ->setParameter('dateEnd', new DateTime($dateEnd));
-            $client = \App\Entity\Client::findOneBy(['id' => $idClient, 'deletedOn' => null]);
-            $resultItems
-                ->andWhere("o.client = :client")
-                ->setParameter('client', $client);
+                ->setParameter('dateStart', $dateStart)
+                ->setParameter('dateEnd', $dateEnd);
+
+            if (!empty($clients)) {
+                $resultItems
+                    ->andWhere('o.client IN (:clients)')
+                    ->setParameter('clients', $clients);
+            }
+
             $result = $resultItems
                 ->getQuery()
                 ->getResult();
