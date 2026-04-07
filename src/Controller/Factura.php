@@ -11,9 +11,7 @@ use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
-use Cavesman\Enum\Console\Type;
 use Cavesman\Enum\Directory;
 use Cavesman\FileSystem;
 use Cavesman\Http;
@@ -28,32 +26,6 @@ use ZipArchive;
 
 class Factura
 {
-
-    public static function checkAllStatus(): void
-    {
-        try {
-
-            $em = DB::getManager();
-            $list = \App\Entity\Document\Factura\Factura::findBy([]);
-
-            /** @var \App\Entity\Document\Factura\Factura $entity */
-            foreach ($list as $entity) {
-                if (empty($entity->number))
-                    $entity->status = DocumentStatus::DRAFT;
-                else
-                    $entity->status = DocumentStatus::ACTIVE;
-
-                $em->persist($entity);
-                $em->flush();
-            }
-
-
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-    }
 
     public static function filter(): Http\JsonResponse
     {
@@ -369,7 +341,7 @@ class Factura
                 ->innerJoin('o.client', 'c')
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
                 ->orderBy("c.numAbonado", "ASC")
-                ->setParameter('dateStart',$dateStart)
+                ->setParameter('dateStart', $dateStart)
                 ->setParameter('dateEnd', $dateEnd);
 
             if (!empty($clients)) {
@@ -460,7 +432,7 @@ class Factura
                 ->where('o.date BETWEEN :dateStart AND :dateEnd')
                 ->orderBy("o.reference", "DESC")
                 ->setParameter('dateStart', $dateStart)
-                ->setParameter('dateEnd',$dateEnd);
+                ->setParameter('dateEnd', $dateEnd);
 
             if (!empty($clients)) {
                 $resultItems

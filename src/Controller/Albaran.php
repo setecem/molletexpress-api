@@ -12,9 +12,7 @@ use App\Model\Pdf\DefaultPdf;
 use App\Model\Pdf\FacturaPdf;
 use App\Model\Pdf\ListadoPdf;
 use Cavesman\Config;
-use Cavesman\Console;
 use Cavesman\Db;
-use Cavesman\Enum\Console\Type;
 use Cavesman\Enum\Directory;
 use Cavesman\FileSystem;
 use Cavesman\Http;
@@ -30,32 +28,6 @@ use ZipArchive;
 class Albaran
 {
     public static array $config = [];
-
-    public static function checkAllStatus(): void
-    {
-        try {
-
-            $em = DB::getManager();
-            $list = \App\Entity\Document\Albaran\Albaran::findBy([]);
-
-            /** @var \App\Entity\Document\Albaran\Albaran $entity */
-            foreach ($list as $entity) {
-                if (empty($entity->number))
-                    $entity->status = DocumentStatus::DRAFT;
-                else
-                    $entity->status = DocumentStatus::ACTIVE;
-
-                $em->persist($entity);
-                $em->flush();
-            }
-
-
-        } catch (Exception|ORMException $e) {
-            Console::output($e->getMessage(), Type::WARNING);
-            Console::output($e->getTraceAsString(), Type::ERROR);
-            exit();
-        }
-    }
 
     public static function filter(): Http\JsonResponse
     {

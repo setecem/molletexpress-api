@@ -9,9 +9,11 @@
 #### 5. Crear estructura con doctrine
 #### 6. Ejecutar migraciones:
 - bin/cavesman migrate:users:employees
-- bin/cavesman check:status:albaranes
-- bin/cavesman check:status:facturas
-
-#### 7. Opcional (si fuese necesario cambiar la contraseña)
+#### 7. Ejecutar check-status.sql:
+- inicializa el campo status en las tablas albaran y factura
+- lógica aplicada:
+  - Si number está vacío → DRAFT
+  - Si number tiene valor → ACTIVE
+#### 8. Opcional (si fuese necesario cambiar la contraseña)
 - bin/cavesman update:user:password
     - Username: admin
