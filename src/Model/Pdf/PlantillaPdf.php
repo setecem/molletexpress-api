@@ -6,6 +6,11 @@ use AllowDynamicProperties;
 use Cavesman\Enum\Directory;
 use Cavesman\FileSystem;
 use DateTimeZone;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Exception\ValidationException;
+use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use Fpdf\Fpdf;
 
@@ -50,6 +55,7 @@ class PlantillaPdf extends Fpdf
     public ?string $badge = null;
     public array $addText = [];
     public ?string $footerNote = null;
+    public ?string $qrData = null;
     public array $dimensions = [];
     public bool $displayToFrom = true;
     public array $customHeaders = [];
@@ -648,6 +654,31 @@ class PlantillaPdf extends Fpdf
 
         if (isset($this->discountField))
             $this->columns += 1;
+
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function addQr($data, $size = 60): void
+    {
+        $qrBuilder = new Builder(
+            writer: new PngWriter(),
+            data: $data,
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Medium,
+            size: $size,
+            margin: 10
+        );
+
+        $qr = $qrBuilder->build();
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'qr_') . '.png';
+        $qr->saveToFile($tmpFile);
+
+        $this->Image($tmpFile, $this->GetX(), $this->GetY(), $size, $size);
+
+        unlink($tmpFile);
 
     }
 }

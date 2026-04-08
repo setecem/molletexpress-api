@@ -465,6 +465,7 @@ class Factura
             foreach ($clients as $c) {
                 foreach ($c['items'] as $item) {
                     $invoice = self::print($item->id, true);
+
                     $invoice->render($cacheDirectory . "/pdf/" . $zipFile . "/" . $item->number . ".pdf", 'F');
                 }
             }
@@ -557,7 +558,8 @@ class Factura
                 $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
 
             $invoice->footerNote = Config::get("modules.factura.empresa.registro");
-
+            if (Config::get('verifacti.enable_qr'))
+                $invoice->qrData = 'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif='. 'B75777847'.'&numserie='.$invoice->reference .'&fecha='.$invoice->date.'&importe='. $item->total*100;
             if (!$export) {
                 $invoice->render('example1.pdf', 'I');
                 exit();

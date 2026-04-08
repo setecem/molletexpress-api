@@ -17,7 +17,8 @@
         "twig/twig": "^3.21",
         "ext-zip": "*",
         "fpdf/fpdf": "^1.83",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "endroid/qr-code": "^6.1"
     },
     "authors": [
         {

@@ -339,5 +339,18 @@ class FacturaPdf extends PlantillaPdf
                 $this->Ln(4);
             }
         }
+
+        if (!empty($this->qrData)) {
+            $qrX = $this->document['w'] - $this->margins['r'] - 55;
+            $qrY = $this->GetY() - 10;
+            $this->setXY($qrX, $qrY);
+
+            try {
+                $this->addQr($this->qrData);
+            } catch (\Exception $e) {
+                echo "Error generando QR: " . $e->getMessage();
+                exit;
+            }
+        }
     }
 }
