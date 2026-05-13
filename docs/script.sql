@@ -101,7 +101,9 @@ ALTER TABLE user_departament
 ALTER TABLE user_type
  CHANGE COLUMN date_created created_on DATETIME NULL DEFAULT current_timestamp(),
  CHANGE COLUMN date_modified updated_on DATETIME NULL DEFAULT current_timestamp();
- 
+
+UPDATE factura_linea SET albaran_linea = NULL WHERE factura = 3599 AND albaran_linea = 29806;
+
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS pedido;
 DROP TABLE IF EXISTS pedido_linea;
