@@ -24,6 +24,8 @@ class OrdenCobro
 
             $qb = $em->getRepository(\App\Entity\OrdenCobro::class)
                 ->createQueryBuilder('i')
+                ->leftJoin('i.facturas', 'f', 'WITH', 'f.deletedOn IS NULL')
+                ->addSelect('f')
                 ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
