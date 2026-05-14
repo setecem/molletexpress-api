@@ -164,9 +164,10 @@ class Albaran
 
             $idLineas = array_map(fn($linea) => $linea->id, $model->lineas);
 
+            /** @var AlbaranLinea $linea */
             foreach ($item->lineas as $linea) {
                 if (!in_array($linea->id, $idLineas)) {
-                    $linea->deleted();
+                    $linea->delete();
                     $em->persist($linea);
                 }
             }
