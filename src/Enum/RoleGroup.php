@@ -111,4 +111,19 @@ enum RoleGroup: string
         ];
 
     }
+
+    /**
+     * @return array<string, Role[]>
+     */
+    public static function all(): array
+    {
+        return array_merge(
+            self::rolesEmployee(),
+            self::rolesClient(),
+            self::rolesInvoice(),
+            self::rolesDeliveryNote(),
+            self::rolesService(),
+            self::rolesChargeOrder()
+        );
+    }
 }
