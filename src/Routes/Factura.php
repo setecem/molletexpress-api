@@ -35,6 +35,9 @@ Router::mount('/api/v1/invoice', function () {
     /** @see Factura::update() */
     Router::put('/(\d+)', Factura::class . '@update');
 
+    /** @see Factura::updatePaid() */
+    Router::put('/(\d+)/paid', Factura::class . '@updatePaid');
+
     /** @see Factura::delete() */
     Router::delete('/(\d+)', Factura::class . '@delete');
 
