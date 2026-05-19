@@ -193,6 +193,37 @@ class Factura
         }
     }
 
+    public static function updatePaid(int $id): Http\JsonResponse
+    {
+
+        try {
+            $item = \App\Entity\Document\Factura\Factura::findOneBy(['id' => $id, 'deletedOn' => null]);
+
+            if (!$item)
+                return new Http\JsonResponse(['message' => "Factura no encontrada"], 404);
+
+            $model = \App\Model\Document\Factura\Factura::fromRequest();
+
+            if ($id != $model->id)
+                return new Http\JsonResponse(['message' => "La id indicada en la url no corresponde a la enviada en el modelo"], 404);
+
+            $em = DB::getManager();
+
+            /** @var \App\Entity\Document\Factura\Factura $entity */
+            $entity = $model->entity();
+
+            $em->persist($entity);
+            $em->flush();
+
+            return new Http\JsonResponse([
+                'message' => "Factura actualizada correctamente",
+                'item' => $entity->model(\App\Model\Document\Factura\Factura::class)->json()
+            ]);
+        } catch (Exception|ORMException $e) {
+            return new Http\JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
     public static function delete(int $id): Http\JsonResponse
     {
         try {
