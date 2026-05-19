@@ -69,13 +69,23 @@ class Albaran
             $total->select('COUNT(i.id)');
             $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
 
+            $sumQb = clone $qb;
+            $sumQb->select('SUM(i.importeBruto)');
+            $totalImporteBruto = (float)$sumQb->getQuery()->getSingleScalarResult();
+
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
                     $index = $order->column;
                     $columnName = $filter->columns[$index]->data;
                     $dir = strtoupper($order->dir);
-                    if ($dir === 'ASC' || $dir === 'DESC')
-                        $qb->addOrderBy('i.' . $columnName, $dir);
+                    if ($dir === 'ASC' || $dir === 'DESC') {
+                        if (str_starts_with($columnName, 'client.')) {
+                            $field = substr($columnName, strlen('client.'));
+                            $qb->addOrderBy('c.' . $field, $dir);
+                        } else
+                            $qb->addOrderBy('i.' . $columnName, $dir);
+
+                    }
                 }
             }
 
@@ -90,6 +100,7 @@ class Albaran
             $datatable = new DataTable();
             $datatable->recordsTotal = $recordsTotal;
             $datatable->recordsFiltered = $recordsTotal;
+            $datatable->totalImporteBruto = $totalImporteBruto;
 
             /** @var \App\Entity\Document\Albaran\Albaran $item */
             foreach ($list as $item) {
