@@ -36,7 +36,7 @@ class Albaran
 
             $qb = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)
                 ->createQueryBuilder('i')
-                ->join('i.client', 'c')
+                ->leftJoin('i.client', 'c')
                 ->where('i.deletedOn IS NULL');
 
             $filter = json_decode(Request::get('filter', '[]'));
@@ -185,6 +185,26 @@ class Albaran
 
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
             $entity = $model->entity();
+
+            if (!empty($entity->number)) {
+                $duplicate = $em->getRepository(\App\Entity\Document\Albaran\Albaran::class)
+                    ->createQueryBuilder('a')
+                    ->where('a.number = :number AND a.id != :id AND a.deletedOn IS NULL')
+                    ->setParameter('number', $entity->number)
+                    ->setParameter('id', $entity->id)
+                    ->setMaxResults(1)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+
+                if ($duplicate) {
+                    $em->detach($entity);
+                    $item = \App\Entity\Document\Albaran\Albaran::findOneBy(['id' => $id, 'deletedOn' => null]);
+                    return new Http\JsonResponse([
+                        'message' => "El número $entity->number ya está en uso por otro albarán",
+                        'item' => $item->model(\App\Model\Document\Albaran\Albaran::class)->json()
+                    ], 409);
+                }
+            }
 
             foreach ($entity->lineas as $linea) {
                 $linea->albaran = $entity;
