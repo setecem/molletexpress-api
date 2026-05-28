@@ -53,6 +53,19 @@ class Factura
                 }
             }
 
+            if (!empty($filter->minDate)) {
+                $qb->andWhere('i.date >= :minDate')
+                    ->setParameter('minDate', new DateTime($filter->minDate));
+            }
+
+            if (!empty($filter->maxDate)) {
+                $maxDate = new DateTime($filter->maxDate);
+                $maxDate->setTime(23, 59, 59);
+
+                $qb->andWhere('i.date <= :maxDate')
+                    ->setParameter('maxDate', $maxDate);
+            }
+
             $total = clone $qb;
             $total->select('COUNT(i.id)');
             $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
