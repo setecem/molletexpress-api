@@ -65,6 +65,11 @@ class Albaran
                     ->setParameter('maxDate', $maxDate);
             }
 
+            if (!empty($filter->clientId)) {
+                $qb->andWhere('c.id = :clientId')
+                    ->setParameter('clientId', $filter->clientId);
+            }
+
             $total = clone $qb;
             $total->select('COUNT(i.id)');
             $recordsTotal = (int)$total->getQuery()->getSingleScalarResult();
