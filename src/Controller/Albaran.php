@@ -78,6 +78,15 @@ class Albaran
             $sumQb->select('SUM(i.importeBruto)');
             $totalImporteBruto = (float)$sumQb->getQuery()->getSingleScalarResult();
 
+            $recentIds = $filter->recentIds ?? [];
+
+            if (!empty($recentIds)) {
+                $qb->addSelect('CASE WHEN i.id IN (:recentIds) THEN 0 ELSE 1 END AS HIDDEN priority')
+                    ->setParameter('recentIds', $recentIds);
+
+                $qb->addOrderBy('priority', 'ASC');
+            }
+
             if ($filter->order && $filter->columns) {
                 foreach ($filter->order as $order) {
                     $index = $order->column;
