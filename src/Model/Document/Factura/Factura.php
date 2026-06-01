@@ -13,6 +13,7 @@ class Factura extends Documento
     const string|Base ENTITY = \App\Entity\Document\Factura\Factura::class;
 
     public ?OrdenCobro $ordenCobro = null;
+    public bool $emailSent = false;
 
     public function typeOfCollection(string $property): ?string
     {

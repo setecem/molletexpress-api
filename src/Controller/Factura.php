@@ -592,7 +592,7 @@ class Factura
 
             foreach ($lineas as $linea) {
                 $albaran = $linea->albaran ? $linea->albaran->number : '';
-                $date = $linea->factura ? $linea->factura->date->format("d/m/Y") : '';
+                $date = $linea->albaran ? $linea->albaran->date->format("d/m/Y") : '';
                 $invoice->addItem($linea->reference, $linea->description, $linea->quantity, false, $linea->price, $linea->discount, $linea->total, $albaran, $date);
             }
 
@@ -680,9 +680,12 @@ class Factura
                 }
             }
 
-            if ($mail)
+            if ($mail) {
+                $item->emailSent = true;
+                $em->persist($item);
+                $em->flush();
                 return new Http\JsonResponse(['message' => "Documento enviado correctamente"]);
-            else
+            } else
                 return new Http\JsonResponse(['message' => "Falló el envío del documento", 500]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);

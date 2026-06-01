@@ -19,4 +19,7 @@ class Albaran extends Documento
     #[ORM\OneToMany(targetEntity: AlbaranLinea::class, mappedBy: 'albaran', cascade: ['persist'])]
     public array|Collection $lineas = [];
 
+    #[ORM\Column(name: 'email_sent', type: 'boolean', nullable: false, options: ['default' => '0'])]
+    public bool $emailSent = false;
+
 }

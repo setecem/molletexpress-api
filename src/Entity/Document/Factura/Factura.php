@@ -27,4 +27,7 @@ class Factura extends Documento
 
     #[ORM\Column(name: 'verifactu', type: 'string', nullable: true)]
     public ?string $verifactu = null;
+
+    #[ORM\Column(name: 'email_sent', type: 'boolean', nullable: false, options: ['default' => '0'])]
+    public bool $emailSent = false;
 }

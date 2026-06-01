@@ -828,9 +828,12 @@ class Albaran
                 }
             }
 
-            if ($mail)
+            if ($mail) {
+                $item->emailSent = true;
+                $em->persist($item);
+                $em->flush();
                 return new Http\JsonResponse(['message' => "Documento enviado correctamente"]);
-            else
+            } else
                 return new Http\JsonResponse(['message' => "Falló el envío del documento", 500]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);

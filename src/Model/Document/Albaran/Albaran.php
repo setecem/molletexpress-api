@@ -17,6 +17,7 @@ class Albaran extends Documento
     const string|Base ENTITY = \App\Entity\Document\Albaran\Albaran::class;
 
     public ?Factura $factura = null;
+    public bool $emailSent = false;
 
     public function typeOfCollection(string $property): ?string
     {
