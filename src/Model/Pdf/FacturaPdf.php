@@ -123,6 +123,7 @@ class FacturaPdf extends PlantillaPdf
                                 $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
                                 $this->SetFont($this->font, '', 9);
                                 $this->SetTextColor(50, 50, 50);
+                                $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
                             } else {
                                 $this->Cell($width, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->from[$i]) ? '' : $this->from[$i]), 0, 0, 'L');
                                 $this->Cell(0, $lineHeight, iconv(self::ICONV_CHARSET_INPUT, self::ICONV_CHARSET_OUTPUT_A, empty($this->to[$i]) ? '' : $this->to[$i]), 0, 0, 'L');
