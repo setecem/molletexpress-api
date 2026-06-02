@@ -603,6 +603,11 @@ class Factura
             $invoice->addTotal("Tipo IVA 21%", $item->total - $item->subtotal);
             $invoice->addTotal("Total", $item->total);
 
+            if ($client && $client->formaPago)
+                $invoice->addParagraph("Forma de pago: " . $client->formaPago);
+
+            $invoice->addParagraph("Vencimiento: " . self::getDueDate($item)->format("d-m-Y"));
+
             if ($client && $client->formaPago == "TRANSFERENCIA BANCARIA")
                 $invoice->addParagraph("IBAN Mollet Express: " . Config::get("modules.factura.empresa.iban"));
 
