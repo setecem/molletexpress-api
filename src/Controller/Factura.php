@@ -80,8 +80,14 @@ class Factura
                     $index = $order->column;
                     $columnName = $filter->columns[$index]->data;
                     $dir = strtoupper($order->dir);
-                    if ($dir === 'ASC' || $dir === 'DESC')
-                        $qb->addOrderBy('i.' . $columnName, $dir);
+                    if ($dir === 'ASC' || $dir === 'DESC') {
+                        if (str_starts_with($columnName, 'client.')) {
+                            $field = substr($columnName, strlen('client.'));
+                            $qb->addOrderBy('c.' . $field, $dir);
+                        } else
+                            $qb->addOrderBy('i.' . $columnName, $dir);
+
+                    }
                 }
             }
 
