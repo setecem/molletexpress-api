@@ -207,6 +207,10 @@
         "message": "Charge order",
         "replace": []
     },
+    "role.group.DECA": {
+        "message": "DeCA",
+        "replace": []
+    },
     "role.role.ACTIVE": {
         "message": "Activate",
         "replace": []
@@ -232,7 +236,7 @@
         "replace": []
     },
     "role.role.INVOICE": {
-      "message": "To invoice",
-      "replace": []
+        "message": "To invoice",
+        "replace": []
     }
 }

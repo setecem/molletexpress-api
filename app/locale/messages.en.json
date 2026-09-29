@@ -51,6 +51,7 @@
     "role.group.DELIVERY_NOTE": "Delivery note",
     "role.group.SERVICE": "Service",
     "role.group.CHARGE_ORDER": "Charge order",
+    "role.group.DECA": "DeCA",
     "role.role.ACTIVE": "Activate",
     "role.role.DOWNLOAD": "Download",
     "role.role.PAID_STATUS": "Edit paid status",

@@ -68,5 +68,21 @@ class Client extends Entity
     #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => true])]
     public bool $active = true;
 
+    /*
+     * Vínculo con DeCA (app → DeCA → Clientes en DeCA). No están en el modelo a propósito:
+     * así editar el cliente en app no los borra.
+     */
+
+    /** Id del tercero de DeCA que es este cliente. */
+    #[ORM\Column(name: 'deca_partner_id', type: 'integer', nullable: true)]
+    public ?int $decaPartnerId = null;
+
+    /** Huella de los datos enviados a DeCA la última vez: si cambia, hay que actualizar el tercero. */
+    #[ORM\Column(name: 'deca_hash', type: 'string', length: 40, nullable: true)]
+    public ?string $decaHash = null;
+
+    #[ORM\Column(name: 'deca_synced_at', type: 'datetime', nullable: true)]
+    public ?\DateTime $decaSyncedAt = null;
+
     public int $debe = 0;
 }

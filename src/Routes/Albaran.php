@@ -35,6 +35,9 @@ Router::mount('/api/v1/delivery-note', function () {
     /** @see Albaran::add() */
     Router::post('/', Albaran::class . '@add');
 
+    /** @see Albaran::deca() — reintenta el borrador de DeCA de un albarán de appDeCA */
+    Router::post('/(\d+)/deca', Albaran::class . '@deca');
+
     /** @see Albaran::update() */
     Router::put('/(\d+)', Albaran::class . '@update');
 

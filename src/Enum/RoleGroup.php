@@ -11,6 +11,8 @@ enum RoleGroup: string
     case DELIVERY_NOTE = 'DELIVERY_NOTE';
     case SERVICE = 'SERVICE';
     case CHARGE_ORDER = 'CHARGE_ORDER';
+    /** Vinculación con DeCA (app → DeCA). ACCESS: ver la configuración; EDIT: vincular, cambiar y desvincular. */
+    case DECA = 'DECA';
 
     public static function rolesEmployee(): array
     {
@@ -95,6 +97,16 @@ enum RoleGroup: string
         ];
     }
 
+    public static function rolesDeca(): array
+    {
+        return [
+            self::DECA->value => [
+                Role::ACCESS,
+                Role::EDIT
+            ]
+        ];
+    }
+
     public static function rolesChargeOrder(): array
     {
         return [
@@ -123,7 +135,8 @@ enum RoleGroup: string
             self::rolesInvoice(),
             self::rolesDeliveryNote(),
             self::rolesService(),
-            self::rolesChargeOrder()
+            self::rolesChargeOrder(),
+            self::rolesDeca()
         );
     }
 }

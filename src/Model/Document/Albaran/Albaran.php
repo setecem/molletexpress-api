@@ -16,8 +16,22 @@ class Albaran extends Documento
 
     const string|Base ENTITY = \App\Entity\Document\Albaran\Albaran::class;
 
+    /** Papeles posibles en el DeCA (appDeCA) */
+    const array TRANSPORT_ROLES = ['TRANSPORTISTA_EFECTIVO', 'CARGADOR_CONTRACTUAL'];
+
     public ?Factura $factura = null;
     public bool $emailSent = false;
+    public ?string $transportRole = null;
+    public ?int $decaId = null;
+    public ?string $decaStatus = null;
+    public ?string $decaError = null;
+
+    /** @throws Exception si el papel de transporte no es uno de los permitidos */
+    public function validateTransportRole(): void
+    {
+        if ($this->transportRole !== null && !in_array($this->transportRole, self::TRANSPORT_ROLES, true))
+            throw new Exception('Tipo de transporte no válido: ' . $this->transportRole);
+    }
 
     public function typeOfCollection(string $property): ?string
     {
