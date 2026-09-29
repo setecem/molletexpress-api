@@ -210,6 +210,31 @@ class Deca
         return $this->request('GET', '/deca?reference=' . rawurlencode($reference));
     }
 
+    /** El DeCA vigente (no anulado) con esa referencia, o null si no hay ninguno. */
+    public function currentByReference(string $reference): ?array
+    {
+        foreach ($this->findDecaByReference($reference) as $deca)
+            if (($deca['status'] ?? null) !== 'CANCELLED')
+                return $deca;
+
+        return null;
+    }
+
+    /**
+     * Igual que {@see currentByReference()}, con la vinculación de la empresa.
+     *
+     * @throws Exception si no está vinculado o DeCA no responde
+     */
+    public static function findByReference(string $reference): ?array
+    {
+        $connection = self::connection();
+
+        if (!self::isReady($connection))
+            throw new Exception(self::notReadyMessage($connection));
+
+        return self::fromConnection($connection)->currentByReference($reference);
+    }
+
     /** Crea un borrador. Devuelve el documento. */
     public function createDraft(array $deca): array
     {
@@ -271,14 +296,9 @@ class Deca
 
             $client = self::fromConnection($connection);
 
-            // Ya creado (p. ej. un reintento tras un corte a medias): se enlaza ese
-            $existing = array_values(array_filter(
-                $client->findDecaByReference($albaran->number),
-                fn(array $deca) => ($deca['status'] ?? null) !== 'CANCELLED'
-            ));
-
-            if ($existing) {
-                $deca = $existing[0];
+            // Ya creado (un reintento tras un corte a medias, o hecho en DeCA): se enlaza ese
+            if ($existing = $client->currentByReference($albaran->number)) {
+                $deca = $existing;
             } else {
                 $own = $connection->ownPartnerId;
                 $isCarrier = $albaran->transportRole === 'TRANSPORTISTA_EFECTIVO';

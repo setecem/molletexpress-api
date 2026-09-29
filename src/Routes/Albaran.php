@@ -17,6 +17,9 @@ Router::mount('/api/v1/delivery-note', function () {
     /** @see Albaran::facturar() */
     Router::post('/facturar', Albaran::class . '@facturar');
 
+    /** @see Albaran::decaCheck() — appDeCA: ¿se creará el albarán, se vinculará o ya existen albarán y DeCA? */
+    Router::get('/deca-check', Albaran::class . '@decaCheck');
+
     /** @see Albaran::sendEmail() */
     Router::get('/(\d+)/email', Albaran::class . '@sendEmail');
 

@@ -156,6 +156,10 @@ class Albaran
             if ($model->transportRole !== null && !\App\Service\Deca::isReady())
                 return new Http\JsonResponse(['message' => \App\Service\Deca::notReadyMessage()], 409);
 
+            // appDeCA con un número de albarán que ya existe: no se duplica
+            if ($model->transportRole !== null && ($linked = self::linkExisting($model)))
+                return $linked;
+
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
             $entity = $model->entity();
 
@@ -213,6 +217,13 @@ class Albaran
             if (!$entity)
                 return new Http\JsonResponse(['message' => "Albarán no encontrado"], 404);
 
+            // appDeCA vinculando un albarán que ya existía: lo que le falte (tipo, cliente) sale
+            // de lo que manda; lo que ya tenga no se toca.
+            $body = json_decode((string)file_get_contents('php://input'), true);
+
+            if (is_array($body))
+                self::fillForDeca($entity, $body['transportRole'] ?? null, (int)($body['client']['id'] ?? $body['client'] ?? 0));
+
             if ($entity->transportRole === null)
                 return new Http\JsonResponse(['message' => "Este albarán no es de appDeCA: no lleva DeCA"], 400);
 
@@ -233,6 +244,130 @@ class Albaran
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * appDeCA con el número de un albarán que ya existe:
+     * - El albarán ya tiene DeCA (vinculado, o uno en DeCA con esa referencia): no se hace
+     *   nada y se avisa (409).
+     * - No tiene DeCA: no se crea otro albarán; se crea el DeCA del existente y se comparte
+     *   con su cliente. Si le falta el tipo o el cliente, se toman de lo que manda appDeCA.
+     *
+     * Si el albarán no existe devuelve null y se sigue con el alta normal (que, si ya hay un
+     * DeCA con esa referencia, lo vincula en vez de crear otro).
+     */
+    private static function linkExisting(\App\Model\Document\Albaran\Albaran $model): ?Http\JsonResponse
+    {
+        $number = trim((string)$model->number);
+
+        if ($number === '')
+            return null;
+
+        try {
+            ['albaran' => $existing, 'deca' => $deca] = self::existingFor($number);
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => 'No se ha podido comprobar en DeCA si el albarán ' . $number . ' ya tiene documento: ' . $e->getMessage()], 502);
+        }
+
+        if (!$existing)
+            return null;
+
+        if ($deca)
+            return new Http\JsonResponse([
+                'message' => 'Ya existen el albarán ' . $number . ' y su DeCA (id ' . $deca['id'] . '): no se ha creado nada',
+                'exists' => true
+            ], 409);
+
+        self::fillForDeca($existing, $model->transportRole, (int)($model->client?->id ?? 0));
+
+        \App\Service\Deca::syncAlbaran($existing);
+        \App\Service\Deca::shareAlbaran($existing);
+
+        // Seguimiento de cambios explícito (Cavesman): sin persist, flush no guarda
+        $em = DB::getManager();
+        $em->persist($existing);
+        $em->flush();
+
+        return new Http\JsonResponse([
+            'message' => 'El albarán ' . $number . ' ya existía: se ha vinculado con su DeCA',
+            'linked' => true,
+            'item' => $existing->model(\App\Model\Document\Albaran\Albaran::class)->json(),
+            'deca' => self::decaResult($existing)
+        ]);
+    }
+
+    /**
+     * appDeCA, antes de guardar: qué pasará con ese número de albarán.
+     *
+     * - `add`: no existe el albarán; se creará (y si ya hay un DeCA con esa referencia, se
+     *   vinculará a él en vez de crear otro).
+     * - `link`: existe el albarán pero no su DeCA; no se crea otro albarán, se le vincula uno.
+     * - `exists`: existen el albarán y su DeCA; no se puede hacer nada.
+     *
+     * GET /delivery-note/deca-check?number=A226-2308
+     */
+    public static function decaCheck(): Http\JsonResponse
+    {
+        try {
+            \App\Model\Auth::getEmployee();
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => 'Token invalido', 'exception' => $e->getMessage()], 401);
+        }
+
+        $number = trim((string)($_GET['number'] ?? ''));
+
+        if ($number === '')
+            return new Http\JsonResponse(['message' => 'Indica el número de albarán'], 400);
+
+        try {
+            ['albaran' => $albaran, 'deca' => $deca] = self::existingFor($number);
+        } catch (Exception $e) {
+            return new Http\JsonResponse(['message' => 'No se ha podido comprobar en DeCA si el albarán ' . $number . ' ya tiene documento: ' . $e->getMessage()], 502);
+        }
+
+        return new Http\JsonResponse([
+            'action' => !$albaran ? 'add' : ($deca ? 'exists' : 'link'),
+            'albaran' => $albaran ? [
+                'id' => $albaran->id,
+                'number' => $albaran->number,
+                'date' => $albaran->date?->format('Y-m-d'),
+                'client' => $albaran->client ? ['id' => $albaran->client->id, 'name' => $albaran->client->name] : null,
+                'transportRole' => $albaran->transportRole,
+                'decaId' => $albaran->decaId
+            ] : null,
+            'deca' => $deca ? ['id' => (int)$deca['id'], 'status' => $deca['status'] ?? null] : null
+        ]);
+    }
+
+    /**
+     * El albarán con ese número y su DeCA: el que tiene vinculado o, si no tiene, uno vigente
+     * en DeCA con esa referencia. Sin albarán no se pregunta a DeCA: el alta ya vincula el
+     * que haya.
+     *
+     * @return array{albaran: ?\App\Entity\Document\Albaran\Albaran, deca: ?array}
+     * @throws Exception si hay que preguntar a DeCA y no responde
+     */
+    private static function existingFor(string $number): array
+    {
+        /** @var \App\Entity\Document\Albaran\Albaran|null $albaran */
+        $albaran = \App\Entity\Document\Albaran\Albaran::findOneBy(['number' => $number, 'deletedOn' => null]);
+
+        if (!$albaran)
+            return ['albaran' => null, 'deca' => null];
+
+        $deca = $albaran->decaId !== null ? ['id' => $albaran->decaId] : \App\Service\Deca::findByReference($number);
+
+        return ['albaran' => $albaran, 'deca' => $deca];
+    }
+
+    /** Al vincular un albarán que ya existía: el tipo y el cliente, solo si le faltan. */
+    private static function fillForDeca(\App\Entity\Document\Albaran\Albaran $albaran, ?string $transportRole, int $clientId): void
+    {
+        if ($albaran->transportRole === null && in_array($transportRole, \App\Model\Document\Albaran\Albaran::TRANSPORT_ROLES, true))
+            $albaran->transportRole = $transportRole;
+
+        if (!$albaran->client && $clientId)
+            $albaran->client = \App\Entity\Client::findOneBy(['id' => $clientId, 'deletedOn' => null]);
     }
 
     /** Resumen del DeCA de un albarán para la respuesta. */
