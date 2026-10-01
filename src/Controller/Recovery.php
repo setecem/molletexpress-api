@@ -39,7 +39,7 @@ final class Recovery
             $text = Twig::renderFromString(Translate::get('mail.recovery.message'), ['message' => Translate::get('mail.recovery.message'), 'server' => $_SERVER]);
 
 
-            Mail::send(Config::get('mail.test.address'), Translate::get('mail.recovery.subject'), ['html' => $body, 'text' => $text]);
+            Mail::send($user->email, Translate::get('mail.recovery.subject'), ['html' => $body, 'text' => $text]);
 
             return new JsonResponse(['message' => 'mail.recovery.response.success']);
 
