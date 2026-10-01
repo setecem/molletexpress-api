@@ -277,10 +277,12 @@ class Deca
      * - CARGADOR_CONTRACTUAL: cargador = Mollet Express.
      * El cliente NO se vincula: el resto del documento lo completa el cliente.
      *
+     * La fecha del transporte es la indicada en appDeCA; si no viene, la del albarán.
+     *
      * Idempotente: si ya hay un documento en DeCA con la referencia del albarán (su número),
      * se vincula ese en vez de crear otro. Nunca lanza: un fallo de DeCA no debe perder el albarán.
      */
-    public static function syncAlbaran(\App\Entity\Document\Albaran\Albaran $albaran): void
+    public static function syncAlbaran(\App\Entity\Document\Albaran\Albaran $albaran, ?\DateTimeInterface $transportDate = null): void
     {
         if ($albaran->transportRole === null || $albaran->decaId !== null)
             return;
@@ -305,7 +307,7 @@ class Deca
 
                 $payload = array_filter([
                     'reference' => $albaran->number,
-                    'transportDate' => ($albaran->date ?? new \DateTime())->format('Y-m-d'),
+                    'transportDate' => ($transportDate ?? $albaran->date ?? new \DateTime())->format('Y-m-d'),
                     'shipper' => $isCarrier ? null : $own,
                     'carrier' => $isCarrier ? $own : null,
                     'notes' => 'Albarán ' . $albaran->number . ' de Mollet Express'

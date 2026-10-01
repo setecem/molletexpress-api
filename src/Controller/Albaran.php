@@ -157,7 +157,10 @@ class Albaran
                 return new Http\JsonResponse(['message' => \App\Service\Deca::notReadyMessage()], 409);
 
             // appDeCA con un número de albarán que ya existe: no se duplica
-            if ($model->transportRole !== null && ($linked = self::linkExisting($model)))
+            // Fecha del transporte y si se comparte con el cliente: solo para el DeCA
+            $options = self::decaOptions();
+
+            if ($model->transportRole !== null && ($linked = self::linkExisting($model, $options)))
                 return $linked;
 
             /** @var \App\Entity\Document\Albaran\Albaran $entity */
@@ -179,10 +182,12 @@ class Albaran
 
             // Albarán de appDeCA: se crea su borrador en DeCA. Si falla, el albarán queda
             // guardado con decaStatus = ERROR y se puede reintentar (POST /{id}/deca).
-            // Y se comparte con el cliente para que lo rellene en DeCA Cliente.
+            // Y, si así se ha pedido, se comparte con el cliente para que lo rellene en DeCA
+            // Cliente; si no, queda sin compartir y se comparte a mano desde la web de DeCA.
             if ($entity->transportRole !== null) {
-                \App\Service\Deca::syncAlbaran($entity);
-                \App\Service\Deca::shareAlbaran($entity);
+                \App\Service\Deca::syncAlbaran($entity, $options['transportDate']);
+                if ($options['share'])
+                    \App\Service\Deca::shareAlbaran($entity);
                 // Seguimiento de cambios explícito (Cavesman): sin persist, flush no guarda
                 $em->persist($entity);
                 $em->flush();
@@ -191,7 +196,7 @@ class Albaran
             return new Http\JsonResponse([
                 'message' => "Albarán añadido correctamente",
                 'item' => $entity->model(\App\Model\Document\Albaran\Albaran::class)->json(),
-                'deca' => self::decaResult($entity)
+                'deca' => self::decaResult($entity, $options['share'])
             ]);
         } catch (Exception|ORMException $e) {
             return new Http\JsonResponse(['message' => $e->getMessage()], 500);
@@ -202,6 +207,9 @@ class Albaran
      * Hace lo que le falte al DeCA de un albarán de appDeCA: crear el borrador si falló y
      * compartirlo con el cliente. Si ya estaba compartido, lo vuelve a compartir, que manda
      * otra vez el aviso por correo al cliente.
+     *
+     * Opcional en el cuerpo: `transportDate` (Y-m-d, si se crea el borrador) y `share`
+     * (false: no se comparte; queda para compartirlo a mano desde la web de DeCA).
      */
     public static function deca(int $id): Http\JsonResponse
     {
@@ -220,6 +228,7 @@ class Albaran
             // appDeCA vinculando un albarán que ya existía: lo que le falte (tipo, cliente) sale
             // de lo que manda; lo que ya tenga no se toca.
             $body = json_decode((string)file_get_contents('php://input'), true);
+            $options = self::decaOptions();
 
             if (is_array($body))
                 self::fillForDeca($entity, $body['transportRole'] ?? null, (int)($body['client']['id'] ?? $body['client'] ?? 0));
@@ -227,14 +236,15 @@ class Albaran
             if ($entity->transportRole === null)
                 return new Http\JsonResponse(['message' => "Este albarán no es de appDeCA: no lleva DeCA"], 400);
 
-            \App\Service\Deca::syncAlbaran($entity);
-            \App\Service\Deca::shareAlbaran($entity);
+            \App\Service\Deca::syncAlbaran($entity, $options['transportDate']);
+            if ($options['share'])
+                \App\Service\Deca::shareAlbaran($entity);
             // Seguimiento de cambios explícito (Cavesman): sin persist, flush no guarda
             $em = DB::getManager();
             $em->persist($entity);
             $em->flush();
 
-            $result = self::decaResult($entity);
+            $result = self::decaResult($entity, $options['share']);
 
             return new Http\JsonResponse([
                 'message' => $result['message'],
@@ -251,12 +261,12 @@ class Albaran
      * - El albarán ya tiene DeCA (vinculado, o uno en DeCA con esa referencia): no se hace
      *   nada y se avisa (409).
      * - No tiene DeCA: no se crea otro albarán; se crea el DeCA del existente y se comparte
-     *   con su cliente. Si le falta el tipo o el cliente, se toman de lo que manda appDeCA.
+     *   con su cliente (salvo que se pida no compartirlo). Si le falta el tipo o el cliente, se toman de lo que manda appDeCA.
      *
      * Si el albarán no existe devuelve null y se sigue con el alta normal (que, si ya hay un
      * DeCA con esa referencia, lo vincula en vez de crear otro).
      */
-    private static function linkExisting(\App\Model\Document\Albaran\Albaran $model): ?Http\JsonResponse
+    private static function linkExisting(\App\Model\Document\Albaran\Albaran $model, array $options): ?Http\JsonResponse
     {
         $number = trim((string)$model->number);
 
@@ -280,8 +290,9 @@ class Albaran
 
         self::fillForDeca($existing, $model->transportRole, (int)($model->client?->id ?? 0));
 
-        \App\Service\Deca::syncAlbaran($existing);
-        \App\Service\Deca::shareAlbaran($existing);
+        \App\Service\Deca::syncAlbaran($existing, $options['transportDate']);
+        if ($options['share'])
+            \App\Service\Deca::shareAlbaran($existing);
 
         // Seguimiento de cambios explícito (Cavesman): sin persist, flush no guarda
         $em = DB::getManager();
@@ -292,7 +303,7 @@ class Albaran
             'message' => 'El albarán ' . $number . ' ya existía: se ha vinculado con su DeCA',
             'linked' => true,
             'item' => $existing->model(\App\Model\Document\Albaran\Albaran::class)->json(),
-            'deca' => self::decaResult($existing)
+            'deca' => self::decaResult($existing, $options['share'])
         ]);
     }
 
@@ -370,8 +381,38 @@ class Albaran
             $albaran->client = \App\Entity\Client::findOneBy(['id' => $clientId, 'deletedOn' => null]);
     }
 
+    /**
+     * Lo que appDeCA manda para el DeCA y no se guarda en el albarán:
+     * - `transportDate` (Y-m-d): fecha del transporte del borrador. Sin ella, la del albarán.
+     * - `share`: si se comparte con el cliente. Por defecto sí (lo de siempre, y el
+     *   «Enviar al cliente» de app); con false el borrador queda sin compartir en DeCA.
+     *
+     * @return array{transportDate: ?\DateTime, share: bool}
+     * @throws Exception si la fecha no es válida
+     */
+    private static function decaOptions(): array
+    {
+        $body = json_decode((string)file_get_contents('php://input'), true);
+        $body = is_array($body) ? $body : [];
+
+        $date = trim((string)($body['transportDate'] ?? ''));
+        $transportDate = null;
+
+        if ($date !== '') {
+            $transportDate = \DateTime::createFromFormat('!Y-m-d', $date);
+
+            if (!$transportDate || $transportDate->format('Y-m-d') !== $date)
+                throw new Exception('Fecha del transporte no válida: ' . $date);
+        }
+
+        return [
+            'transportDate' => $transportDate,
+            'share' => filter_var($body['share'] ?? true, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true
+        ];
+    }
+
     /** Resumen del DeCA de un albarán para la respuesta. */
-    private static function decaResult(\App\Entity\Document\Albaran\Albaran $entity): ?array
+    private static function decaResult(\App\Entity\Document\Albaran\Albaran $entity, bool $share = true): ?array
     {
         if ($entity->transportRole === null)
             return null;
@@ -388,6 +429,7 @@ class Albaran
             'message' => match (true) {
                 !$created => 'El albarán se ha guardado, pero no se ha podido crear el borrador DeCA: ' . $entity->decaError,
                 $entity->decaError !== null => 'Borrador DeCA creado (id ' . $entity->decaId . '). ' . $entity->decaError,
+                !$share && !$shared => 'Borrador DeCA creado (id ' . $entity->decaId . '). No se ha enviado al cliente: compártelo desde la web de DeCA cuando quieras',
                 default => 'Borrador DeCA creado (id ' . $entity->decaId . ') y enviado al cliente para que lo rellene'
             }
         ];
