@@ -379,8 +379,11 @@ class Deca
         }
     }
 
-    /** Papeles con los que se dan de alta los clientes en DeCA (los que ya tengan allí se conservan). */
-    const array CLIENT_ROLES = ['SHIPPER', 'CONSIGNEE'];
+    /**
+     * Papeles con los que se pasan los clientes a DeCA: expedidor y destinatario. Se suman a los
+     * que ya tengan allí, salvo el de cargador, que antes se les ponía por defecto y no les toca.
+     */
+    const array CLIENT_ROLES = ['CONSIGNOR', 'CONSIGNEE'];
 
     /** Un cliente de Mollet Express en el formato de tercero de DeCA. */
     public static function clientPayload(\App\Entity\Client $client): array
@@ -395,8 +398,27 @@ class Deca
             'state' => $client->provincia,
             'email' => $client->email,
             'phone' => $client->telefono ?: $client->movil,
-            'country' => 'ES'
+            'country' => 'ES',
+            // Los inactivos también se pasan, pero inactivos
+            'active' => $client->active,
+            // Va en la huella: si cambian los papeles, los clientes se vuelven a mandar
+            'roles' => self::CLIENT_ROLES
         ], fn($value) => $value !== null && $value !== '');
+    }
+
+    /**
+     * Papeles del tercero de un cliente: los suyos más expedidor y destinatario. El de cargador
+     * se le quita si el tercero es de este cliente (se le ponía antes por defecto); a uno
+     * aprovechado por NIF se le respetan todos.
+     */
+    private static function clientRoles(?array $existing, string $reference): array
+    {
+        $roles = $existing['roles'] ?? [];
+
+        if (($existing['reference'] ?? null) === $reference)
+            $roles = array_diff($roles, ['SHIPPER']);
+
+        return array_values(array_unique(array_merge($roles, self::CLIENT_ROLES)));
     }
 
     /** Huella de los datos que se mandan: si no cambia, no hace falta volver a enviarlos. */
@@ -411,9 +433,11 @@ class Deca
      * Da de alta o actualiza en DeCA los clientes indicados como terceros y deja el vínculo en
      * cada cliente (decaPartnerId, decaHash, decaSyncedAt). Hace persist de cada cliente; el flush, quien llama.
      *
-     * - No existe (ni por NIF ni por la referencia MOLLET-CLIENTE-<id>): se crea.
+     * - Se busca por la referencia MOLLET-CLIENTE-<id>; si no, por NIF, pero solo entre los terceros
+     *   sin referencia (varios clientes pueden compartir NIF y cada uno tiene su tercero).
+     * - No existe: se crea.
      * - Existe y los datos han cambiado desde el último envío (o nunca se vinculó): se actualiza,
-     *   conservando los papeles que tenga en DeCA.
+     *   con los papeles de {@see clientRoles()}.
      * - Existe y no ha cambiado nada: no se toca.
      * - Sin NIF: DeCA no puede actualizarlo sin duplicarlo; se crea una vez y después solo se vincula.
      *
@@ -429,10 +453,10 @@ class Deca
         $byReference = [];
 
         foreach ($this->partners() as $partner) {
-            if (!empty($partner['nif']))
-                $byNif[self::normalizeNif($partner['nif'])] ??= $partner;
             if (!empty($partner['reference']))
                 $byReference[$partner['reference']] ??= $partner;
+            elseif (!empty($partner['nif']))
+                $byNif[self::normalizeNif($partner['nif'])] ??= $partner;
         }
 
         foreach ($clients as $client) {
@@ -443,9 +467,11 @@ class Deca
                 if (empty($payload['name']))
                     throw new Exception('no tiene nombre');
 
+                // Por su referencia (el id del cliente): puede haber varios clientes con el mismo
+                // NIF. Por NIF solo se aprovecha un tercero que no sea ya de otro cliente.
                 $hasNif = !empty($payload['nif']);
-                $existing = ($hasNif ? $byNif[self::normalizeNif($payload['nif'])] ?? null : null)
-                    ?? $byReference[$payload['reference']] ?? null;
+                $existing = $byReference[$payload['reference']]
+                    ?? ($hasNif ? $byNif[self::normalizeNif($payload['nif'])] ?? null : null);
 
                 if ($existing && (int)$existing['id'] === $client->decaPartnerId && $client->decaHash === $hash) {
                     $result['unchanged']++;
@@ -458,7 +484,7 @@ class Deca
                     $result['warnings'][] = ['client' => $client->name, 'message' => 'Sin NIF: vinculado, pero sus datos no se actualizan en DeCA'];
                     $result['unchanged']++;
                 } else {
-                    $payload['roles'] = $existing ? ($existing['roles'] ?? []) : self::CLIENT_ROLES;
+                    $payload['roles'] = self::clientRoles($existing, $payload['reference']);
                     $partner = $this->savePartner($payload);
                     $existing ? $result['updated']++ : $result['created']++;
 
@@ -476,10 +502,10 @@ class Deca
                 // Seguimiento de cambios explícito (Cavesman): sin persist, el flush no lo guarda
                 \Cavesman\Db::getManager()->persist($client);
 
-                // Para el resto del lote (p. ej. dos clientes con el mismo NIF)
+                // Para el resto del lote: ya es de este cliente, así que otro con el mismo NIF no lo aprovecha
                 if ($hasNif)
-                    $byNif[self::normalizeNif($payload['nif'])] = $partner + ['nif' => $payload['nif']];
-                $byReference[$payload['reference']] ??= $partner;
+                    unset($byNif[self::normalizeNif($payload['nif'])]);
+                $byReference[$payload['reference']] = $partner;
             } catch (Exception $e) {
                 $result['errors'][] = ['client' => $client->name, 'message' => $e->getMessage()];
             }
@@ -489,16 +515,20 @@ class Deca
     }
 
     /**
-     * Cómo están los clientes activos respecto a DeCA, sin llamar a DeCA.
+     * Cómo están los clientes respecto a DeCA, sin llamar a DeCA. Cuentan también los
+     * inactivos, que se pasan a DeCA como inactivos.
      *
-     * @return array{total: int, linked: int, outdated: int, pending: int}
+     * @return array{total: int, active: int, linked: int, outdated: int, pending: int}
      */
     public static function clientsStatus(): array
     {
-        $status = ['total' => 0, 'linked' => 0, 'outdated' => 0, 'pending' => 0];
+        $status = ['total' => 0, 'active' => 0, 'linked' => 0, 'outdated' => 0, 'pending' => 0];
 
-        foreach (\App\Entity\Client::findBy(['deletedOn' => null, 'active' => true]) as $client) {
+        foreach (\App\Entity\Client::findBy(['deletedOn' => null]) as $client) {
             $status['total']++;
+
+            if ($client->active)
+                $status['active']++;
 
             if (!$client->decaPartnerId) {
                 $status['pending']++;

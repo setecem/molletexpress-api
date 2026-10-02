@@ -230,7 +230,7 @@ class DecaConnection
         }
     }
 
-    /** Cuántos clientes activos están vinculados en DeCA, cuántos han cambiado y cuántos faltan. */
+    /** Cuántos clientes (activos o no) están vinculados en DeCA, cuántos han cambiado y cuántos faltan. */
     public static function clients(): JsonResponse
     {
         if ($denied = self::denied('ACCESS'))
@@ -245,7 +245,7 @@ class DecaConnection
 
     /**
      * Vincula los clientes como terceros de DeCA: crea los que no existen y actualiza los que han
-     * cambiado. Body: {ids: [..]} para unos concretos; sin ids, todos los activos.
+     * cambiado. Body: {ids: [..]} para unos concretos; sin ids, todos (los inactivos, como inactivos).
      */
     public static function syncClients(): JsonResponse
     {
@@ -263,14 +263,15 @@ class DecaConnection
             $data = json_decode(file_get_contents('php://input'), true) ?: [];
             $ids = array_values(array_filter(array_map('intval', (array)($data['ids'] ?? []))));
 
-            $criteria = ['deletedOn' => null, 'active' => true];
+            // Los inactivos también: van a DeCA como inactivos
+            $criteria = ['deletedOn' => null];
             if ($ids)
                 $criteria['id'] = $ids;
 
             $clients = \App\Entity\Client::findBy($criteria, ['name' => 'ASC']);
 
             if (!$clients)
-                return new JsonResponse(['message' => 'No hay clientes activos que vincular'], 400);
+                return new JsonResponse(['message' => 'No hay clientes que vincular'], 400);
 
             $result = $client->syncClients($clients);
 

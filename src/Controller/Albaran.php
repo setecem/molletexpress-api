@@ -384,8 +384,8 @@ class Albaran
     /**
      * Lo que appDeCA manda para el DeCA y no se guarda en el albarán:
      * - `transportDate` (Y-m-d): fecha del transporte del borrador. Sin ella, la del albarán.
-     * - `share`: si se comparte con el cliente. Por defecto sí (lo de siempre, y el
-     *   «Enviar al cliente» de app); con false el borrador queda sin compartir en DeCA.
+     * - `share`: si se comparte con el cliente. Por defecto no: el borrador queda sin
+     *   compartir en DeCA. El «Enviar al cliente» de app manda true.
      *
      * @return array{transportDate: ?\DateTime, share: bool}
      * @throws Exception si la fecha no es válida
@@ -407,12 +407,12 @@ class Albaran
 
         return [
             'transportDate' => $transportDate,
-            'share' => filter_var($body['share'] ?? true, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true
+            'share' => filter_var($body['share'] ?? false, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false
         ];
     }
 
     /** Resumen del DeCA de un albarán para la respuesta. */
-    private static function decaResult(\App\Entity\Document\Albaran\Albaran $entity, bool $share = true): ?array
+    private static function decaResult(\App\Entity\Document\Albaran\Albaran $entity, bool $share = false): ?array
     {
         if ($entity->transportRole === null)
             return null;
